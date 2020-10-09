@@ -2,20 +2,22 @@ package com.chentian.xiangkan
 
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.githang.statusbar.StatusBarCompat
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,7 +34,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_main)
+        StatusBarCompat.setStatusBarColor(this, Color.WHITE,true)
 
         viewManager = LinearLayoutManager(this)
         viewAdapter = MyAdapter()
@@ -139,7 +143,13 @@ class MainActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-            holder.textView.text = dataList[position].title
+            holder.title.text = dataList[position].title
+            holder.author.text = dataList[position].author
+
+            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.CHINESE)
+            var date = Date(dataList[position].pubDate)
+            date = Date(date.time + 8 * 60 * 60 * 1000)//加8小时
+            holder.date.text = simpleDateFormat.format(date)
             holder.itemView.tag = position
         }
 
@@ -154,7 +164,9 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            val textView: TextView = itemView.findViewById(R.id.text_view)
+            val title: TextView = itemView.findViewById(R.id.title)
+            val author: TextView = itemView.findViewById(R.id.author)
+            val date: TextView = itemView.findViewById(R.id.date)
         }
     }
 

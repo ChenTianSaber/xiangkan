@@ -35,4 +35,5 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
     implementation 'com.github.smart-fun:XmlToJson:1.4.5'// XML to JSON
+    implementation 'com.githang:status-bar-compat:0.7' //改变状态栏颜色
 }
