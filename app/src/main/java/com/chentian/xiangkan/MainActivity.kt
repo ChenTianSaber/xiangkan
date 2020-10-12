@@ -10,6 +10,9 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
+import com.chentian.xiangkan.data.AppDatabase
+import com.chentian.xiangkan.data.RSSItem
 import com.githang.statusbar.StatusBarCompat
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
@@ -29,7 +32,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var viewAdapter: MyAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-    private val context: Context = this;
+    private val context: Context = this
+//    private val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,9 +49,13 @@ class MainActivity : AppCompatActivity() {
             adapter = viewAdapter
         }
         viewAdapter.itemClick = object : ItemClick {
-            override fun onItemClick(itemView: View, data: Item) {
+            override fun onItemClick(itemView: View, data: RSSItem) {
                 val intent = Intent(context, DetailActivity::class.java)
-                intent.putExtra("url", data.link)
+                intent.putExtra("title", data.title)
+                intent.putExtra("author", data.author)
+                intent.putExtra("pubDate", data.pubDate)
+                intent.putExtra("link", data.link)
+                intent.putExtra("description", data.description)
                 startActivity(intent)
             }
         }
@@ -82,7 +90,7 @@ class MainActivity : AppCompatActivity() {
                 Log.d(TAG, "getRSSData: $rssData")
 
                 runOnUiThread { //更新列表
-                    viewAdapter.dataList = rssData?.items!!
+                    viewAdapter.dataList = rssData
                     viewAdapter.notifyDataSetChanged()
                 }
             } catch (e: Exception) {
@@ -96,44 +104,46 @@ class MainActivity : AppCompatActivity() {
     /**
      * 解析RSS数据
      */
-    private fun parseRSSData(data: InputStream): Channel? {
-        var channel: Channel? = null
+    private fun parseRSSData(data: InputStream): MutableList<RSSItem> {
+        val dataList = mutableListOf<RSSItem>()
         data.use {
             val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
             val jsonObject = xmlToJson.toJson()
             val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
             val jsonArray = channelJsonObject?.optJSONArray("item")
-            val items = mutableListOf<Item>()
+
+            val channelTitle = channelJsonObject?.optString("title")
+            val channelLink = channelJsonObject?.optString("link")
+            val channelDescription = channelJsonObject?.optString("description")
+            val channelManagingEditor = channelJsonObject?.optString("managingEditor")
+
             if (jsonArray != null) {
                 for (i in 0 until jsonArray.length()) {
                     val json = (jsonArray.get(i) as JSONObject)
-                    items.add(
-                        Item(
+                    dataList.add(
+                        RSSItem(
                             title = json.optString("title"),
                             link = json.optString("link"),
                             description = json.optString("description"),
                             author = json.optString("author"),
-                            pubDate = json.optString("pubDate")
+                            pubDate = Date(json.optString("pubDate")).time,
+                            channelTitle = channelTitle,
+                            channelLink = channelLink,
+                            channelDescription = channelDescription,
+                            channelManagingEditor = channelManagingEditor,
                         )
                     )
                 }
             }
-            channel = Channel(
-                title = channelJsonObject?.optString("title"),
-                link = channelJsonObject?.optString("link"),
-                description = channelJsonObject?.optString("description"),
-                pubDate = channelJsonObject?.optString("pubDate"),
-                items = items
-            )
         }
-        return channel
+        return dataList
     }
 
     //endregion
 
     class MyAdapter : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
-        var dataList: List<Item> = mutableListOf()
+        var dataList: List<RSSItem> = mutableListOf()
         var itemClick: ItemClick? = null
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -147,8 +157,7 @@ class MainActivity : AppCompatActivity() {
             holder.author.text = dataList[position].author
 
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss",Locale.CHINESE)
-            var date = Date(dataList[position].pubDate)
-            date = Date(date.time + 8 * 60 * 60 * 1000)//加8小时
+            val date = dataList[position].pubDate?.plus(8 * 60 * 60 * 1000)?.let { Date(it) }//加8小时
             holder.date.text = simpleDateFormat.format(date)
             holder.itemView.tag = position
         }
@@ -171,27 +180,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     interface ItemClick {
-        fun onItemClick(itemView: View, data: Item)
+        fun onItemClick(itemView: View, data: RSSItem)
     }
 
-    // region 数据类
-    /**
-     * 数据类
-     */
-    data class Channel(
-        val title: String?,
-        val link: String?,
-        val description: String?,
-        val pubDate: String?,
-        val items: List<Item>?
-    )
-
-    data class Item(
-        val title: String?,
-        val link: String?,
-        val description: String?,
-        val author: String?,
-        val pubDate: String?
-    )
-    // endregion
 }
