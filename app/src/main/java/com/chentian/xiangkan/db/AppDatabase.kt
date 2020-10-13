@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.data
+package com.chentian.xiangkan.db
 
 import androidx.room.Database
 import androidx.room.RoomDatabase

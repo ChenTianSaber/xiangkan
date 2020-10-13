@@ -1,15 +1,14 @@
-package com.chentian.xiangkan.data
+package com.chentian.xiangkan.db
 
 import androidx.room.Dao
-import androidx.room.Entity
 import androidx.room.Insert
 import androidx.room.Query
 
 @Dao
 interface RSSItemDao {
     @Query("SELECT * FROM RSSItem")
-    fun getAll(): List<RSSItem>
+    fun getAll(): MutableList<RSSItem>
 
     @Insert
-    fun insertAll(rssItems: List<RSSItem>)
+    fun insertAll(rssItems: MutableList<RSSItem>)
 }

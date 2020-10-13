@@ -1,0 +1,113 @@
+package com.chentian.xiangkan
+
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import com.chentian.xiangkan.db.RSSItem
+import com.chentian.xiangkan.db.RSSItemDao
+import fr.arnaudguyon.xmltojsonlib.XmlToJson
+import kotlinx.coroutines.*
+import org.json.JSONObject
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.*
+
+class RSSRepository constructor(
+    private val rssItemDao: RSSItemDao
+) {
+
+    companion object{
+        const val TAG = "RSSRepository"
+    }
+
+    /**
+     * 获取RSS数据
+     */
+    fun getRSSData(): LiveData<MutableList<RSSItem>> {
+        val rssData = MutableLiveData<MutableList<RSSItem>>()
+        GlobalScope.launch(Dispatchers.IO) {
+            requestRSSDate()
+            rssData.postValue(getRSSDateFromDB())
+        }
+        Log.d(TAG, "return rssData")
+        return rssData
+    }
+
+    /**
+     * 请求web数据
+     */
+    private fun requestRSSDate() {
+        var connection: HttpURLConnection? = null
+        try {
+            val url = URL("https://sspai.com/feed")
+            connection = url.openConnection() as HttpURLConnection
+            //设置请求方法
+            connection.requestMethod = "GET"
+            //设置连接超时时间（毫秒）
+            connection.connectTimeout = 5000
+            //设置读取超时时间（毫秒）
+            connection.readTimeout = 5000
+
+            //返回输入流
+            val inputStream: InputStream = connection.inputStream
+
+            //解析xml数据
+            val rssData = parseRSSData(inputStream)
+            Log.d(TAG, "requestRSSDate: $rssData size --> ${rssData.size}")
+            rssItemDao.insertAll(rssData)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection?.disconnect()
+        }
+    }
+
+    /**
+     * 从数据库获取数据
+     */
+    private fun getRSSDateFromDB() : MutableList<RSSItem>{
+        val rssData = rssItemDao.getAll()
+        Log.d(TAG, "getRSSDateFromDB: $rssData size --> ${rssData.size}")
+        return rssData
+    }
+
+    /**
+     * 解析RSS数据
+     */
+    private fun parseRSSData(data: InputStream): MutableList<RSSItem> {
+        val dataList = mutableListOf<RSSItem>()
+        data.use {
+            val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
+            val jsonObject = xmlToJson.toJson()
+            val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
+            val jsonArray = channelJsonObject?.optJSONArray("item")
+
+            val channelTitle = channelJsonObject?.optString("title")
+            val channelLink = channelJsonObject?.optString("link")
+            val channelDescription = channelJsonObject?.optString("description")
+            val channelManagingEditor = channelJsonObject?.optString("managingEditor")
+
+            if (jsonArray != null) {
+                for (i in 0 until jsonArray.length()) {
+                    val json = (jsonArray.get(i) as JSONObject)
+                    dataList.add(
+                        RSSItem(
+                            title = json.optString("title"),
+                            link = json.optString("link"),
+                            description = json.optString("description"),
+                            author = json.optString("author"),
+                            pubDate = Date(json.optString("pubDate")).time,
+                            channelTitle = channelTitle,
+                            channelLink = channelLink,
+                            channelDescription = channelDescription,
+                            channelManagingEditor = channelManagingEditor,
+                        )
+                    )
+                }
+            }
+        }
+        return dataList
+    }
+
+}
