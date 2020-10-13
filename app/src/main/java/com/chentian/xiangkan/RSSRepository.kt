@@ -27,7 +27,9 @@ class RSSRepository constructor(
     fun getRSSData(): LiveData<MutableList<RSSItem>> {
         val rssData = MutableLiveData<MutableList<RSSItem>>()
         GlobalScope.launch(Dispatchers.IO) {
-            requestRSSDate()
+            if(getRSSDateFromDB().isNullOrEmpty()){
+                requestRSSDate()
+            }
             rssData.postValue(getRSSDateFromDB())
         }
         Log.d(TAG, "return rssData")
@@ -54,7 +56,7 @@ class RSSRepository constructor(
 
             //解析xml数据
             val rssData = parseRSSData(inputStream)
-            Log.d(TAG, "requestRSSDate: $rssData size --> ${rssData.size}")
+            Log.d(TAG, "requestRSSDate: size --> ${rssData.size}")
             rssItemDao.insertAll(rssData)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -68,7 +70,7 @@ class RSSRepository constructor(
      */
     private fun getRSSDateFromDB() : MutableList<RSSItem>{
         val rssData = rssItemDao.getAll()
-        Log.d(TAG, "getRSSDateFromDB: $rssData size --> ${rssData.size}")
+        Log.d(TAG, "getRSSDateFromDB: size --> ${rssData.size}")
         return rssData
     }
 
