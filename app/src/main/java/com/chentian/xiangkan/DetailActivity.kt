@@ -1,6 +1,7 @@
 package com.chentian.xiangkan
 
 import android.annotation.SuppressLint
+import android.content.ClipDescription
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -21,7 +22,6 @@ class DetailActivity : AppCompatActivity() {
         private const val TAG = "DetailActivity"
     }
 
-//    private lateinit var contentTextView: TextView
     private lateinit var webView: WebView
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -37,52 +37,40 @@ class DetailActivity : AppCompatActivity() {
         val link:String = intent.extras?.get("link") as String
         val description:String = intent.extras?.get("description") as String
 
-//        contentTextView = findViewById(R.id.content)
-
-//        val imgGetter = ImageGetter { source ->
-//            var drawable: Drawable? = null
-////            val url: URL
-////            try {
-////                url = URL(source)
-////                drawable = Drawable.createFromStream(url.openStream(), "")
-////            } catch (e: Exception) {
-////                Log.e(TAG, "imgGetter Exception --> $e")
-////                return@ImageGetter null
-////            }
-//            drawable = resources.getDrawable(R.mipmap.ic_launcher)
-//            drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-//            drawable
-//        }
-//
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-//            contentTextView.text = Html.fromHtml(description, Html.FROM_HTML_OPTION_USE_CSS_COLORS,imgGetter,null)
-//        }else{
-//            contentTextView.text = Html.fromHtml(description,imgGetter,null)
-//        }
-
-        val html = """
-            <!DOCTYPE html>
-            <html lang="en" id="html">
-            <head>
-              <meta charset="utf-8">
-              <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-              <meta name="fragment" content="!">
-              <link rel="stylesheet" href="https://cdn.sspai.com/static/neo/element-ui@2.4.5.css">
-              <link rel="stylesheet" href="https://post.sspai.com/sspai-ui@1.17.4/sspai-ui.css">
-              <link rel="stylesheet" href="https://cdn.sspai.com/static/js/lightgallery@1.1.3/css/lightgallery.min.css">
-            </head>
-            <body id="appBody">
-                $description
-            </body>
-            </html>
-        """
+        val html = buildSSPaiHtml(description)
 
         webView = findViewById(R.id.web_view)
         webView.settings.javaScriptEnabled = true
-//        webView.loadData(description,"text/html", "UTF-8")
-        webView.loadData(html,"text/html", "UTF-8")
-
+        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
     }
 
+    /**
+     * 构造少数派的Html，加载对应CSS样式
+     */
+    private fun buildSSPaiHtml(description: String): String {
+        return """
+            <!DOCTYPE html>
+                <html lang="en" id="html" class="">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+                    <link rel="stylesheet" href="sspai-ui.css" type="text/css">
+                </head>
+                <body id="appBody">
+                    <div data-v-450436a6="" data-v-5d84cf38="" class="article-detail">
+                        <article data-v-450436a6="" class="normal-article">
+                            <div data-v-b5fe1ab0="" data-v-450436a6="" id="" class="article-body">
+                                <div data-v-b5fe1ab0="" class="articleWidth-content">
+                                    <div data-v-b5fe1ab0="" class="content wangEditor-txt">
+                                        $description
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </body>
+            </html>
+        """
+    }
 
 }
