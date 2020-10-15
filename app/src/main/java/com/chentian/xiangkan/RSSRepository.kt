@@ -17,8 +17,9 @@ class RSSRepository constructor(
     private val rssItemDao: RSSItemDao
 ) {
 
-    companion object{
+    companion object {
         const val TAG = "RSSRepository"
+        var lastestPubDate: Long = -1
     }
 
     /**
@@ -27,9 +28,8 @@ class RSSRepository constructor(
     fun getRSSData(): LiveData<MutableList<RSSItem>> {
         val rssData = MutableLiveData<MutableList<RSSItem>>()
         GlobalScope.launch(Dispatchers.IO) {
-            if(getRSSDateFromDB().isNullOrEmpty()){
-                requestRSSDate()
-            }
+            // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
+            requestRSSDate()
             rssData.postValue(getRSSDateFromDB())
         }
         Log.d(TAG, "return rssData")
@@ -57,7 +57,7 @@ class RSSRepository constructor(
             //解析xml数据
             val rssData = parseRSSData(inputStream)
             Log.d(TAG, "requestRSSDate: size --> ${rssData.size}")
-            rssItemDao.insertAll(rssData)
+            insertDB(rssData)
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
@@ -66,10 +66,30 @@ class RSSRepository constructor(
     }
 
     /**
+     * 对比数据，然后存储数据库
+     */
+    private fun insertDB(rssData: MutableList<RSSItem>){
+        if(lastestPubDate < 0 || rssData[rssData.lastIndex].pubDate!! > lastestPubDate){
+            // 说明数据库没有数据，或者Web数据最老的数据也比目前的数据新，那就直接插入
+            rssItemDao.insertAll(rssData)
+        }else {
+            // 对比数据
+            for(rssItem in rssData){
+                if(rssItem.pubDate!! <= lastestPubDate){
+                    break
+                }
+                rssItemDao.insertItem(rssItem)
+            }
+        }
+        Log.d(TAG, "insertDB: rssData[0].pubDate --> ${rssData[0].pubDate}")
+        lastestPubDate = rssData[0].pubDate ?: lastestPubDate
+    }
+
+    /**
      * 从数据库获取数据
      */
     private fun getRSSDateFromDB() : MutableList<RSSItem>{
-        val rssData = rssItemDao.getAll()
+        val rssData = rssItemDao.getAllOrderByPubDate()
         Log.d(TAG, "getRSSDateFromDB: size --> ${rssData.size}")
         return rssData
     }

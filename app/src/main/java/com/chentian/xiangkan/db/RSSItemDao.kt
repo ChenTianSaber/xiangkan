@@ -9,6 +9,12 @@ interface RSSItemDao {
     @Query("SELECT * FROM RSSItem")
     fun getAll(): MutableList<RSSItem>
 
+    @Query("SELECT * FROM RSSItem ORDER BY pubDate DESC")
+    fun getAllOrderByPubDate(): MutableList<RSSItem>
+
     @Insert
     fun insertAll(rssItems: MutableList<RSSItem>)
+
+    @Insert
+    fun insertItem(vararg rssItem: RSSItem)
 }
