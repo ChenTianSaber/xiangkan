@@ -17,12 +17,12 @@
                 android:background="@color/white_1">
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginEnd="24dp"
-                    android:text="本月新游前瞻：博德之门 3、幽灵行者、看门狗：军团等｜Markon Review"
+                    tools:text="本月新游前瞻：博德之门 3、幽灵行者、看门狗：军团等｜Markon Review"
                     android:textColor="@color/black_0"
                     android:textSize="18sp"
                     android:textStyle="bold"
@@ -32,28 +32,28 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/textView4"
+                    android:id="@+id/author"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="16dp"
-                    android:text="陈添"
+                    tools:text="陈添"
                     android:textColor="@color/black_0"
                     android:textSize="12sp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
 
                 <TextView
-                    android:id="@+id/textView3"
+                    android:id="@+id/pubDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:layout_marginEnd="24dp"
                     android:textColor="@color/gray_1"
                     android:textSize="12sp"
-                    android:text="2020.10.01 16:08"
+                    tools:text="2020.10.01 16:08"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                    app:layout_constraintTop_toBottomOf="@+id/title" />
 
                 <WebView
                     android:id="@+id/web_view"
@@ -62,7 +62,7 @@
                     android:layout_marginTop="24dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                    app:layout_constraintTop_toBottomOf="@+id/author" />
 
 
             </androidx.constraintlayout.widget.ConstraintLayout>

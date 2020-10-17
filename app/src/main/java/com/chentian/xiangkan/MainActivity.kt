@@ -8,12 +8,12 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.db.RSSItem
-import com.chentian.xiangkan.db.RSSItemDao
 import com.githang.statusbar.StatusBarCompat
 
 class MainActivity : AppCompatActivity() {

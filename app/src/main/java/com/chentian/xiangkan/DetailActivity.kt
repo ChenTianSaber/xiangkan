@@ -14,6 +14,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.githang.statusbar.StatusBarCompat
 import java.net.URL
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class DetailActivity : AppCompatActivity() {
@@ -22,7 +24,19 @@ class DetailActivity : AppCompatActivity() {
         private const val TAG = "DetailActivity"
     }
 
+    // region field
     private lateinit var webView: WebView
+    private lateinit var titleTextView: TextView
+    private lateinit var authorTextView: TextView
+    private lateinit var pubDateTextView: TextView
+
+    private var html = ""
+    private var title = ""
+    private var author = ""
+    private var pubDate = 0L
+    private var link = ""
+    private var description = ""
+    // endregion
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,15 +45,34 @@ class DetailActivity : AppCompatActivity() {
         setContentView(R.layout.activity_detail)
         StatusBarCompat.setStatusBarColor(this, Color.WHITE, true)
 
-        val title:String = intent.extras?.get("title") as String
-        val author:String = intent.extras?.get("author") as String
-        val pubDate:Long = intent.extras?.get("pubDate") as Long
-        val link:String = intent.extras?.get("link") as String
-        val description:String = intent.extras?.get("description") as String
+        initData()
+        initView()
+    }
 
-        val html = buildSSPaiHtml(description)
+    private fun initData(){
+        title = intent.extras?.get("title") as String
+        author = intent.extras?.get("author") as String
+        pubDate = intent.extras?.get("pubDate") as Long
+        link = intent.extras?.get("link") as String
+        description = intent.extras?.get("description") as String
 
+        html = buildSSPaiHtml(description)
+    }
+
+    @SuppressLint("SetJavaScriptEnabled")
+    private fun initView(){
+        titleTextView = findViewById(R.id.title)
+        authorTextView = findViewById(R.id.author)
+        pubDateTextView = findViewById(R.id.pubDate)
         webView = findViewById(R.id.web_view)
+
+        titleTextView.text = title
+        authorTextView.text = author
+
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
+        val date = Date(pubDate.plus(8 * 60 * 60 * 1000))//加8小时
+        pubDateTextView.text = simpleDateFormat.format(date)
+
         webView.settings.javaScriptEnabled = true
         webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
     }
