@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.db.RSSItemDao
+import com.chentian.xiangkan.utils.RSSInfoUtils
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.*
 import org.json.JSONObject
@@ -42,7 +43,7 @@ class RSSRepository constructor(
     private fun requestRSSDate() {
         var connection: HttpURLConnection? = null
         try {
-            val url = URL("https://sspai.com/feed")
+            val url = URL(RSSInfoUtils.RSSLinkList[0].link)
             connection = url.openConnection() as HttpURLConnection
             //设置请求方法
             connection.requestMethod = "GET"
