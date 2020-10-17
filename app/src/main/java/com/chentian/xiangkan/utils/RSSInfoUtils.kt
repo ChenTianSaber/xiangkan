@@ -43,6 +43,7 @@ object RSSInfoUtils {
     fun getRSSIcon(channelLink:String): Int {
         return when(channelLink){
             "https://sspai.com" -> R.mipmap.icon_sspai
+            "https://www.gcores.com" -> R.mipmap.icon_jihe
             else -> R.mipmap.ic_launcher
         }
     }

@@ -29,8 +29,9 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.MyViewHolder>
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        holder.name.text = dataList[0].name
-        holder.state.setImageResource(if(dataList[0].state) R.mipmap.icon_sspai else R.mipmap.icon_round)
+        holder.name.text = dataList[position].name
+        holder.state.setImageResource(if(dataList[position].state) R.mipmap.icon_sspai else R.mipmap.icon_round)
+        holder.itemView.tag = position
     }
 
     override fun getItemCount(): Int {
@@ -40,7 +41,8 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.MyViewHolder>
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {
-                dataList[0].state = !dataList[0].state
+                val position = itemView.tag as Int
+                dataList[position].state = !dataList[position].state
 //                Log.d(TAG, "itemView.setOnClickListener: ${RSSInfoUtils.RSSLinkList}")
                 notifyDataSetChanged()
             }
