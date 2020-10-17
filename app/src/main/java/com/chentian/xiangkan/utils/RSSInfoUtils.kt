@@ -8,7 +8,7 @@ object RSSInfoUtils {
     /**
      * 已订阅的RSS地址
      */
-    var RSSLinkList = mutableListOf<RSSManagerInfo>(
+    var RSSLinkList = mutableListOf(
         RSSManagerInfo(
             link = "https://sspai.com/feed",
             name = "少数派",
@@ -24,7 +24,15 @@ object RSSInfoUtils {
             channelLink = "https://www.gcores.com",
             state = false,
             showWeb = true
-        )
+        ),
+        RSSManagerInfo(
+            link = "https://www.zhihu.com/rss",
+            name = "知乎每日精选",
+            description = "中文互联网最大的知识平台，帮助人们便捷地分享彼此的知识、经验和见解。",
+            channelLink = "http://www.zhihu.com",
+            state = false,
+            showWeb = true
+        ),
     )
 
     /**
@@ -44,6 +52,7 @@ object RSSInfoUtils {
         return when(channelLink){
             "https://sspai.com" -> R.mipmap.icon_sspai
             "https://www.gcores.com" -> R.mipmap.icon_jihe
+            "http://www.zhihu.com" -> R.mipmap.icon_zhihu
             else -> R.mipmap.ic_launcher
         }
     }

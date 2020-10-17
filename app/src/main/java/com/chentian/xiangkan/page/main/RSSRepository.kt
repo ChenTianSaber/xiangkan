@@ -110,6 +110,19 @@ class RSSRepository constructor(
      */
     private fun parseRSSData(data: InputStream): MutableList<RSSItem> {
         val dataList = mutableListOf<RSSItem>()
+
+        /**
+         * 提取作者的信息，一般都是author，但是知乎这边是dc:creator
+         */
+        fun getAuthor(json:JSONObject):String{
+            var author = json.optString("author")
+            if(author.isNullOrEmpty()){
+                author = json.optJSONObject("dc:creator").optString("content")
+            }
+            Log.d(TAG, "getAuthor: $author")
+            return author
+        }
+
         data.use {
             val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
             val jsonObject = xmlToJson.toJson()
@@ -129,7 +142,7 @@ class RSSRepository constructor(
                             title = json.optString("title"),
                             link = json.optString("link"),
                             description = json.optString("description"),
-                            author = json.optString("author"),
+                            author = getAuthor(json),
                             pubDate = Date(json.optString("pubDate")).time,
                             channelTitle = channelTitle,
                             channelLink = channelLink,

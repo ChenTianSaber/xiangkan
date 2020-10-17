@@ -3,11 +3,13 @@ package com.chentian.xiangkan.page.detail
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.chentian.xiangkan.R
@@ -28,12 +30,14 @@ class DetailActivity : AppCompatActivity() {
     private lateinit var titleTextView: TextView
     private lateinit var authorTextView: TextView
     private lateinit var pubDateTextView: TextView
+    private lateinit var scrollView: ScrollView
 
     private var html = ""
     private var title = ""
     private var author = ""
     private var pubDate = 0L
     private var link = ""
+    private var channelLink = ""
     private var description = ""
     private var showWeb = true //直接展示原始网页
     // endregion
@@ -54,10 +58,11 @@ class DetailActivity : AppCompatActivity() {
         author = intent.extras?.get("author") as String
         pubDate = intent.extras?.get("pubDate") as Long
         link = intent.extras?.get("link") as String
+        channelLink = intent.extras?.get("channelLink") as String
         description = intent.extras?.get("description") as String
         showWeb = intent.extras?.get("showWeb") as Boolean
 
-        html = buildSSPaiHtml(description)
+        html = buildHtml(description)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -65,7 +70,7 @@ class DetailActivity : AppCompatActivity() {
         titleTextView = findViewById(R.id.title)
         authorTextView = findViewById(R.id.author)
         pubDateTextView = findViewById(R.id.pubDate)
-        webView = findViewById(R.id.web_view)
+        scrollView = findViewById(R.id.scroll_view)
 
         titleTextView.text = title
         authorTextView.text = author
@@ -74,22 +79,38 @@ class DetailActivity : AppCompatActivity() {
         val date = Date(pubDate.plus(8 * 60 * 60 * 1000))//加8小时
         pubDateTextView.text = simpleDateFormat.format(date)
 
+        if(showWeb){
+            //如果是直接展示网页的话，那么把scrollView隐藏掉，把下面的全屏webView放出来
+            scrollView.visibility = View.GONE
+            webView = findViewById(R.id.full_web_view)
+            webView.visibility = View.VISIBLE
+            webView.loadUrl(link)
+        }else{
+            webView = findViewById(R.id.web_view)
+            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
+        }
+
         webView.settings.javaScriptEnabled = true
         webView.webViewClient = object : WebViewClient(){
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
+                Log.d(TAG, "shouldOverrideUrlLoading: ${request?.url}")
+                if(request?.url.toString().startsWith("zhihu://")){
+                    return true
+                }
                 return super.shouldOverrideUrlLoading(view, request)
             }
         }
-        if(showWeb){
-            titleTextView.visibility = View.GONE
-            authorTextView.visibility = View.GONE
-            pubDateTextView.visibility = View.GONE
-            webView.loadUrl(link)
-        }else{
-            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
+
+    }
+
+    private fun buildHtml(description: String):String{
+        return when(channelLink){
+            "https://sspai.com" -> buildSSPaiHtml(description)
+            "http://www.zhihu.com" -> buildZhiHuHtml(description)
+            else -> description
         }
     }
 
@@ -118,6 +139,37 @@ class DetailActivity : AppCompatActivity() {
                         </article>
                     </div>
                 </body>
+            </html>
+        """
+    }
+
+    /**
+     * 构造知乎每日精选的Html，加载对应CSS样式
+     */
+    private fun buildZhiHuHtml(description: String): String {
+        return """
+            <!DOCTYPE html>
+            <html lang="zh" data-ios="true" data-theme="light" data-react-helmet="data-theme">
+            
+            <head>
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+              <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+              <link rel="stylesheet" href="zhihu.css" type="text/css">
+            </head>
+            
+            <body>
+              <div class="Card AnswerCard">
+                <div class="QuestionAnswer-content" tabindex="0">
+                  <div class="RichContent RichContent--unescapable">
+                    <div class="RichContent-inner"><span class="RichText ztext CopyrightRichText-richText" itemprop="text">
+                      $description
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </body>
+            
             </html>
         """
     }
