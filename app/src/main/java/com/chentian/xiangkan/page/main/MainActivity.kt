@@ -18,7 +18,9 @@ import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.page.detail.DetailActivity
 import com.chentian.xiangkan.page.manager.ManagerActivity
+import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.githang.statusbar.StatusBarCompat
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
 
@@ -78,8 +80,9 @@ class MainActivity : AppCompatActivity() {
         // 获取最新的时间
         sharedPreferences = getSharedPreferences("rss_info", MODE_PRIVATE)
         editor = sharedPreferences.edit()
-        RSSRepository.lastestPubDate = sharedPreferences.getLong("lastestPubDate",-1)
-        Log.d(TAG, "initData RSSRepository.lastestPubDate ---> ${RSSRepository.lastestPubDate}")
+        val latestPubDateStr = sharedPreferences.getString("latestPubDateMap","{}")
+        Log.d(TAG, "initData latestPubDateStr ---> $latestPubDateStr")
+        parseStringToMap(latestPubDateStr!!)
 
         val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
         rssViewModel = RSSViewModel(
@@ -91,12 +94,22 @@ class MainActivity : AppCompatActivity() {
 //            Log.d(TAG, "onCreate: rssViewModel.rssItemList.observe $it")
             viewAdapter.dataList = it
             viewAdapter.notifyDataSetChanged()
-            // 这个时候lastestPubDate更新了，记下最新的时间
-            editor.putLong("lastestPubDate",
-                RSSRepository.lastestPubDate
-            )
+            // 这个时候lastestPubDateMap更新了，记下最新的时间
+            Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}")
+            editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
             editor.commit()
         }
+    }
+
+    private fun parseStringToMap(pubDateMapString:String){
+        if(pubDateMapString == "{}") return
+        val string = pubDateMapString.substring(1,pubDateMapString.length - 1)
+        val list = string.trim().split(",")
+        for(str in list){
+            val mapList = str.trim().split("=")
+            RSSRepository.latestPubDateMap[mapList[0]] = mapList[1].toLong()
+        }
+        Log.d(TAG, "parseStringToMap ---> ${RSSRepository.latestPubDateMap}")
     }
 
     interface ItemClick {

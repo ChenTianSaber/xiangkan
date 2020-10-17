@@ -3,8 +3,11 @@ package com.chentian.xiangkan.page.detail
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.view.View
 import android.view.Window
+import android.webkit.WebResourceRequest
 import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.chentian.xiangkan.R
@@ -31,6 +34,7 @@ class DetailActivity : AppCompatActivity() {
     private var pubDate = 0L
     private var link = ""
     private var description = ""
+    private var showWeb = true //直接展示原始网页
     // endregion
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -69,7 +73,22 @@ class DetailActivity : AppCompatActivity() {
         pubDateTextView.text = simpleDateFormat.format(date)
 
         webView.settings.javaScriptEnabled = true
-        webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
+        webView.webViewClient = object : WebViewClient(){
+            override fun shouldOverrideUrlLoading(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): Boolean {
+                return super.shouldOverrideUrlLoading(view, request)
+            }
+        }
+        if(showWeb){
+            titleTextView.visibility = View.GONE
+            authorTextView.visibility = View.GONE
+            pubDateTextView.visibility = View.GONE
+            webView.loadUrl(link)
+        }else{
+            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
+        }
     }
 
     /**

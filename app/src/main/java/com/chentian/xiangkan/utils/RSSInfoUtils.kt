@@ -14,7 +14,16 @@ object RSSInfoUtils {
             name = "少数派",
             description = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
             webUrl = "https://sspai.com",
-            state = false
+            state = false,
+            showWeb = false
+        ),
+        RSSManagerInfo(
+            link = "https://www.gcores.com/rss",
+            name = "机核",
+            description = "不止是游戏",
+            webUrl = "https://www.gcores.com",
+            state = false,
+            showWeb = true
         )
     )
 

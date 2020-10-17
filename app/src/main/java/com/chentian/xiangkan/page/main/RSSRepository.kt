@@ -20,7 +20,7 @@ class RSSRepository constructor(
 
     companion object {
         const val TAG = "RSSRepository"
-        var lastestPubDate: Long = -1
+        var latestPubDateMap = mutableMapOf<String,Long>() // <link,time> 通过link来获取最新的更新时间
     }
 
     /**
@@ -30,7 +30,10 @@ class RSSRepository constructor(
         val rssData = MutableLiveData<MutableList<RSSItem>>()
         GlobalScope.launch(Dispatchers.IO) {
             // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
-            requestRSSDate()
+            // web数据会有多个订阅源，所有源都请求结束后再获取数据
+            for(rssManagerInfo in RSSInfoUtils.RSSLinkList){
+                requestRSSDate(rssManagerInfo.link)
+            }
             rssData.postValue(getRSSDateFromDB())
         }
         Log.d(TAG, "return rssData")
@@ -40,10 +43,10 @@ class RSSRepository constructor(
     /**
      * 请求web数据
      */
-    private fun requestRSSDate() {
+    private fun requestRSSDate(link:String) {
         var connection: HttpURLConnection? = null
         try {
-            val url = URL(RSSInfoUtils.RSSLinkList[0].link)
+            val url = URL(link)
             connection = url.openConnection() as HttpURLConnection
             //设置请求方法
             connection.requestMethod = "GET"
@@ -70,20 +73,27 @@ class RSSRepository constructor(
      * 对比数据，然后存储数据库
      */
     private fun insertDB(rssData: MutableList<RSSItem>){
-        if(lastestPubDate < 0 || rssData[rssData.lastIndex].pubDate!! > lastestPubDate){
-            // 说明数据库没有数据，或者Web数据最老的数据也比目前的数据新，那就直接插入
+        if(rssData.isNullOrEmpty()){
+            return
+        }
+        var pubDate = latestPubDateMap[rssData[0].channelLink] ?: -1
+        if(latestPubDateMap.isNullOrEmpty() || pubDate == -1L
+            || rssData[rssData.lastIndex].pubDate!! > pubDate){
+            // 说明还没有数据，或者Web数据最老的数据也比目前的数据新，那就直接插入
             rssItemDao.insertAll(rssData)
         }else {
             // 对比数据
             for(rssItem in rssData){
-                if(rssItem.pubDate!! <= lastestPubDate){
+                if(rssItem.pubDate!! <= pubDate){
                     break
                 }
                 rssItemDao.insertItem(rssItem)
             }
         }
         Log.d(TAG, "insertDB: rssData[0].pubDate --> ${rssData[0].pubDate}")
-        lastestPubDate = rssData[0].pubDate ?: lastestPubDate
+        pubDate = rssData[0].pubDate ?: pubDate
+        // 更新最后时间
+        latestPubDateMap[rssData[0].channelLink ?: ""] = pubDate
     }
 
     /**

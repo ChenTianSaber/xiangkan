@@ -8,5 +8,6 @@ data class RSSManagerInfo(
     val name:String,
     val description: String,
     val webUrl:String,
-    var state:Boolean
+    var state:Boolean,
+    var showWeb:Boolean //是否默认直接展示网页
 )
