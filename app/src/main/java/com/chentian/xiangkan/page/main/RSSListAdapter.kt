@@ -1,10 +1,13 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.page.main
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.chentian.xiangkan.R
+import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.chentian.xiangkan.db.RSSItem
 import java.text.SimpleDateFormat
 import java.util.*
@@ -28,6 +31,11 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
         val date = dataList[position].pubDate?.plus(8 * 60 * 60 * 1000)?.let { Date(it) }//加8小时
         holder.date.text = simpleDateFormat.format(date)
         holder.itemView.tag = position
+        dataList[position].channelLink?.let {
+            RSSInfoUtils.getRSSIcon(it)
+        }?.let {
+            holder.icon.setImageResource(it)
+        }
     }
 
     override fun getItemCount(): Int {
@@ -44,5 +52,6 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
         val title: TextView = itemView.findViewById(R.id.title)
         val author: TextView = itemView.findViewById(R.id.author)
         val date: TextView = itemView.findViewById(R.id.date)
+        val icon: ImageView = itemView.findViewById(R.id.icon)
     }
 }

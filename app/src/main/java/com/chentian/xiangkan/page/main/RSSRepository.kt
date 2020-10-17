@@ -1,4 +1,4 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.page.main
 
 import android.util.Log
 import androidx.lifecycle.LiveData

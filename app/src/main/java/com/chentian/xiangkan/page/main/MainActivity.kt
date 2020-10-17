@@ -1,4 +1,4 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.page.main
 
 import android.content.Context
 import android.content.Intent
@@ -7,13 +7,17 @@ import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import com.chentian.xiangkan.*
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.db.RSSItem
+import com.chentian.xiangkan.page.detail.DetailActivity
+import com.chentian.xiangkan.page.manager.ManagerActivity
 import com.githang.statusbar.StatusBarCompat
 
 class MainActivity : AppCompatActivity() {
@@ -24,11 +28,12 @@ class MainActivity : AppCompatActivity() {
 
     // region field
     private lateinit var recyclerView: RecyclerView
+    private lateinit var addImageView: ImageView
+
     private lateinit var viewAdapter: RSSListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
-
     private val context: Context = this
-    private lateinit var rssViewModel:RSSViewModel
+    private lateinit var rssViewModel: RSSViewModel
     private lateinit var sharedPreferences:SharedPreferences
     private lateinit var editor:SharedPreferences.Editor
     // endregion
@@ -51,7 +56,8 @@ class MainActivity : AppCompatActivity() {
             layoutManager = viewManager
             adapter = viewAdapter
         }
-        viewAdapter.itemClick = object : ItemClick {
+        viewAdapter.itemClick = object :
+            ItemClick {
             override fun onItemClick(itemView: View, data: RSSItem) {
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("title", data.title)
@@ -61,6 +67,10 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("description", data.description)
                 startActivity(intent)
             }
+        }
+        addImageView = findViewById(R.id.add)
+        addImageView.setOnClickListener {
+            startActivity(Intent(this, ManagerActivity::class.java))
         }
     }
 
@@ -72,7 +82,9 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "initData RSSRepository.lastestPubDate ---> ${RSSRepository.lastestPubDate}")
 
         val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
-        rssViewModel = RSSViewModel(RSSRepository(db.rssItemDao()))
+        rssViewModel = RSSViewModel(
+            RSSRepository(db.rssItemDao())
+        )
         //观察数据
         rssViewModel.rssItemList.observe(this){
             // 更新
@@ -80,7 +92,9 @@ class MainActivity : AppCompatActivity() {
             viewAdapter.dataList = it
             viewAdapter.notifyDataSetChanged()
             // 这个时候lastestPubDate更新了，记下最新的时间
-            editor.putLong("lastestPubDate",RSSRepository.lastestPubDate)
+            editor.putLong("lastestPubDate",
+                RSSRepository.lastestPubDate
+            )
             editor.commit()
         }
     }

@@ -1,8 +1,9 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.page.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import com.chentian.xiangkan.db.RSSItem
+import com.chentian.xiangkan.page.main.RSSRepository
 
 class RSSViewModel(
     rssRepository: RSSRepository

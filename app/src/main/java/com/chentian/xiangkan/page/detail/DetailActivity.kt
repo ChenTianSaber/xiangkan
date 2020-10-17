@@ -1,19 +1,14 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.page.detail
 
 import android.annotation.SuppressLint
-import android.content.ClipDescription
 import android.graphics.Color
-import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.Html
-import android.text.Html.ImageGetter
-import android.util.Log
 import android.view.Window
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.chentian.xiangkan.R
 import com.githang.statusbar.StatusBarCompat
-import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
 
