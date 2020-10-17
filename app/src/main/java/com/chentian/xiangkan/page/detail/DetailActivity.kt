@@ -11,6 +11,7 @@ import android.webkit.WebViewClient
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.chentian.xiangkan.R
+import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.githang.statusbar.StatusBarCompat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,6 +55,7 @@ class DetailActivity : AppCompatActivity() {
         pubDate = intent.extras?.get("pubDate") as Long
         link = intent.extras?.get("link") as String
         description = intent.extras?.get("description") as String
+        showWeb = intent.extras?.get("showWeb") as Boolean
 
         html = buildSSPaiHtml(description)
     }

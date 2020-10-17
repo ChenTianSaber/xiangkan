@@ -13,7 +13,7 @@ object RSSInfoUtils {
             link = "https://sspai.com/feed",
             name = "少数派",
             description = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
-            webUrl = "https://sspai.com",
+            channelLink = "https://sspai.com",
             state = false,
             showWeb = false
         ),
@@ -21,11 +21,21 @@ object RSSInfoUtils {
             link = "https://www.gcores.com/rss",
             name = "机核",
             description = "不止是游戏",
-            webUrl = "https://www.gcores.com",
+            channelLink = "https://www.gcores.com",
             state = false,
             showWeb = true
         )
     )
+
+    /**
+     * 根据channelLink判断是否需要展示网页
+     */
+    fun isShowWeb(channelLink: String):Boolean{
+        for(rssInfo in RSSLinkList){
+            if(rssInfo.channelLink == channelLink) return rssInfo.showWeb
+        }
+        return true
+    }
 
     /**
      * 根据channelLink返回不同的icon

@@ -67,6 +67,7 @@ class MainActivity : AppCompatActivity() {
                 intent.putExtra("pubDate", data.pubDate)
                 intent.putExtra("link", data.link)
                 intent.putExtra("description", data.description)
+                intent.putExtra("showWeb", RSSInfoUtils.isShowWeb(data.channelLink ?: ""))
                 startActivity(intent)
             }
         }
