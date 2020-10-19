@@ -13,6 +13,7 @@ import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.chentian.xiangkan.*
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.db.RSSItem
@@ -22,7 +23,7 @@ import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.githang.statusbar.StatusBarCompat
 import org.json.JSONObject
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
 
     companion object {
         private const val TAG = "MainActivity"
@@ -31,6 +32,7 @@ class MainActivity : AppCompatActivity() {
 
     // region field
     private lateinit var recyclerView: RecyclerView
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var addImageView: ImageView
 
     private lateinit var viewAdapter: RSSListAdapter
@@ -57,6 +59,8 @@ class MainActivity : AppCompatActivity() {
         viewManager = LinearLayoutManager(this)
         viewAdapter = RSSListAdapter()
         viewAdapter.context = this
+        swipeRefreshLayout = findViewById(R.id.swiperefresh)
+        swipeRefreshLayout.setOnRefreshListener(this)
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = viewManager
             adapter = viewAdapter
@@ -100,6 +104,7 @@ class MainActivity : AppCompatActivity() {
         rssViewModel.rssItemList.observe(this){
             // 更新
 //            Log.d(TAG, "onCreate: rssViewModel.rssItemList.observe $it")
+            swipeRefreshLayout.isRefreshing = false
             viewAdapter.dataList = it
             viewAdapter.notifyDataSetChanged()
             // 这个时候lastestPubDateMap更新了，记下最新的时间
@@ -126,6 +131,14 @@ class MainActivity : AppCompatActivity() {
 
     interface ItemClick {
         fun onItemClick(itemView: View, data: RSSItem)
+    }
+
+    /**
+     * 下拉刷新时回调
+     */
+    override fun onRefresh() {
+        Log.d(TAG, "onRefresh")
+        rssRepository.getRSSData()
     }
 
 }

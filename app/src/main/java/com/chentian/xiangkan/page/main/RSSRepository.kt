@@ -27,17 +27,17 @@ class RSSRepository constructor(
     companion object {
         const val TAG = "RSSRepository"
         var latestPubDateMap = mutableMapOf<String,Long>() // <link,time> 通过link来获取最新的更新时间
+        var rssData:MutableLiveData<MutableList<RSSItem>> = MutableLiveData<MutableList<RSSItem>>()
     }
 
     /**
      * 获取RSS数据
      */
-    fun getRSSData(): LiveData<MutableList<RSSItem>> {
-        val rssData = MutableLiveData<MutableList<RSSItem>>()
+    fun getRSSData(): MutableLiveData<MutableList<RSSItem>> {
         GlobalScope.launch(Dispatchers.IO) {
             // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
             // web数据会有多个订阅源，所有源都请求结束后再获取数据
-            for(rssManagerInfo in RSSInfoUtils.RSSLinkList){
+            for (rssManagerInfo in RSSInfoUtils.RSSLinkList) {
                 requestRSSDate(rssManagerInfo.link)
             }
             rssData.postValue(getRSSDateFromDB())
