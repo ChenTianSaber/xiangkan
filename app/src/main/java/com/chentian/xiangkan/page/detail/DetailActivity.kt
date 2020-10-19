@@ -110,8 +110,37 @@ class DetailActivity : AppCompatActivity() {
         return when(channelLink){
             "https://sspai.com" -> buildSSPaiHtml(description)
             "http://www.zhihu.com" -> buildZhiHuHtml(description)
-            else -> description
+            else -> buildNormalHtml(description)
         }
+    }
+
+    /**
+     * 构造普通的Html
+     */
+    private fun buildNormalHtml(description: String): String {
+        return """
+            <!DOCTYPE html>
+                <html lang="en" id="html" class="">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+                    <link rel="stylesheet" href="sspai-ui.css" type="text/css">
+                </head>
+                <body id="appBody">
+                    <div data-v-450436a6="" data-v-5d84cf38="" class="article-detail">
+                        <article data-v-450436a6="" class="normal-article">
+                            <div data-v-b5fe1ab0="" data-v-450436a6="" id="" class="article-body">
+                                <div data-v-b5fe1ab0="" class="articleWidth-content">
+                                    <div data-v-b5fe1ab0="" class="content wangEditor-txt">
+                                        $description
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </body>
+            </html>
+        """
     }
 
     /**

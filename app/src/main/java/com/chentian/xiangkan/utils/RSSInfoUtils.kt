@@ -33,6 +33,14 @@ object RSSInfoUtils {
             state = false,
             showWeb = true
         ),
+        RSSManagerInfo(
+            link = "https://rsshub.ioiox.com/bilibili/user/dynamic/14110780",
+            name = "凉风Kaze",
+            description = "凉风Kaze 的 bilibili 动态 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
+            channelLink = "https://space.bilibili.com/14110780/dynamic",
+            state = false,
+            showWeb = false
+        ),
     )
 
     /**
@@ -49,11 +57,16 @@ object RSSInfoUtils {
      * 根据channelLink返回不同的icon
      */
     fun getRSSIcon(channelLink:String): Int {
-        return when(channelLink){
-            "https://sspai.com" -> R.mipmap.icon_sspai
-            "https://www.gcores.com" -> R.mipmap.icon_jihe
-            "http://www.zhihu.com" -> R.mipmap.icon_zhihu
-            else -> R.mipmap.ic_launcher
+        if(channelLink == "https://sspai.com"){
+            return R.mipmap.icon_sspai
+        }else if(channelLink == "https://www.gcores.com"){
+            return R.mipmap.icon_jihe
+        }else if(channelLink == "http://www.zhihu.com"){
+            return R.mipmap.icon_zhihu
+        }else if("https://www.bilibili.com".contains("",ignoreCase = false)){
+            return R.mipmap.icon_bilibili
+        }else{
+            return R.mipmap.ic_launcher
         }
     }
 }

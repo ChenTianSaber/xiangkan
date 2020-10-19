@@ -10,6 +10,7 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.InputStream
+import java.lang.NullPointerException
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
@@ -114,11 +115,17 @@ class RSSRepository constructor(
         /**
          * 提取作者的信息，一般都是author，但是知乎这边是dc:creator
          */
-        fun getAuthor(json:JSONObject):String{
+        fun getAuthor(json:JSONObject,channelTitle:String?):String{
             var author = json.optString("author")
-            if(author.isNullOrEmpty()){
-                author = json.optJSONObject("dc:creator").optString("content")
+            try {
+                if(author.isNullOrEmpty()){
+                    author = json.optJSONObject("dc:creator").optString("content")
+                }
+            }catch (e:NullPointerException){
+                //如果都没有的话，直接用channelTitle代替吧
+                author = channelTitle
             }
+
             Log.d(TAG, "getAuthor: $author")
             return author
         }
@@ -142,7 +149,7 @@ class RSSRepository constructor(
                             title = json.optString("title"),
                             link = json.optString("link"),
                             description = json.optString("description"),
-                            author = getAuthor(json),
+                            author = getAuthor(json,channelTitle),
                             pubDate = Date(json.optString("pubDate")).time,
                             channelTitle = channelTitle,
                             channelLink = channelLink,
