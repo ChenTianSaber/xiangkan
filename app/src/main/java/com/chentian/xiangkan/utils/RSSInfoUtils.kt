@@ -73,6 +73,8 @@ object RSSInfoUtils {
             return R.mipmap.icon_zhihu
         }else if(channelLink.contains("bilibili",ignoreCase = false)){
             return R.mipmap.icon_bilibili
+        }else if(channelLink == "https://daily.zhihu.com"){
+            return R.mipmap.icon_zhihudaily
         }else{
             return R.mipmap.ic_launcher
         }
