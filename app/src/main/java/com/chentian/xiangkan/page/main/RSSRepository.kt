@@ -1,5 +1,6 @@
 package com.chentian.xiangkan.page.main
 
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,9 +11,13 @@ import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.*
 import org.json.JSONObject
 import java.io.InputStream
+import java.lang.IllegalArgumentException
 import java.lang.NullPointerException
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.*
 
 class RSSRepository constructor(
@@ -130,6 +135,17 @@ class RSSRepository constructor(
             return author
         }
 
+        /**
+         * 提取时间信息
+         */
+        fun getTime(json:JSONObject):Long{
+            return try {
+                Date(json.optString("pubDate")).time
+            }catch (e:IllegalArgumentException){
+                SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(json.optString("pubDate").replace("T","")).time
+            }
+        }
+
         data.use {
             val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
             val jsonObject = xmlToJson.toJson()
@@ -150,7 +166,7 @@ class RSSRepository constructor(
                             link = json.optString("link"),
                             description = json.optString("description"),
                             author = getAuthor(json,channelTitle),
-                            pubDate = Date(json.optString("pubDate")).time,
+                            pubDate = getTime(json),
                             channelTitle = channelTitle,
                             channelLink = channelLink,
                             channelDescription = channelDescription,

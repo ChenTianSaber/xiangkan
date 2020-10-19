@@ -41,6 +41,14 @@ object RSSInfoUtils {
             state = false,
             showWeb = false
         ),
+        RSSManagerInfo(
+            link = "https://rsshub.ioiox.com/zhihu/daily",
+            name = "知乎日报",
+            description = "每天3次，每次7分钟 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
+            channelLink = "https://daily.zhihu.com",
+            state = false,
+            showWeb = false
+        ),
     )
 
     /**
@@ -63,7 +71,7 @@ object RSSInfoUtils {
             return R.mipmap.icon_jihe
         }else if(channelLink == "http://www.zhihu.com"){
             return R.mipmap.icon_zhihu
-        }else if("https://www.bilibili.com".contains("",ignoreCase = false)){
+        }else if(channelLink.contains("bilibili",ignoreCase = false)){
             return R.mipmap.icon_bilibili
         }else{
             return R.mipmap.ic_launcher
