@@ -3,6 +3,7 @@ package com.chentian.xiangkan.db
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface RSSItemDao {
@@ -17,4 +18,7 @@ interface RSSItemDao {
 
     @Insert
     fun insertItem(vararg rssItem: RSSItem)
+
+    @Update
+    fun updateItems(vararg rssItem: RSSItem)
 }

@@ -26,6 +26,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
+        const val BACK_FROM_DETAIL = 1000 //从详情页回来
     }
 
     // region field
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var rssViewModel: RSSViewModel
     private lateinit var sharedPreferences:SharedPreferences
     private lateinit var editor:SharedPreferences.Editor
+    private lateinit var rssRepository: RSSRepository
     // endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +56,7 @@ class MainActivity : AppCompatActivity() {
     private fun initView(){
         viewManager = LinearLayoutManager(this)
         viewAdapter = RSSListAdapter()
+        viewAdapter.context = this
         recyclerView = findViewById<RecyclerView>(R.id.recycler_view).apply {
             layoutManager = viewManager
             adapter = viewAdapter
@@ -61,6 +64,10 @@ class MainActivity : AppCompatActivity() {
         viewAdapter.itemClick = object :
             ItemClick {
             override fun onItemClick(itemView: View, data: RSSItem) {
+                //点击之后置为已读，并存入数据库
+                data.wasRead = true
+                viewAdapter.notifyDataSetChanged()
+                rssRepository.updateRSSItem(data)
                 val intent = Intent(context, DetailActivity::class.java)
                 intent.putExtra("title", data.title)
                 intent.putExtra("author", data.author)
@@ -87,9 +94,8 @@ class MainActivity : AppCompatActivity() {
         parseStringToMap(latestPubDateStr!!)
 
         val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
-        rssViewModel = RSSViewModel(
-            RSSRepository(db.rssItemDao())
-        )
+        rssRepository = RSSRepository(db.rssItemDao())
+        rssViewModel = RSSViewModel(rssRepository)
         //观察数据
         rssViewModel.rssItemList.observe(this){
             // 更新
@@ -113,6 +119,10 @@ class MainActivity : AppCompatActivity() {
         }
         Log.d(TAG, "parseStringToMap ---> ${RSSRepository.latestPubDateMap}")
     }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//
+//    }
 
     interface ItemClick {
         fun onItemClick(itemView: View, data: RSSItem)

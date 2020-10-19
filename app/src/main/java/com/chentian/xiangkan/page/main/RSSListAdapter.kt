@@ -1,10 +1,13 @@
 package com.chentian.xiangkan.page.main
 
+import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.utils.RSSInfoUtils
@@ -16,6 +19,7 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
 
     var dataList: List<RSSItem> = mutableListOf()
     var itemClick: MainActivity.ItemClick? = null
+    var context: Context? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -35,6 +39,13 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
             RSSInfoUtils.getRSSIcon(it)
         }?.let {
             holder.icon.setImageResource(it)
+        }
+
+        //是否已读
+        if(dataList[position].wasRead!!){
+            context?.let { holder.title.setTextColor(ContextCompat.getColor(it,R.color.gray_2)) }
+        }else{
+            context?.let { holder.title.setTextColor(ContextCompat.getColor(it,R.color.black_0)) }
         }
     }
 

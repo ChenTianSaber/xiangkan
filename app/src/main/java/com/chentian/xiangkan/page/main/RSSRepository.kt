@@ -156,4 +156,13 @@ class RSSRepository constructor(
         return dataList
     }
 
+    /**
+     * 更新RSSItem的数据
+     */
+    fun updateRSSItem(rssItem:RSSItem){
+        GlobalScope.launch(Dispatchers.IO) {
+            rssItemDao.updateItems(rssItem)
+        }
+    }
+
 }
