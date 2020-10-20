@@ -14,7 +14,7 @@ object RSSInfoUtils {
             name = "少数派",
             description = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
             channelLink = "https://sspai.com",
-            state = true,
+            state = false,
             showWeb = false
         ),
         RSSManagerInfo(
@@ -22,7 +22,7 @@ object RSSInfoUtils {
             name = "机核",
             description = "不止是游戏",
             channelLink = "https://www.gcores.com",
-            state = true,
+            state = false,
             showWeb = true
         ),
         RSSManagerInfo(
@@ -38,7 +38,7 @@ object RSSInfoUtils {
             name = "知乎日报",
             description = "每天3次，每次7分钟 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
             channelLink = "https://daily.zhihu.com",
-            state = true,
+            state = false,
             showWeb = false
         ),
     )
