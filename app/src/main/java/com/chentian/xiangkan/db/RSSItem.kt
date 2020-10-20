@@ -18,4 +18,5 @@ data class RSSItem(
     @PrimaryKey(autoGenerate = true)
     var id:Long = 0
     var wasRead: Boolean? = false
+    var imageUrl: String? = ""
 }

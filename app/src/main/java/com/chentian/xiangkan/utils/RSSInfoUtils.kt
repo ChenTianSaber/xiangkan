@@ -14,7 +14,7 @@ object RSSInfoUtils {
             name = "少数派",
             description = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
             channelLink = "https://sspai.com",
-            state = false,
+            state = true,
             showWeb = false
         ),
         RSSManagerInfo(
@@ -22,15 +22,7 @@ object RSSInfoUtils {
             name = "机核",
             description = "不止是游戏",
             channelLink = "https://www.gcores.com",
-            state = false,
-            showWeb = true
-        ),
-        RSSManagerInfo(
-            link = "https://www.zhihu.com/rss",
-            name = "知乎每日精选",
-            description = "中文互联网最大的知识平台，帮助人们便捷地分享彼此的知识、经验和见解。",
-            channelLink = "http://www.zhihu.com",
-            state = false,
+            state = true,
             showWeb = true
         ),
         RSSManagerInfo(
@@ -38,7 +30,7 @@ object RSSInfoUtils {
             name = "凉风Kaze",
             description = "凉风Kaze 的 bilibili 动态 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
             channelLink = "https://space.bilibili.com/14110780/dynamic",
-            state = false,
+            state = true,
             showWeb = false
         ),
         RSSManagerInfo(
@@ -46,7 +38,7 @@ object RSSInfoUtils {
             name = "知乎日报",
             description = "每天3次，每次7分钟 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
             channelLink = "https://daily.zhihu.com",
-            state = false,
+            state = true,
             showWeb = false
         ),
     )

@@ -1,24 +1,24 @@
 package com.chentian.xiangkan.page.main
 
-import android.os.Build
+import android.R.string
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.db.RSSItemDao
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.InputStream
-import java.lang.IllegalArgumentException
-import java.lang.NullPointerException
 import java.net.HttpURLConnection
 import java.net.URL
-import java.text.DateFormat
 import java.text.SimpleDateFormat
-import java.time.Instant
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
+
 
 class RSSRepository constructor(
     private val rssItemDao: RSSItemDao
@@ -38,7 +38,7 @@ class RSSRepository constructor(
             // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
             // web数据会有多个订阅源，所有源都请求结束后再获取数据
             for (rssManagerInfo in RSSInfoUtils.RSSLinkList) {
-                requestRSSDate(rssManagerInfo.link)
+                if(rssManagerInfo.state) requestRSSDate(rssManagerInfo.link)
             }
             rssData.postValue(getRSSDateFromDB())
         }
@@ -146,6 +146,25 @@ class RSSRepository constructor(
             }
         }
 
+        /**
+         * 解析description获取第一张图片
+         */
+        fun getImageUrl(json:JSONObject):String{
+            val description = json.optString("description")
+            val pics: MutableList<String> = ArrayList()
+            val compile = Pattern.compile("<img.*?>")
+            val matcher: Matcher = compile.matcher(description)
+            while (matcher.find()) {
+                val img: String = matcher.group()
+                pics.add(img)
+            }
+            if(pics.isNullOrEmpty()) return ""
+            val m = Pattern.compile("\"http?(.*?)(\"|>|\\s+)").matcher(pics[0])
+            m.find()
+            val url = m.group()
+            return url.substring(1, url.length - 1)
+        }
+
         data.use {
             val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
             val jsonObject = xmlToJson.toJson()
@@ -160,19 +179,19 @@ class RSSRepository constructor(
             if (jsonArray != null) {
                 for (i in 0 until jsonArray.length()) {
                     val json = (jsonArray.get(i) as JSONObject)
-                    dataList.add(
-                        RSSItem(
-                            title = json.optString("title"),
-                            link = json.optString("link"),
-                            description = json.optString("description"),
-                            author = getAuthor(json,channelTitle),
-                            pubDate = getTime(json),
-                            channelTitle = channelTitle,
-                            channelLink = channelLink,
-                            channelDescription = channelDescription,
-                            channelManagingEditor = channelManagingEditor,
-                        )
+                    val rssItem = RSSItem(
+                        title = json.optString("title"),
+                        link = json.optString("link"),
+                        description = json.optString("description"),
+                        author = getAuthor(json,channelTitle),
+                        pubDate = getTime(json),
+                        channelTitle = channelTitle,
+                        channelLink = channelLink,
+                        channelDescription = channelDescription,
+                        channelManagingEditor = channelManagingEditor,
                     )
+                    rssItem.imageUrl = getImageUrl(json)
+                    dataList.add(rssItem)
                 }
             }
         }

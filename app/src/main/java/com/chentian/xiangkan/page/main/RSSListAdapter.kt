@@ -9,6 +9,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.chentian.xiangkan.db.RSSItem
@@ -34,6 +35,7 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
         val date = dataList[position].pubDate?.let { Date(it) }
         holder.date.text = simpleDateFormat.format(date)
+        Glide.with(context!!).load(dataList[position].imageUrl).into(holder.cover)
         holder.itemView.tag = position
         dataList[position].channelLink?.let {
             RSSInfoUtils.getRSSIcon(it)
@@ -64,5 +66,6 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
         val author: TextView = itemView.findViewById(R.id.author)
         val date: TextView = itemView.findViewById(R.id.date)
         val icon: ImageView = itemView.findViewById(R.id.icon)
+        val cover: ImageView = itemView.findViewById(R.id.cover)
     }
 }
