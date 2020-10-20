@@ -32,7 +32,7 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
         holder.author.text = dataList[position].author
 
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
-        val date = dataList[position].pubDate?.plus(8 * 60 * 60 * 1000)?.let { Date(it) }//加8小时
+        val date = dataList[position].pubDate?.let { Date(it) }
         holder.date.text = simpleDateFormat.format(date)
         holder.itemView.tag = position
         dataList[position].channelLink?.let {

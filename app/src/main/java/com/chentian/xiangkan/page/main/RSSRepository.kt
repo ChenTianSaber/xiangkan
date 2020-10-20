@@ -140,7 +140,7 @@ class RSSRepository constructor(
          */
         fun getTime(json:JSONObject):Long{
             return try {
-                Date(json.optString("pubDate")).time
+                Date(json.optString("pubDate")).time.plus(8 * 60 * 60 * 1000)//加8小时
             }catch (e:IllegalArgumentException){
                 SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(json.optString("pubDate").replace("T","")).time
             }
