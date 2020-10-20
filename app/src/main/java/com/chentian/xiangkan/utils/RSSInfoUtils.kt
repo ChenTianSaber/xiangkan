@@ -22,7 +22,7 @@ object RSSInfoUtils {
             name = "机核",
             description = "不止是游戏",
             channelLink = "https://www.gcores.com",
-            state = false,
+            state = true,
             showWeb = true
         ),
         RSSManagerInfo(
