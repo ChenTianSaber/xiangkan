@@ -6,7 +6,7 @@ import com.chentian.xiangkan.db.RSSManagerInfo
 object RSSInfoUtils {
 
     /**
-     * 已订阅的RSS地址
+     * RSS地址全部集合
      */
     var RSSLinkList = mutableListOf(
         RSSManagerInfo(
@@ -14,7 +14,6 @@ object RSSInfoUtils {
             name = "少数派",
             description = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
             channelLink = "https://sspai.com",
-            state = false,
             showWeb = false
         ),
         RSSManagerInfo(
@@ -22,7 +21,6 @@ object RSSInfoUtils {
             name = "机核",
             description = "不止是游戏",
             channelLink = "https://www.gcores.com",
-            state = true,
             showWeb = true
         ),
         RSSManagerInfo(
@@ -30,7 +28,6 @@ object RSSInfoUtils {
             name = "凉风Kaze",
             description = "凉风Kaze 的 bilibili 动态 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
             channelLink = "https://space.bilibili.com/14110780/dynamic",
-            state = true,
             showWeb = false
         ),
         RSSManagerInfo(
@@ -38,10 +35,11 @@ object RSSInfoUtils {
             name = "知乎日报",
             description = "每天3次，每次7分钟 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
             channelLink = "https://daily.zhihu.com",
-            state = false,
             showWeb = false
         ),
     )
+
+    var followRSSLink = mutableSetOf<String>()
 
     /**
      * 根据channelLink判断是否需要展示网页

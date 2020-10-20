@@ -97,6 +97,9 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         Log.d(TAG, "initData latestPubDateStr ---> $latestPubDateStr")
         parseStringToMap(latestPubDateStr!!)
 
+        //获取已订阅的数据
+        RSSInfoUtils.followRSSLink = sharedPreferences.getStringSet("followRSSLink", mutableSetOf()) as MutableSet<String>
+
         val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
         rssRepository = RSSRepository(db.rssItemDao())
         rssViewModel = RSSViewModel(rssRepository)
@@ -110,6 +113,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
             // 这个时候lastestPubDateMap更新了，记下最新的时间
             Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}")
             editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
+            editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
             editor.commit()
         }
     }
