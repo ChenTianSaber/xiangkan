@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.db.RSSItemDao
+import com.chentian.xiangkan.db.RSSManagerInfoDao
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,8 @@ import java.util.regex.Pattern
 
 
 class RSSRepository constructor(
-    private val rssItemDao: RSSItemDao
+    private val rssItemDao: RSSItemDao,
+    private val rssManagerInfoDao: RSSManagerInfoDao
 ) {
 
     companion object {
@@ -35,6 +37,8 @@ class RSSRepository constructor(
      */
     fun getRSSData(): MutableLiveData<MutableList<RSSItem>> {
         GlobalScope.launch(Dispatchers.IO) {
+            //获取用户手动添加的订阅地址
+            RSSInfoUtils.RSSLinkList.addAll(rssManagerInfoDao.getAll())
             // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
             // web数据会有多个订阅源，所有源都请求结束后再获取数据
             for (rssManagerInfo in RSSInfoUtils.RSSLinkList) {

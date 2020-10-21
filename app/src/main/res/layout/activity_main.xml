@@ -6,14 +6,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".page.main.MainActivity">
+    tools:context=".page.main.MainActivity"
+    android:background="@color/white_4">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/title_bar"
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:orientation="horizontal"
-        android:background="@color/white_1">
+        android:background="@color/white_3">
 
         <ImageView
             android:id="@+id/add"

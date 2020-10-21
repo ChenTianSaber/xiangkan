@@ -3,6 +3,7 @@ package com.chentian.xiangkan.page.main
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -51,7 +52,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_main)
-        StatusBarCompat.setStatusBarColor(this, Color.WHITE,true)
+        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_3),true)
 
         initView()
         initData()
@@ -104,12 +105,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         RSSInfoUtils.followRSSLink = sharedPreferences.getStringSet("followRSSLink", mutableSetOf()) as MutableSet<String>
 
         val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
-        //获取用户手动添加的订阅地址
-        GlobalScope.launch(Dispatchers.IO) {
-            RSSInfoUtils.RSSLinkList.addAll(db.rssManagerInfoDao().getAll())
-        }
-
-        rssRepository = RSSRepository(db.rssItemDao())
+        rssRepository = RSSRepository(db.rssItemDao(),db.rssManagerInfoDao())
         rssViewModel = RSSViewModel(rssRepository)
         //观察数据
         rssViewModel.rssItemList.observe(this){
