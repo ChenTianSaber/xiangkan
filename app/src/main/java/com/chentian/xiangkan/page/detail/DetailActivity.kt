@@ -8,8 +8,10 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.Window
 import android.webkit.WebResourceRequest
+import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.ImageView
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -31,10 +33,13 @@ class DetailActivity : AppCompatActivity() {
 
     // region field
     private lateinit var webView: WebView
+    private lateinit var fullWebView: WebView
     private lateinit var titleTextView: TextView
     private lateinit var authorTextView: TextView
     private lateinit var pubDateTextView: TextView
     private lateinit var scrollView: ScrollView
+    private lateinit var back: ImageView
+    private lateinit var readMode: ImageView
 
     private var html = ""
     private var title = ""
@@ -51,7 +56,7 @@ class DetailActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_detail)
-        StatusBarCompat.setStatusBarColor(this, Color.WHITE, true)
+        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_3), true)
 
         initData()
         initView()
@@ -75,6 +80,24 @@ class DetailActivity : AppCompatActivity() {
         authorTextView = findViewById(R.id.author)
         pubDateTextView = findViewById(R.id.pubDate)
         scrollView = findViewById(R.id.scroll_view)
+        readMode = findViewById(R.id.read_mode)
+        back = findViewById(R.id.back)
+        fullWebView = findViewById(R.id.full_web_view)
+        webView = findViewById(R.id.web_view)
+
+        back.setOnClickListener {
+            val web = if(showWeb) fullWebView else webView
+            if (web.canGoBack()) {
+                web.goBack()
+            }else{
+                finish()
+            }
+        }
+
+        readMode.setOnClickListener {
+            showWeb = !showWeb
+            setReadMode(showWeb,false)
+        }
 
         titleTextView.text = title
         authorTextView.text = author
@@ -83,31 +106,49 @@ class DetailActivity : AppCompatActivity() {
         val date = Date(pubDate.plus(8 * 60 * 60 * 1000))//加8小时
         pubDateTextView.text = simpleDateFormat.format(date)
 
-        if(showWeb){
-            //如果是直接展示网页的话，那么把scrollView隐藏掉，把下面的全屏webView放出来
-            scrollView.visibility = View.GONE
-            webView = findViewById(R.id.full_web_view)
-            webView.visibility = View.VISIBLE
-            webView.loadUrl(link)
-        }else{
-            webView = findViewById(R.id.web_view)
-            webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
-        }
+        setReadMode(showWeb,true)
 
-        webView.settings.javaScriptEnabled = true
-        webView.webViewClient = object : WebViewClient(){
+        val webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
             ): Boolean {
                 Log.d(TAG, "shouldOverrideUrlLoading: ${request?.url}")
-                if(request?.url.toString().startsWith("zhihu://")){
+                if(!showWeb || request?.url.toString().startsWith("zhihu://")){
                     return true
                 }
                 return super.shouldOverrideUrlLoading(view, request)
             }
         }
 
+        fullWebView.settings.javaScriptEnabled = true
+        fullWebView.settings.domStorageEnabled = true
+        fullWebView.settings.blockNetworkImage = false
+        fullWebView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+
+        webView.settings.javaScriptEnabled = true
+        webView.settings.domStorageEnabled = true
+        webView.settings.blockNetworkImage = false
+        webView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+
+        fullWebView.webViewClient = webViewClient
+        webView.webViewClient = webViewClient
+
+    }
+
+    private fun setReadMode(showWeb:Boolean,isInit:Boolean){
+        if(showWeb){
+            readMode.setImageResource(R.mipmap.compass)
+            //如果是直接展示网页的话，那么把scrollView隐藏掉，把下面的全屏webView放出来
+            scrollView.visibility = View.GONE
+            fullWebView.visibility = View.VISIBLE
+        }else{
+            readMode.setImageResource(R.mipmap.book)
+            scrollView.visibility = View.VISIBLE
+            fullWebView.visibility = View.GONE
+        }
+        if(isInit) fullWebView.loadUrl(link)
+        if(isInit) webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
     }
 
     private fun buildHtml(description: String):String{
@@ -123,8 +164,9 @@ class DetailActivity : AppCompatActivity() {
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_BACK && webView.canGoBack()) {
-            webView.goBack()
+        val web = if(showWeb) fullWebView else webView
+        if (keyCode == KeyEvent.KEYCODE_BACK && web.canGoBack()) {
+            web.goBack()
             return true
         }
         return super.onKeyDown(keyCode, event)
