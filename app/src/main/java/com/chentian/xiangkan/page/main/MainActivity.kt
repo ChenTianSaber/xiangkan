@@ -1,32 +1,29 @@
 package com.chentian.xiangkan.page.main
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
-import android.content.res.Resources
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
-import android.view.*
+import android.view.View
+import android.view.Window
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.chentian.xiangkan.*
+import com.chentian.xiangkan.R
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.page.detail.DetailActivity
 import com.chentian.xiangkan.page.manager.ManagerActivity
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.githang.statusbar.StatusBarCompat
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
-import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
 
@@ -40,6 +37,8 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var addImageView: ImageView
     private lateinit var updateMessage: TextView
+    private lateinit var sort: ImageView
+    private lateinit var refresh: ImageView
 
     private lateinit var viewAdapter: RSSListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_main)
-        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_3),true)
+        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_3), true)
 
         initView()
         initData()
@@ -98,11 +97,26 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
             //点击更新List
             updateMessage.visibility = View.GONE
             viewAdapter.notifyDataSetChanged()
-            // 这个时候lastestPubDateMap更新了，记下最新的时间
-            Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}")
-            editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
-            editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
-            editor.commit()
+        }
+        refresh = findViewById(R.id.refresh)
+        refresh.setOnClickListener {
+            swipeRefreshLayout.isRefreshing = true
+            rssRepository.getRSSData()
+        }
+        sort = findViewById(R.id.sort)
+        sort.setOnClickListener {
+            // 切换排序类型
+            val sportsArray = arrayOf("全部", "未读", "已读")
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("选择筛选类型")
+                .setItems(
+                    sportsArray,
+                    DialogInterface.OnClickListener { dialog, which ->
+                        RSSRepository.sortType = which
+                        rssRepository.getRSSData()
+                    })
+            val dialog = builder.create()
+            dialog.show()
         }
     }
 
@@ -110,45 +124,49 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         // 获取最新的时间
         sharedPreferences = getSharedPreferences("rss_info", MODE_PRIVATE)
         editor = sharedPreferences.edit()
-        val latestPubDateStr = sharedPreferences.getString("latestPubDateMap","{}")
+        val latestPubDateStr = sharedPreferences.getString("latestPubDateMap", "{}")
         Log.d(TAG, "initData latestPubDateStr ---> $latestPubDateStr")
         parseStringToMap(latestPubDateStr!!)
 
         //获取已订阅的数据
         RSSInfoUtils.followRSSLink = sharedPreferences.getStringSet("followRSSLink", mutableSetOf()) as MutableSet<String>
 
-        val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
-        rssRepository = RSSRepository(db.rssItemDao(),db.rssManagerInfoDao())
+        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "xiangkan").build()
+        rssRepository = RSSRepository(db.rssItemDao(), db.rssManagerInfoDao())
         rssViewModel = RSSViewModel(rssRepository)
         //观察数据
         rssViewModel.rssItemList.observe(this){
             // 更新
 //            Log.d(TAG, "onCreate: rssViewModel.rssItemList.observe $it")
             swipeRefreshLayout.isRefreshing = false
-            if (it.size - viewAdapter.dataList.size > 0) {
-                if (viewAdapter.dataList.isEmpty()) {
+            Log.d(TAG, "list ---> ${it.size} ${viewAdapter.dataList.size}")
+            if (it.size - viewAdapter.dataList.size > 0 || (RSSRepository.lastSortType != RSSRepository.sortType)) {
+                if (viewAdapter.dataList.isEmpty() || (RSSRepository.lastSortType != RSSRepository.sortType)) {
                     //直接更新
-                    //点击更新List
-                    viewAdapter.dataList = it
+                    RSSRepository.lastSortType = RSSRepository.sortType
                     updateMessage.visibility = View.GONE
+                    viewAdapter.dataList = it
                     viewAdapter.notifyDataSetChanged()
-                    // 这个时候lastestPubDateMap更新了，记下最新的时间
-                    Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}")
-                    editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
-                    editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
-                    editor.commit()
                 }else{
                     updateMessage.visibility = View.VISIBLE
                     updateMessage.text = "有${it.size - viewAdapter.dataList.size}条更新"
                     viewAdapter.dataList = it
                 }
+                // 这个时候lastestPubDateMap更新了，记下最新的时间
+                Log.d(
+                    TAG,
+                    "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}"
+                )
+                editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
+                editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
+                editor.commit()
             }
         }
     }
 
-    private fun parseStringToMap(pubDateMapString:String){
+    private fun parseStringToMap(pubDateMapString: String){
         if(pubDateMapString == "{}") return
-        val string = pubDateMapString.substring(1,pubDateMapString.length - 1)
+        val string = pubDateMapString.substring(1, pubDateMapString.length - 1)
         val list = string.trim().split(",")
         for(str in list){
             val mapList = str.trim().split("=")

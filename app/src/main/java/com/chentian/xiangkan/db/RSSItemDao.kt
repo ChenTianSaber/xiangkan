@@ -13,6 +13,12 @@ interface RSSItemDao {
     @Query("SELECT * FROM RSSItem ORDER BY pubDate DESC")
     fun getAllOrderByPubDate(): MutableList<RSSItem>
 
+    @Query("SELECT * FROM RSSItem WHERE wasRead = 0 ORDER BY pubDate DESC")
+    fun getAllUnRead(): MutableList<RSSItem>
+
+    @Query("SELECT * FROM RSSItem WHERE wasRead = 1 ORDER BY pubDate DESC")
+    fun getAllWasRead(): MutableList<RSSItem>
+
     @Insert
     fun insertAll(rssItems: MutableList<RSSItem>)
 

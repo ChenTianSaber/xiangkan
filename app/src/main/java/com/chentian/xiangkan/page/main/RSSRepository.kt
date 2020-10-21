@@ -30,6 +30,8 @@ class RSSRepository constructor(
         const val TAG = "RSSRepository"
         var latestPubDateMap = mutableMapOf<String,Long>() // <link,time> 通过link来获取最新的更新时间
         var rssData:MutableLiveData<MutableList<RSSItem>> = MutableLiveData<MutableList<RSSItem>>()
+        var sortType:Int = 0 // 排序类型，0全部，1未读，2已读
+        var lastSortType = 0
     }
 
     /**
@@ -113,7 +115,11 @@ class RSSRepository constructor(
      * 从数据库获取数据
      */
     private fun getRSSDateFromDB() : MutableList<RSSItem>{
-        val rssData = rssItemDao.getAllOrderByPubDate()
+        val rssData = when(sortType){
+            1 -> rssItemDao.getAllUnRead()
+            2 -> rssItemDao.getAllWasRead()
+            else -> rssItemDao.getAllOrderByPubDate()
+        }
         Log.d(TAG, "getRSSDateFromDB: size --> ${rssData.size}")
         return rssData
     }

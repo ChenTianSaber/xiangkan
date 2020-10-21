@@ -155,7 +155,7 @@ class DetailActivity : AppCompatActivity() {
                 isFullWebViewInit = true
             }
         }else{
-            readMode.setImageResource(R.mipmap.book)
+            readMode.setImageResource(R.mipmap.read)
             scrollView.visibility = View.VISIBLE
             fullWebView.visibility = View.GONE
             if(!isWebViewInit){
