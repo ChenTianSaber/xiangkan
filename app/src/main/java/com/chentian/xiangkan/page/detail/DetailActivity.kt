@@ -49,6 +49,8 @@ class DetailActivity : AppCompatActivity() {
     private var channelLink = ""
     private var description = ""
     private var showWeb = true //直接展示原始网页
+    private var isFullWebViewInit = false
+    private var isWebViewInit = false
     // endregion
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -60,6 +62,12 @@ class DetailActivity : AppCompatActivity() {
 
         initData()
         initView()
+    }
+
+    override fun onDestroy() {
+        webView.destroy()
+        fullWebView.destroy()
+        super.onDestroy()
     }
 
     private fun initData(){
@@ -96,7 +104,7 @@ class DetailActivity : AppCompatActivity() {
 
         readMode.setOnClickListener {
             showWeb = !showWeb
-            setReadMode(showWeb,false)
+            setReadMode(showWeb)
         }
 
         titleTextView.text = title
@@ -106,7 +114,7 @@ class DetailActivity : AppCompatActivity() {
         val date = Date(pubDate.plus(8 * 60 * 60 * 1000))//加8小时
         pubDateTextView.text = simpleDateFormat.format(date)
 
-        setReadMode(showWeb,true)
+        setReadMode(showWeb)
 
         val webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
@@ -114,7 +122,7 @@ class DetailActivity : AppCompatActivity() {
                 request: WebResourceRequest?
             ): Boolean {
                 Log.d(TAG, "shouldOverrideUrlLoading: ${request?.url}")
-                if(!showWeb || request?.url.toString().startsWith("zhihu://")){
+                if(!showWeb || request?.url.toString().startsWith("zhihu://") || request?.url.toString().startsWith("bilibili://")){
                     return true
                 }
                 return super.shouldOverrideUrlLoading(view, request)
@@ -136,19 +144,25 @@ class DetailActivity : AppCompatActivity() {
 
     }
 
-    private fun setReadMode(showWeb:Boolean,isInit:Boolean){
+    private fun setReadMode(showWeb:Boolean){
         if(showWeb){
             readMode.setImageResource(R.mipmap.compass)
             //如果是直接展示网页的话，那么把scrollView隐藏掉，把下面的全屏webView放出来
             scrollView.visibility = View.GONE
             fullWebView.visibility = View.VISIBLE
+            if(!isFullWebViewInit){
+                fullWebView.loadUrl(link)
+                isFullWebViewInit = true
+            }
         }else{
             readMode.setImageResource(R.mipmap.book)
             scrollView.visibility = View.VISIBLE
             fullWebView.visibility = View.GONE
+            if(!isWebViewInit){
+                webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
+                isWebViewInit = true
+            }
         }
-        if(isInit) fullWebView.loadUrl(link)
-        if(isInit) webView.loadDataWithBaseURL("file:///android_asset/", html, "text/html", "UTF-8", null)
     }
 
     private fun buildHtml(description: String):String{

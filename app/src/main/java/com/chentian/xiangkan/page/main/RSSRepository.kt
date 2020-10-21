@@ -37,6 +37,9 @@ class RSSRepository constructor(
      */
     fun getRSSData(): MutableLiveData<MutableList<RSSItem>> {
         GlobalScope.launch(Dispatchers.IO) {
+            //先从数据库将本地数据返回展示，再去取web数据
+            rssData.postValue(getRSSDateFromDB())
+
             //获取用户手动添加的订阅地址
             RSSInfoUtils.RSSLinkList.addAll(rssManagerInfoDao.getAll())
             // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
@@ -144,7 +147,7 @@ class RSSRepository constructor(
          */
         fun getTime(json:JSONObject):Long{
             return try {
-                Date(json.optString("pubDate")).time.plus(8 * 60 * 60 * 1000)//加8小时
+                Date(json.optString("pubDate")).time
             }catch (e:IllegalArgumentException){
                 SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(json.optString("pubDate").replace("T","")).time
             }
