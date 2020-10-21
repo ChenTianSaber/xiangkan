@@ -35,7 +35,11 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
 
         val pattern: Pattern = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE)
         val matcher: Matcher = pattern.matcher(dataList[position].description)
-        holder.description.text = matcher.replaceAll("")
+        if(matcher.replaceAll("").trim().isNullOrEmpty()) {
+            holder.description.visibility = View.GONE
+        }else{
+            holder.description.text = matcher.replaceAll("")
+        }
 
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
         val date = dataList[position].pubDate?.let { Date(it) }

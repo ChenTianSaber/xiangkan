@@ -9,6 +9,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipeRefreshLayout: SwipeRefreshLayout
     private lateinit var addImageView: ImageView
+    private lateinit var updateMessage: TextView
 
     private lateinit var viewAdapter: RSSListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -91,6 +93,17 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         addImageView.setOnClickListener {
             startActivity(Intent(this, ManagerActivity::class.java))
         }
+        updateMessage = findViewById(R.id.update_message)
+        updateMessage.setOnClickListener {
+            //点击更新List
+            updateMessage.visibility = View.GONE
+            viewAdapter.notifyDataSetChanged()
+            // 这个时候lastestPubDateMap更新了，记下最新的时间
+            Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}")
+            editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
+            editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
+            editor.commit()
+        }
     }
 
     private fun initData(){
@@ -112,13 +125,24 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
             // 更新
 //            Log.d(TAG, "onCreate: rssViewModel.rssItemList.observe $it")
             swipeRefreshLayout.isRefreshing = false
-            viewAdapter.dataList = it
-            viewAdapter.notifyDataSetChanged()
-            // 这个时候lastestPubDateMap更新了，记下最新的时间
-            Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}")
-            editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
-            editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
-            editor.commit()
+            if (it.size - viewAdapter.dataList.size > 0) {
+                if (viewAdapter.dataList.isEmpty()) {
+                    //直接更新
+                    //点击更新List
+                    viewAdapter.dataList = it
+                    updateMessage.visibility = View.GONE
+                    viewAdapter.notifyDataSetChanged()
+                    // 这个时候lastestPubDateMap更新了，记下最新的时间
+                    Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}")
+                    editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
+                    editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
+                    editor.commit()
+                }else{
+                    updateMessage.visibility = View.VISIBLE
+                    updateMessage.text = "有${it.size - viewAdapter.dataList.size}条更新"
+                    viewAdapter.dataList = it
+                }
+            }
         }
     }
 
