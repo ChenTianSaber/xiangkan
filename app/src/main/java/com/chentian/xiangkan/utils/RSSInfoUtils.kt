@@ -6,7 +6,7 @@ import com.chentian.xiangkan.db.RSSManagerInfo
 object RSSInfoUtils {
 
     /**
-     * RSS地址全部集合
+     * 默认RSS地址全部集合
      */
     var RSSLinkList = mutableListOf(
         RSSManagerInfo(

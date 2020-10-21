@@ -21,6 +21,9 @@ import com.chentian.xiangkan.page.detail.DetailActivity
 import com.chentian.xiangkan.page.manager.ManagerActivity
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.githang.statusbar.StatusBarCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
@@ -101,6 +104,11 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         RSSInfoUtils.followRSSLink = sharedPreferences.getStringSet("followRSSLink", mutableSetOf()) as MutableSet<String>
 
         val db = Room.databaseBuilder(applicationContext,AppDatabase::class.java,"xiangkan").build()
+        //获取用户手动添加的订阅地址
+        GlobalScope.launch(Dispatchers.IO) {
+            RSSInfoUtils.RSSLinkList.addAll(db.rssManagerInfoDao().getAll())
+        }
+
         rssRepository = RSSRepository(db.rssItemDao())
         rssViewModel = RSSViewModel(rssRepository)
         //观察数据
