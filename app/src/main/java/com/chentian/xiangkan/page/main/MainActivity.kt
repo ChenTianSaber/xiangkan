@@ -12,6 +12,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.lifecycle.observe
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -39,6 +40,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
     private lateinit var updateMessage: TextView
     private lateinit var sort: ImageView
     private lateinit var refresh: ImageView
+    private lateinit var emptyLayout: ConstraintLayout
 
     private lateinit var viewAdapter: RSSListAdapter
     private lateinit var viewManager: RecyclerView.LayoutManager
@@ -61,6 +63,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
     }
 
     private fun initView(){
+        emptyLayout = findViewById(R.id.empty_layout)
         viewManager = LinearLayoutManager(this)
         viewAdapter = RSSListAdapter()
         viewAdapter.context = this
@@ -140,6 +143,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
 //            Log.d(TAG, "onCreate: rssViewModel.rssItemList.observe $it")
             swipeRefreshLayout.isRefreshing = false
             Log.d(TAG, "list ---> ${it.size} ${viewAdapter.dataList.size}")
+            if(it.size > 0) emptyLayout.visibility = View.GONE
             if (it.size - viewAdapter.dataList.size > 0 || (RSSRepository.lastSortType != RSSRepository.sortType)) {
                 if (viewAdapter.dataList.isEmpty() || (RSSRepository.lastSortType != RSSRepository.sortType)) {
                     //直接更新
