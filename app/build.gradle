@@ -60,4 +60,6 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     // androidUtils
     implementation 'com.blankj:utilcodex:1.29.0'
+    // bugly
+    compile 'com.tencent.bugly:crashreport:latest.release'
 }
