@@ -152,11 +152,7 @@ class RSSRepository constructor(
          * 提取时间信息
          */
         fun getTime(json:JSONObject):Long{
-            return try {
-                Date(json.optString("pubDate")).time
-            }catch (e:IllegalArgumentException){
-                SimpleDateFormat("yyyy-MM-ddHH:mm:ss").parse(json.optString("pubDate").replace("T","")).time
-            }
+            return Date(json.optString("pubDate")).time
         }
 
         /**

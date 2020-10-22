@@ -30,13 +30,6 @@ object RSSInfoUtils {
             channelLink = "https://space.bilibili.com/14110780/dynamic",
             showWeb = false
         ),
-        RSSManagerInfo(
-            link = "https://rsshub.ioiox.com/zhihu/daily",
-            name = "知乎日报",
-            description = "每天3次，每次7分钟 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
-            channelLink = "https://daily.zhihu.com",
-            showWeb = false
-        ),
     )
 
     var followRSSLink = mutableSetOf<String>()
