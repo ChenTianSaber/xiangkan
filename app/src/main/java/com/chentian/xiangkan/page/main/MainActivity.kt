@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.SharedPreferences
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -40,6 +41,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
     private lateinit var updateMessage: TextView
     private lateinit var sort: ImageView
     private lateinit var refresh: ImageView
+    private lateinit var notice: ImageView
     private lateinit var emptyLayout: ConstraintLayout
 
     private lateinit var viewAdapter: RSSListAdapter
@@ -120,6 +122,16 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
                     })
             val dialog = builder.create()
             dialog.show()
+        }
+        notice = findViewById(R.id.notice)
+        notice.setOnClickListener {
+            val builder = AlertDialog.Builder(this)
+            builder.setTitle("嗨！")
+                .setMessage("感谢你使用「想看」，这个APP目前还处于内测版，如果你有任何问题，都可以通过以下方式联系我：\n微博：ChenTianSaber\n邮箱：chentiansaber@qq.com")
+                .setNegativeButton("好滴",DialogInterface.OnClickListener { dialog, which -> {} })
+            val dialog = builder.create()
+            dialog.show()
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
         }
     }
 
