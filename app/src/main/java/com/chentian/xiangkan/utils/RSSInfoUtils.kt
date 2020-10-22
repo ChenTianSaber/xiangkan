@@ -24,6 +24,20 @@ object RSSInfoUtils {
             showWeb = true
         ),
         RSSManagerInfo(
+            link = "https://rsshub.ioiox.com/zhihu/daily",
+            name = "知乎日报",
+            description = "每天3次，每次7分钟",
+            channelLink = "https://daily.zhihu.com",
+            showWeb = true
+        ),
+        RSSManagerInfo(
+            link = "https://rsshub.ioiox.com/zhihu/hotlist",
+            name = "知乎热榜",
+            description = "知乎热榜",
+            channelLink = "https://www.zhihu.com/billboard",
+            showWeb = false
+        ),
+        RSSManagerInfo(
             link = "https://rsshub.ioiox.com/bilibili/user/dynamic/14110780",
             name = "凉风Kaze",
             description = "凉风Kaze 的 bilibili 动态 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
@@ -52,12 +66,12 @@ object RSSInfoUtils {
             return R.mipmap.icon_sspai
         }else if(channelLink == "https://www.gcores.com"){
             return R.mipmap.icon_jihe
-        }else if(channelLink == "http://www.zhihu.com"){
+        }else if(channelLink == "https://daily.zhihu.com"){
+            return R.mipmap.icon_zhihudaily
+        }else if(channelLink.contains("zhihu",ignoreCase = false)){
             return R.mipmap.icon_zhihu
         }else if(channelLink.contains("bilibili",ignoreCase = false)){
             return R.mipmap.icon_bilibili
-        }else if(channelLink == "https://daily.zhihu.com"){
-            return R.mipmap.icon_zhihudaily
         }else{
             return R.mipmap.ic_launcher
         }

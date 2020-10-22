@@ -29,9 +29,11 @@ class RSSRepository constructor(
     companion object {
         const val TAG = "RSSRepository"
         var latestPubDateMap = mutableMapOf<String,Long>() // <link,time> 通过link来获取最新的更新时间
+        var latestItemTitleMap = mutableMapOf<String,String>() // <link,title> 通过link来获取最新的item的标题
         var rssData:MutableLiveData<MutableList<RSSItem>> = MutableLiveData<MutableList<RSSItem>>()
         var sortType:Int = 0 // 排序类型，0全部，1未读，2已读
         var lastSortType = 0
+        const val NO_DATD = -1L
     }
 
     /**
@@ -91,15 +93,17 @@ class RSSRepository constructor(
         if(rssData.isNullOrEmpty()){
             return
         }
-        var pubDate = latestPubDateMap[rssData[0].channelLink] ?: -1
-        if(latestPubDateMap.isNullOrEmpty() || pubDate == -1L
-            || rssData[rssData.lastIndex].pubDate!! > pubDate){
-            // 说明还没有数据，或者Web数据最老的数据也比目前的数据新，那就直接插入
+
+        var pubDate = latestPubDateMap[rssData[0].channelLink] ?: -1L
+        var latsedTitle = latestItemTitleMap[rssData[0].channelLink] ?: ""
+
+        if(latestPubDateMap.isNullOrEmpty() || pubDate == NO_DATD){
+            // 说明还没有数据，那就直接插入
             rssItemDao.insertAll(rssData)
         }else {
             // 对比数据
             for(rssItem in rssData){
-                if(rssItem.pubDate!! <= pubDate){
+                if(latsedTitle == rssItem.title || rssItem.pubDate!! <= pubDate){
                     break
                 }
                 rssItemDao.insertItem(rssItem)
@@ -107,8 +111,10 @@ class RSSRepository constructor(
         }
         Log.d(TAG, "insertDB: rssData[0].pubDate --> ${rssData[0].pubDate}")
         pubDate = rssData[0].pubDate ?: pubDate
-        // 更新最后时间
+        latsedTitle = rssData[0].title ?: ""
+        // 更新最后时间和标题
         latestPubDateMap[rssData[0].channelLink ?: ""] = pubDate
+        latestItemTitleMap[rssData[0].channelLink ?: ""] = latsedTitle
     }
 
     /**
@@ -152,7 +158,11 @@ class RSSRepository constructor(
          * 提取时间信息
          */
         fun getTime(json:JSONObject):Long{
-            return Date(json.optString("pubDate")).time
+            return try {
+                Date(json.optString("pubDate")).time
+            }catch (e:java.lang.Exception){
+                Date().time
+            }
         }
 
         /**

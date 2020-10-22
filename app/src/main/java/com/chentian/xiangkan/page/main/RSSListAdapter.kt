@@ -35,16 +35,19 @@ class RSSListAdapter : RecyclerView.Adapter<RSSListAdapter.MyViewHolder>() {
 
         val pattern: Pattern = Pattern.compile("<[^>]+>", Pattern.CASE_INSENSITIVE)
         val matcher: Matcher = pattern.matcher(dataList[position].description)
-        if(matcher.replaceAll("").trim().isNullOrEmpty()) {
-            holder.description.visibility = View.GONE
-        }else{
-            holder.description.text = matcher.replaceAll("")
-        }
+        holder.description.text = matcher.replaceAll("")
 
         val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
         val date = dataList[position].pubDate?.let { Date(it) }
         holder.date.text = simpleDateFormat.format(date)
-        Glide.with(context!!).load(dataList[position].imageUrl).into(holder.cover)
+
+        if(dataList[position].imageUrl.isNullOrEmpty()){
+            holder.cover.visibility = View.GONE
+        }else{
+            holder.cover.visibility = View.VISIBLE
+            Glide.with(context!!).load(dataList[position].imageUrl).into(holder.cover)
+        }
+
         holder.itemView.tag = position
         dataList[position].channelLink?.let {
             RSSInfoUtils.getRSSIcon(it)

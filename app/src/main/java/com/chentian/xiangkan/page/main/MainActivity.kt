@@ -127,9 +127,14 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         // 获取最新的时间
         sharedPreferences = getSharedPreferences("rss_info", MODE_PRIVATE)
         editor = sharedPreferences.edit()
+
         val latestPubDateStr = sharedPreferences.getString("latestPubDateMap", "{}")
         Log.d(TAG, "initData latestPubDateStr ---> $latestPubDateStr")
         parseStringToMap(latestPubDateStr!!)
+
+        val latestTitleStr = sharedPreferences.getString("latestItemTitleMap", "{}")
+        Log.d(TAG, "initData latestItemTitleMap ---> $latestTitleStr")
+        parseStringToMap2(latestTitleStr!!)
 
         //获取已订阅的数据
         RSSInfoUtils.followRSSLink = sharedPreferences.getStringSet("followRSSLink", mutableSetOf()) as MutableSet<String>
@@ -157,20 +162,18 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
                     viewAdapter.dataList = it
                 }
                 // 这个时候lastestPubDateMap更新了，记下最新的时间
-                Log.d(
-                    TAG,
-                    "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}"
-                )
+                Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}  ${RSSRepository.latestItemTitleMap}")
                 editor.putString("latestPubDateMap", RSSRepository.latestPubDateMap.toString())
+                editor.putString("latestItemTitleMap", RSSRepository.latestItemTitleMap.toString())
                 editor.putStringSet("followRSSLink", RSSInfoUtils.followRSSLink)
                 editor.commit()
             }
         }
     }
 
-    private fun parseStringToMap(pubDateMapString: String){
-        if(pubDateMapString == "{}") return
-        val string = pubDateMapString.substring(1, pubDateMapString.length - 1)
+    private fun parseStringToMap(mapString: String){
+        if(mapString == "{}") return
+        val string = mapString.substring(1, mapString.length - 1)
         val list = string.trim().split(",")
         for(str in list){
             val mapList = str.trim().split("=")
@@ -179,9 +182,16 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         Log.d(TAG, "parseStringToMap ---> ${RSSRepository.latestPubDateMap}")
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//
-//    }
+    private fun parseStringToMap2(mapString: String){
+        if(mapString == "{}") return
+        val string = mapString.substring(1, mapString.length - 1)
+        val list = string.trim().split(",")
+        for(str in list){
+            val mapList = str.trim().split("=")
+            RSSRepository.latestItemTitleMap[mapList[0]] = mapList[1]
+        }
+        Log.d(TAG, "parseStringToMap ---> ${RSSRepository.latestItemTitleMap}")
+    }
 
     interface ItemClick {
         fun onItemClick(itemView: View, data: RSSItem)
