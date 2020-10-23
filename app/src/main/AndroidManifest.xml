@@ -27,6 +27,7 @@
         </activity>
         <activity android:name=".page.detail.DetailActivity"/>
         <activity android:name=".page.manager.ManagerActivity"/>
+        <activity android:name=".page.AddActivity"/>
     </application>
 
 </manifest>
