@@ -19,15 +19,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.chentian.xiangkan.MyEventBus
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.db.RSSItem
+import com.chentian.xiangkan.db.RSSManagerInfo
 import com.chentian.xiangkan.page.detail.DetailActivity
+import com.chentian.xiangkan.page.manager.EventListener
 import com.chentian.xiangkan.page.manager.ManagerActivity
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.githang.statusbar.StatusBarCompat
 
-class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
+class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener,EventListener{
 
     companion object {
         private const val TAG = "MainActivity"
@@ -59,6 +62,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         setContentView(R.layout.activity_main)
         StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_3), true)
 
+        MyEventBus.register(this)
         initView()
         initData()
 
@@ -205,6 +209,11 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
         Log.d(TAG, "parseStringToMap ---> ${RSSRepository.latestItemTitleMap}")
     }
 
+    override fun onDestroy() {
+        MyEventBus.unregister(this)
+        super.onDestroy()
+    }
+
     interface ItemClick {
         fun onItemClick(itemView: View, data: RSSItem)
     }
@@ -215,6 +224,10 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener{
     override fun onRefresh() {
         Log.d(TAG, "onRefresh")
         rssRepository.getRSSData()
+    }
+
+    override fun addSuccess(rssManagerInfo: RSSManagerInfo) {
+        rssRepository.addRSSManagerInfo(rssManagerInfo)
     }
 
 }

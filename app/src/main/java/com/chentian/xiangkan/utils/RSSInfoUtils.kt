@@ -1,9 +1,22 @@
 package com.chentian.xiangkan.utils
 
+import android.util.Log
 import com.chentian.xiangkan.R
+import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.db.RSSManagerInfo
+import com.chentian.xiangkan.page.main.RSSRepository
+import fr.arnaudguyon.xmltojsonlib.XmlToJson
+import org.json.JSONObject
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
+import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 object RSSInfoUtils {
+
+    private const val TAG = "RSSInfoUtils"
 
     /**
      * 默认RSS地址全部集合
@@ -17,13 +30,6 @@ object RSSInfoUtils {
             showWeb = false
         ),
         RSSManagerInfo(
-            link = "https://www.gcores.com/rss",
-            name = "机核",
-            description = "不止是游戏",
-            channelLink = "https://www.gcores.com",
-            showWeb = true
-        ),
-        RSSManagerInfo(
             link = "https://rsshub.ioiox.com/zhihu/daily",
             name = "知乎日报",
             description = "每天3次，每次7分钟",
@@ -35,13 +41,6 @@ object RSSInfoUtils {
             name = "知乎热榜",
             description = "知乎热榜",
             channelLink = "https://www.zhihu.com/billboard",
-            showWeb = false
-        ),
-        RSSManagerInfo(
-            link = "https://rsshub.ioiox.com/bilibili/user/dynamic/14110780",
-            name = "凉风Kaze",
-            description = "凉风Kaze 的 bilibili 动态 - Made with love by RSSHub(https://github.com/DIYgod/RSSHub)",
-            channelLink = "https://space.bilibili.com/14110780/dynamic",
             showWeb = false
         ),
     )
@@ -75,5 +74,58 @@ object RSSInfoUtils {
         }else{
             return R.mipmap.ic_launcher
         }
+    }
+
+    /**
+     * 检测RSS数据
+     */
+    fun checkRSSData(link: String, showWeb: Boolean): RSSManagerInfo? {
+        Log.d(TAG, "checkRSSData: link-> $link showWeb->$showWeb")
+        var rssManagerInfo: RSSManagerInfo? = null
+        var connection: HttpURLConnection? = null
+        try {
+            val url = URL(link)
+            connection = url.openConnection() as HttpURLConnection
+            //设置请求方法
+            connection.requestMethod = "GET"
+            //设置连接超时时间（毫秒）
+            connection.connectTimeout = 5000
+            //设置读取超时时间（毫秒）
+            connection.readTimeout = 5000
+
+            //返回输入流
+            val data: InputStream = connection.inputStream
+
+            //检测数据
+            data.use {
+                val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
+                val jsonObject = xmlToJson.toJson()
+                val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
+                val jsonArray = channelJsonObject?.optJSONArray("item")
+
+                val channelTitle = channelJsonObject?.optString("title")
+                val channelLink = channelJsonObject?.optString("link")
+                val channelDescription = channelJsonObject?.optString("description")
+                val channelManagingEditor = channelJsonObject?.optString("managingEditor")
+
+                if(channelTitle.isNullOrEmpty() || channelLink.isNullOrEmpty()){
+                    Log.d(TAG, "checkRSSData: channelTitle或者channelLink为空")
+                    return null
+                }
+                rssManagerInfo = RSSManagerInfo(
+                    link = link,
+                    name = channelTitle ?: "",
+                    description = channelDescription ?: "",
+                    channelLink = channelLink ?: "",
+                    showWeb = showWeb
+                )
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection?.disconnect()
+        }
+
+        return rssManagerInfo
     }
 }

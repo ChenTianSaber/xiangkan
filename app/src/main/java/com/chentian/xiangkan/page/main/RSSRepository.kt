@@ -1,10 +1,10 @@
 package com.chentian.xiangkan.page.main
 
-import android.R.string
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.db.RSSItemDao
+import com.chentian.xiangkan.db.RSSManagerInfo
 import com.chentian.xiangkan.db.RSSManagerInfoDao
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
@@ -223,6 +223,12 @@ class RSSRepository constructor(
     fun updateRSSItem(rssItem:RSSItem){
         GlobalScope.launch(Dispatchers.IO) {
             rssItemDao.updateItems(rssItem)
+        }
+    }
+
+    fun addRSSManagerInfo(rssManagerInfo: RSSManagerInfo){
+        GlobalScope.launch (Dispatchers.IO){
+            rssManagerInfoDao.insertItem(rssManagerInfo)
         }
     }
 

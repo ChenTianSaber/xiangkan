@@ -1,5 +1,6 @@
 package com.chentian.xiangkan.page.manager
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -8,10 +9,12 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.SwitchCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.utils.RSSInfoUtils
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.db.RSSManagerInfo
+import kotlinx.android.synthetic.main.item_manager.view.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -22,6 +25,7 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.MyViewHolder>
     }
 
     var dataList: List<RSSManagerInfo> = mutableListOf()
+    var context: Context? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context)
@@ -33,6 +37,7 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.MyViewHolder>
         holder.name.text = dataList[position].name
         holder.state.isChecked = RSSInfoUtils.followRSSLink.contains(dataList[position].link)
         holder.itemView.tag = position
+        Glide.with(context!!).load(RSSInfoUtils.getRSSIcon(dataList[position].channelLink)).into(holder.itemView.icon)
     }
 
     override fun getItemCount(): Int {
@@ -54,5 +59,6 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.MyViewHolder>
         }
         val name: TextView = itemView.findViewById(R.id.name)
         val state: SwitchCompat = itemView.findViewById(R.id.state)
+        val icon:ImageView = itemView.findViewById(R.id.icon)
     }
 }
