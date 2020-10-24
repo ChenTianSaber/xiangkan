@@ -11,7 +11,7 @@ data class RSSManagerInfo(
     val link:String,// feed订阅地址
     val name:String,// 名称
     val description: String, //描述
-    val channelLink:String, // 网址
+    val channelLink:String, // 主站的地址
     var showWeb:Boolean //是否默认直接展示网页
 ){
     @PrimaryKey(autoGenerate = true)
