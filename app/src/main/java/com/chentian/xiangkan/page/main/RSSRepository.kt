@@ -1,7 +1,9 @@
 package com.chentian.xiangkan.page.main
 
 import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.chentian.xiangkan.ResponseData
 import com.chentian.xiangkan.db.RSSItem
 import com.chentian.xiangkan.db.RSSItemDao
 import com.chentian.xiangkan.db.RSSManagerInfo
@@ -28,21 +30,27 @@ class RSSRepository constructor(
 
     companion object {
         const val TAG = "RSSRepository"
+
+        const val NO_DATD = -1L
+        const val DEFAULT = -2 //默认返回
+        const val WEB_SUCCESS = 0 //网络正常返回
+        const val DB_SUCCESS = 1 //数据库正常返回
+
         var latestPubDateMap = mutableMapOf<String,Long>() // <link,time> 通过link来获取最新的更新时间
         var latestItemTitleMap = mutableMapOf<String,String>() // <link,title> 通过link来获取最新的item的标题
-        var rssData:MutableLiveData<MutableList<RSSItem>> = MutableLiveData<MutableList<RSSItem>>()
+        var rssData:MutableLiveData<ResponseData> = MutableLiveData(ResponseData(code = DEFAULT,message = "默认初始化返回",data = mutableListOf<RSSItem>()))
         var sortType:Int = 0 // 排序类型，0全部，1未读，2已读
         var lastSortType = 0
-        const val NO_DATD = -1L
     }
 
     /**
      * 获取RSS数据
      */
-    fun getRSSData(): MutableLiveData<MutableList<RSSItem>> {
+    fun getRSSData(): LiveData<ResponseData> {
         GlobalScope.launch(Dispatchers.IO) {
             //先从数据库将本地数据返回展示，再去取web数据
-            rssData.postValue(getRSSDateFromDB())
+            var resultList = getRSSDateFromDB()
+            rssData.postValue(ResponseData(code = DB_SUCCESS,message = "数据库返回",data = resultList))
 
             //获取用户手动添加的订阅地址
             RSSInfoUtils.RSSLinkList.addAll(rssManagerInfoDao.getAll())
@@ -51,7 +59,8 @@ class RSSRepository constructor(
             for (rssManagerInfo in RSSInfoUtils.RSSLinkList) {
                 if(RSSInfoUtils.followRSSLink.contains(rssManagerInfo.link)) requestRSSDate(rssManagerInfo.link)
             }
-            rssData.postValue(getRSSDateFromDB())
+            resultList = getRSSDateFromDB()
+            rssData.postValue(ResponseData(code = WEB_SUCCESS,message = "网络请求结束返回",data = resultList))
         }
         Log.d(TAG, "return rssData")
         return rssData

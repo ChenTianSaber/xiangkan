@@ -109,8 +109,10 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener,E
         }
         refresh = findViewById(R.id.refresh)
         refresh.setOnClickListener {
-            swipeRefreshLayout.isRefreshing = true
-            rssRepository.getRSSData()
+            if(!swipeRefreshLayout.isRefreshing){
+                swipeRefreshLayout.isRefreshing = true
+                rssRepository.getRSSData()
+            }
         }
         sort = findViewById(R.id.sort)
         sort.setOnClickListener {
@@ -159,23 +161,28 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener,E
         rssRepository = RSSRepository(db.rssItemDao(), db.rssManagerInfoDao())
         rssViewModel = RSSViewModel(rssRepository)
         //观察数据
-        rssViewModel.rssItemList.observe(this){
+        rssViewModel.rssData.observe(this){
+            val code = it.code
+            val message = it.message
+            val data = it.data
             // 更新
-//            Log.d(TAG, "onCreate: rssViewModel.rssItemList.observe $it")
-            swipeRefreshLayout.isRefreshing = false
-            Log.d(TAG, "list ---> ${it.size} ${viewAdapter.dataList.size}")
-            if(it.size > 0) emptyLayout.visibility = View.GONE
-            if (it.size - viewAdapter.dataList.size > 0 || (RSSRepository.lastSortType != RSSRepository.sortType)) {
+            Log.d(TAG, "onCreate: rssData.observe [code:$code message:$message]")
+
+            if(code == RSSRepository.WEB_SUCCESS) swipeRefreshLayout.isRefreshing = false
+
+            Log.d(TAG, "list ---> ${data.size} ${viewAdapter.dataList.size}")
+            if(data.size > 0) emptyLayout.visibility = View.GONE
+            if (data.size - viewAdapter.dataList.size > 0 || (RSSRepository.lastSortType != RSSRepository.sortType)) {
                 if (viewAdapter.dataList.isEmpty() || (RSSRepository.lastSortType != RSSRepository.sortType)) {
                     //直接更新
                     RSSRepository.lastSortType = RSSRepository.sortType
                     updateMessage.visibility = View.GONE
-                    viewAdapter.dataList = it
+                    viewAdapter.dataList = data
                     viewAdapter.notifyDataSetChanged()
                 }else{
                     updateMessage.visibility = View.VISIBLE
-                    updateMessage.text = "有${it.size - viewAdapter.dataList.size}条更新"
-                    viewAdapter.dataList = it
+                    updateMessage.text = "有${data.size - viewAdapter.dataList.size}条更新"
+                    viewAdapter.dataList = data
                 }
                 // 这个时候lastestPubDateMap更新了，记下最新的时间
                 Log.d(TAG, "rssViewModel.rssItemList.observe ---> ${RSSRepository.latestPubDateMap}  ${RSSRepository.latestItemTitleMap}")
@@ -222,8 +229,11 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener,E
      * 下拉刷新时回调
      */
     override fun onRefresh() {
-        Log.d(TAG, "onRefresh")
-        rssRepository.getRSSData()
+        if(!swipeRefreshLayout.isRefreshing){
+            Log.d(TAG, "onRefresh")
+            swipeRefreshLayout.isRefreshing = true
+            rssRepository.getRSSData()
+        }
     }
 
     override fun addSuccess(rssManagerInfo: RSSManagerInfo) {

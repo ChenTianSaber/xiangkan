@@ -11,6 +11,7 @@ import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
+import java.util.concurrent.CopyOnWriteArrayList
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -21,29 +22,31 @@ object RSSInfoUtils {
     /**
      * 默认RSS地址全部集合
      */
-    var RSSLinkList = mutableListOf(
-        RSSManagerInfo(
+    var RSSLinkList = CopyOnWriteArrayList<RSSManagerInfo>()
+    init {
+        RSSLinkList.add(RSSManagerInfo(
             link = "https://sspai.com/feed",
             name = "少数派",
             description = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
             channelLink = "https://sspai.com",
             showWeb = false
-        ),
-        RSSManagerInfo(
+        ))
+        RSSLinkList.add(RSSManagerInfo(
             link = "https://rsshub.ioiox.com/zhihu/daily",
             name = "知乎日报",
             description = "每天3次，每次7分钟",
             channelLink = "https://daily.zhihu.com",
             showWeb = true
-        ),
-        RSSManagerInfo(
+        ))
+        RSSLinkList.add(RSSManagerInfo(
             link = "https://rsshub.ioiox.com/zhihu/hotlist",
             name = "知乎热榜",
             description = "知乎热榜",
             channelLink = "https://www.zhihu.com/billboard",
             showWeb = false
-        ),
-    )
+        ))
+
+    }
 
     var followRSSLink = mutableSetOf<String>()
 
