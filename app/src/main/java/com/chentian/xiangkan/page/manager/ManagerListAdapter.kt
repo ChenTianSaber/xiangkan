@@ -1,6 +1,7 @@
 package com.chentian.xiangkan.page.manager
 
 import android.content.Context
+import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -45,6 +46,9 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.MyViewHolder>
     }
 
     inner class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val name: TextView = itemView.findViewById(R.id.name)
+        val state: SwitchCompat = itemView.findViewById(R.id.state)
+        val icon:ImageView = itemView.findViewById(R.id.icon)
         init {
             itemView.setOnClickListener {
                 val position = itemView.tag as Int
@@ -57,8 +61,5 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.MyViewHolder>
                 notifyDataSetChanged()
             }
         }
-        val name: TextView = itemView.findViewById(R.id.name)
-        val state: SwitchCompat = itemView.findViewById(R.id.state)
-        val icon:ImageView = itemView.findViewById(R.id.icon)
     }
 }

@@ -53,20 +53,25 @@ class AddActivity : AppCompatActivity() {
                         if(uid.text.isNullOrEmpty()){
                             Toast.makeText(context,"请先输入uid~",Toast.LENGTH_SHORT).show()
                         }else{
-                            // 先请求检测一下，可以的话就加入订阅源里
-                            Toast.makeText(context,"正在检测链接~",Toast.LENGTH_SHORT).show()
-                            GlobalScope.launch(Dispatchers.IO) {
-                                val result = RSSInfoUtils.checkRSSData(
-                                    link = "https://rsshub.ioiox.com/bilibili/user/dynamic/${uid.text}",
-                                    showWeb = false
-                                )
-                                GlobalScope.launch(Dispatchers.Main) {
-                                    if(result != null){
-                                        Toast.makeText(context,"添加订阅成功~",Toast.LENGTH_SHORT).show()
-                                        RSSInfoUtils.RSSLinkList.add(result)
-                                        MyEventBus.post(result)
-                                    }else{
-                                        Toast.makeText(context,"添加订阅失败...请确认uid是否正确",Toast.LENGTH_SHORT).show()
+                            //先判断链接是否已被添加过了
+                            if(checkLinkExist("https://rsshub.ioiox.com/bilibili/user/dynamic/${uid.text}")){
+                                Toast.makeText(context,"已经添加过了~",Toast.LENGTH_SHORT).show()
+                            }else{
+                                // 先请求检测一下，可以的话就加入订阅源里
+                                Toast.makeText(context,"正在检测链接~",Toast.LENGTH_SHORT).show()
+                                GlobalScope.launch(Dispatchers.IO) {
+                                    val result = RSSInfoUtils.checkRSSData(
+                                        link = "https://rsshub.ioiox.com/bilibili/user/dynamic/${uid.text}",
+                                        showWeb = false
+                                    )
+                                    GlobalScope.launch(Dispatchers.Main) {
+                                        if(result != null){
+                                            Toast.makeText(context,"添加订阅成功~",Toast.LENGTH_SHORT).show()
+                                            RSSInfoUtils.RSSLinkList.add(result)
+                                            MyEventBus.post(result)
+                                        }else{
+                                            Toast.makeText(context,"添加订阅失败...请确认uid是否正确",Toast.LENGTH_SHORT).show()
+                                        }
                                     }
                                 }
                             }
@@ -79,5 +84,14 @@ class AddActivity : AppCompatActivity() {
             dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
             dialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(Color.BLACK)
         }
+    }
+
+    private fun checkLinkExist(link:String):Boolean{
+        for(data in RSSInfoUtils.RSSLinkList){
+            if(data.link == link){
+                return true
+            }
+        }
+        return false
     }
 }
