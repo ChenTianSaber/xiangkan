@@ -134,10 +134,12 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener,E
             val builder = AlertDialog.Builder(this)
             builder.setTitle("嗨！")
                 .setMessage("感谢你使用「想看」，这个APP目前还处于内测版，如果你有任何问题，都可以通过以下方式联系我：\n微博：ChenTianSaber\n邮箱：chentiansaber@qq.com")
-                .setNegativeButton("好滴",DialogInterface.OnClickListener { dialog, which -> {} })
+                .setNegativeButton("好滴", DialogInterface.OnClickListener { dialog, which -> {} })
             val dialog = builder.create()
             dialog.show()
-            dialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(Color.BLACK)
+            dialog.getButton(DialogInterface.BUTTON_NEGATIVE)?.let {
+                it.setTextColor(Color.BLACK)
+            }
         }
     }
 
@@ -211,6 +213,7 @@ class MainActivity : AppCompatActivity() ,SwipeRefreshLayout.OnRefreshListener,E
         val list = string.trim().split(",")
         for(str in list){
             val mapList = str.trim().split("=")
+            if(mapList.size < 2) return
             RSSRepository.latestItemTitleMap[mapList[0]] = mapList[1]
         }
         Log.d(TAG, "parseStringToMap ---> ${RSSRepository.latestItemTitleMap}")
