@@ -2,13 +2,16 @@ package com.chentian.xiangkan
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.room.Room
 import com.blankj.utilcode.util.ToastUtils
 import com.chentian.xiangkan.page.AddFragment
 import com.chentian.xiangkan.page.DetailFragment
@@ -16,6 +19,10 @@ import com.chentian.xiangkan.page.HomeFragment
 import com.chentian.xiangkan.page.ManagerFragment
 
 class MainActivity : AppCompatActivity() ,View.OnClickListener{
+
+    companion object{
+        const val TAG = "MainActivity"
+    }
 
     // region field
 
@@ -29,6 +36,9 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
 
     private lateinit var sortBtn:ImageView
     private lateinit var managerBtn:ImageView
+
+    private lateinit var rssRepository: RssRepository
+    lateinit var rssModel: RssModel
 
     //endregion
 
@@ -60,7 +70,31 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
     private fun initData() {
+        val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "xiangkan").build()
 
+        rssModel = RssModel()
+        dataListen()
+        rssRepository = RssRepository(
+                rssLinksData = rssModel.rssLinksData,
+                rssItemsData = rssModel.rssItemsData,
+                rssLinkInfoDao = db.rssLinkInfoDao(),
+                rssItemDao = db.rssItemDao()
+        )
+        // 获取已订阅的链接
+        rssRepository.getRssLinks()
+        // 获取内容列表
+        rssRepository.getRssItemList()
+    }
+
+    private fun dataListen(){
+        rssModel.rssLinksData.observe(this, Observer<ResponseData>{ response ->
+            Log.d(TAG, "rssLinksData observe ---> $response")
+            tabListAdapter.dataList = response.data as MutableList<RssLinkInfo>
+            tabListAdapter.notifyDataSetChanged()
+        })
+        rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->
+            Log.d(TAG, "rssItemsData observe ---> $response")
+        })
     }
 
     override fun onClick(v: View?) {

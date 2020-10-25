@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
 
     private lateinit var context:Context
+    var dataList = mutableListOf<RssLinkInfo>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
         context = parent.context
@@ -20,7 +21,7 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
     }
 
     override fun getItemCount(): Int {
-        return 10
+        return dataList.size
     }
 
     inner class TabViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
