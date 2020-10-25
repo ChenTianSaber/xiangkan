@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white_4"
     android:paddingBottom="24dp">
 
     <ImageView
@@ -14,7 +12,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:scaleType="centerCrop"
-        android:src="@mipmap/ic_launcher_round"
+        android:src="@mipmap/icon_sspai"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/author" />
 
@@ -28,12 +26,12 @@
         android:ellipsize="end"
         android:textStyle="bold"
         android:maxLines="2"
-        android:textColor="@color/black_0"
-        android:textSize="14sp"
+        android:textSize="16sp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toStartOf="@+id/cover"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toBottomOf="@+id/author"
-        tools:text="苹果十月发布会前瞻：即将亮相的 iPhone 12，有哪些新变化？" />
+        android:text="苹果十月发布会前瞻：即将亮相的 iPhone 12，有哪些新变化？" />
 
     <TextView
         android:id="@+id/description"
@@ -44,12 +42,11 @@
         android:layout_marginEnd="16dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="@color/gray_2"
         android:textSize="14sp"
         app:layout_constraintEnd_toStartOf="@+id/cover"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toBottomOf="@+id/title"
-        tools:text="是少数派的写作社区，我们主张分享真实的产品体验，有实用价值的经验与思考。我们会不定期挑选 Matrix 最优质的文章，展示来自用户的最真实的体验和观点。" />
+        android:text="是少数派的写作社区，我们主张分享真实的产品体验，有实用价值的经验与思考。我们会不定期挑选 Matrix 最优质的文章，展示来自用户的最真实的体验和观点。" />
 
     <TextView
         android:id="@+id/date"
@@ -57,11 +54,11 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="16dp"
-        android:textColor="@color/gray_1"
         android:textSize="12sp"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="2020.10.09 16:11" />
+        android:text="2020.10.09 16:11" />
 
     <TextView
         android:id="@+id/author"
@@ -72,12 +69,11 @@
         android:layout_marginEnd="32dp"
         android:ellipsize="end"
         android:lines="1"
-        android:textColor="@color/gray_2"
         android:textSize="12sp"
         app:layout_constraintEnd_toStartOf="@+id/date"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="nerd_dusbdhcdbdjhbhfbehjfbjhbfhjdbvchjdbvhjdbvhjdbvcjhbjhebvhjer" />
+        android:text="陈添" />
 
     <ImageView
         android:id="@+id/cover"
@@ -88,6 +84,6 @@
         android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date"
-        tools:srcCompat="@tools:sample/avatars" />
+        android:src="@mipmap/ic_launcher" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
