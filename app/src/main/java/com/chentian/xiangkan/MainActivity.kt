@@ -82,8 +82,6 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
         )
         // 获取已订阅的链接
         rssRepository.getRssLinks()
-        // 获取内容列表
-        rssRepository.getRssItemList()
     }
 
     private fun dataListen(){
@@ -91,6 +89,8 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
             Log.d(TAG, "rssLinksData observe ---> $response")
             tabListAdapter.dataList = response.data as MutableList<RssLinkInfo>
             tabListAdapter.notifyDataSetChanged()
+            // 获取内容列表
+            rssRepository.getRssItemList()
         })
         rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->
             Log.d(TAG, "rssItemsData observe ---> $response")

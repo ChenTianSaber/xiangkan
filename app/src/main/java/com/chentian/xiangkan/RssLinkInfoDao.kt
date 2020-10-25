@@ -10,6 +10,9 @@ interface RssLinkInfoDao {
     @Query("SELECT * FROM RssLinkInfo")
     fun getAll(): MutableList<RssLinkInfo>
 
+    @Query("SELECT * FROM RssLinkInfo WHERE url = :url")
+    fun getItemByUrl(url:String): MutableList<RssLinkInfo>
+
     @Insert
     fun insertAll(rssManagerInfos: MutableList<RssLinkInfo>)
 

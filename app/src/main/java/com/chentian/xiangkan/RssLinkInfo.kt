@@ -13,7 +13,9 @@ data class RssLinkInfo (
         val channelTitle:String, //主站名称
         val channelDescription:String, // 主站的描述
         var state:Boolean = false // 是否开启订阅
-){
+) {
     @PrimaryKey(autoGenerate = true)
-    var id:Long = 0
+    var id: Long = 0
+    var latsedTitle: String = "" // 最新
+    var latestPubDate: Long = RssRepository.NO_DATD
 }

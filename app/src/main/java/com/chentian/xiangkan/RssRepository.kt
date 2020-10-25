@@ -28,6 +28,8 @@ class RssRepository(
     companion object {
         const val TAG = "RssRepository"
 
+        const val NO_DATD = -1L
+
         const val DB_SUCCESS = 0
         const val WEB_SUCCESS = 1
         const val SUCCESS = 2
@@ -40,9 +42,12 @@ class RssRepository(
     fun getRssLinks() {
         GlobalScope.launch(Dispatchers.IO) {
             val defaultList = getDefaultRssLinks()
+            if(rssLinkInfoDao.getItemByUrl(defaultList[0].url).isNullOrEmpty()){
+                // 如果没有数据的话，就先存进数据库
+                rssLinkInfoDao.insertAll(defaultList)
+            }
             val dbList = getRssLinksFromDB()
             rssLinks.clear()
-            rssLinks.addAll(defaultList)
             rssLinks.addAll(dbList)
             rssLinksData.postValue(ResponseData(
                     code = SUCCESS,
@@ -131,9 +136,36 @@ class RssRepository(
      */
     private fun setRssItemsDB(rssData: MutableList<RssItem>){
         if(rssData.isNullOrEmpty()){
+            Log.i(TAG, "setRssItemsDB: rssData.isNullOrEmpty")
             return
         }
-        rssItemDao.insertAll(rssData)
+
+        val linkInfos = rssLinkInfoDao.getItemByUrl(rssData[0].url)
+        if(linkInfos.isNullOrEmpty()){
+            Log.i(TAG, "setRssItemsDB: linkInfo.isNullOrEmpty [rssData[0].url --> ${rssData[0].url}]")
+            return
+        }
+        val linkInfo = linkInfos[0]
+        val pubDate = linkInfo.latestPubDate
+        val latsedTitle = linkInfo.latsedTitle
+
+        if(pubDate == NO_DATD){
+            // 说明还没有数据，那就直接插入
+            rssItemDao.insertAll(rssData)
+        }else {
+            // 对比数据
+            for(rssItem in rssData){
+                if(latsedTitle == rssItem.title || rssItem.pubDate <= pubDate){
+                    break
+                }
+                rssItemDao.insertItem(rssItem)
+            }
+        }
+        Log.d(TAG, "setRssItemsDB: rssData[0] --> ${rssData[0]}")
+        linkInfo.latestPubDate = rssData[0].pubDate
+        linkInfo.latsedTitle = rssData[0].title
+        // 更新最后时间和标题
+        rssLinkInfoDao.updateItems(linkInfo)
     }
 
     /**
