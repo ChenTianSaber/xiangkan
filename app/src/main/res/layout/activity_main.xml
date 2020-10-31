@@ -13,7 +13,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/teal_200">
+        android:background="@color/white_2">
 
     </androidx.recyclerview.widget.RecyclerView>
 
@@ -28,18 +28,20 @@
         app:layout_constraintTop_toBottomOf="@+id/tab_list" />
 
     <TextView
-        android:id="@+id/textView2"
+        android:id="@+id/update_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="64dp"
-        android:text="有12条更新"
+        android:visibility="gone"
+        tools:text="有12条更新"
         android:textSize="14sp"
-        android:textColor="@color/white"
+        android:textColor="@color/black"
         android:paddingBottom="6dp"
         android:paddingTop="6dp"
         android:paddingLeft="12dp"
         android:paddingRight="12dp"
-        android:background="@drawable/coner_black"
+        android:background="@drawable/coner_white_3"
+        android:elevation="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
@@ -54,6 +56,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:paddingLeft="16dp"
         android:paddingRight="4dp"
+        android:elevation="4dp"
         android:gravity="center">
 
         <!--排序按钮-->
@@ -61,15 +64,15 @@
             android:id="@+id/sort"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@mipmap/icon_sspai"/>
+            android:src="@mipmap/liebiao"/>
 
         <!--管理订阅按钮-->
         <ImageView
             android:id="@+id/manager"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@mipmap/icon_sspai"
-            android:layout_marginLeft="16dp"/>
+            android:src="@mipmap/cangku_kucun"
+            android:layout_marginLeft="18dp"/>
 
     </LinearLayout>
 

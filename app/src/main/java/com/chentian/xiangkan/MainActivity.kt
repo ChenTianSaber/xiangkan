@@ -7,6 +7,7 @@ import android.view.View
 import android.view.Window
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,6 +18,7 @@ import com.chentian.xiangkan.page.AddFragment
 import com.chentian.xiangkan.page.DetailFragment
 import com.chentian.xiangkan.page.HomeFragment
 import com.chentian.xiangkan.page.ManagerFragment
+import com.githang.statusbar.StatusBarCompat
 
 class MainActivity : AppCompatActivity() ,View.OnClickListener{
 
@@ -36,6 +38,7 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
 
     private lateinit var sortBtn:ImageView
     private lateinit var managerBtn:ImageView
+    private lateinit var updateTip:TextView
 
     private lateinit var rssRepository: RssRepository
     lateinit var rssModel: RssModel
@@ -46,6 +49,7 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_main)
+        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_2), true)
 
         initView()
         initData()
@@ -67,6 +71,8 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
         sortBtn.setOnClickListener(this)
         managerBtn = findViewById(R.id.manager)
         managerBtn.setOnClickListener(this)
+
+        updateTip = findViewById(R.id.update_tip)
     }
 
     private fun initData() {
@@ -85,13 +91,23 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
     }
 
     private fun dataListen(){
+        // 监听订阅源数据的变化
         rssModel.rssLinksData.observe(this, Observer<ResponseData>{ response ->
             Log.d(TAG, "rssLinksData observe ---> $response")
             tabListAdapter.dataList = response.data as MutableList<RssLinkInfo>
+            // 设置"全部"TAB
+            tabListAdapter.dataList.add(0, RssLinkInfo(
+                    url = "-1",
+                    channelLink = "-1",
+                    channelTitle = "全部",
+                    channelDescription = "全部内容",
+                    state = false
+            ))
             tabListAdapter.notifyDataSetChanged()
             // 获取内容列表
             rssRepository.getRssItemList()
         })
+        // 监听内容数据的变化
         rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->
             Log.d(TAG, "rssItemsData observe ---> $response")
         })
