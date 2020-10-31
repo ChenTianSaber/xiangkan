@@ -185,7 +185,7 @@ class RssRepository(
                 rssItemDao.insertItem(rssItem)
             }
         }
-        Log.d(TAG, "setRssItemsDB: rssData[0] --> ${rssData[0]}")
+//        Log.d(TAG, "setRssItemsDB: rssData[0] --> ${rssData[0]}")
         linkInfo.latestPubDate = rssData[0].pubDate
         linkInfo.latsedTitle = rssData[0].title
         // 更新最后时间和标题

@@ -42,6 +42,17 @@ class HomeFragment : Fragment() {
         contentListAdapter = ContentListAdapter()
         contentList.adapter = contentListAdapter
         contentList.layoutManager = LinearLayoutManager(activity)
+
+        swipeRefreshLayout = itemView.findViewById(R.id.swipe_refresh)
+        swipeRefreshLayout.setOnRefreshListener(activity as MainActivity)
+    }
+
+    fun isRefreshing(): Boolean {
+        return swipeRefreshLayout.isRefreshing
+    }
+
+    fun setIsRefreshing(value: Boolean) {
+        swipeRefreshLayout.isRefreshing = value
     }
 
     private fun initData() {

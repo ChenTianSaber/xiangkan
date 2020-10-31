@@ -29,7 +29,7 @@
         android:maxLines="2"
         android:textSize="16sp"
         android:textColor="@color/black"
-        app:layout_constraintEnd_toStartOf="@+id/cover"
+        app:layout_constraintEnd_toStartOf="@+id/cover_layout"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toBottomOf="@+id/author"
         android:text="苹果十月发布会前瞻：即将亮相的 iPhone 12，有哪些新变化？" />
@@ -44,7 +44,7 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:textSize="14sp"
-        app:layout_constraintEnd_toStartOf="@+id/cover"
+        app:layout_constraintEnd_toStartOf="@+id/cover_layout"
         app:layout_constraintStart_toEndOf="@+id/icon"
         app:layout_constraintTop_toBottomOf="@+id/title"
         android:text="是少数派的写作社区，我们主张分享真实的产品体验，有实用价值的经验与思考。我们会不定期挑选 Matrix 最优质的文章，展示来自用户的最真实的体验和观点。" />
@@ -76,15 +76,22 @@
         app:layout_constraintTop_toTopOf="parent"
         android:text="陈添" />
 
-    <ImageView
-        android:id="@+id/cover"
-        android:layout_width="72dp"
-        android:layout_height="72dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cover_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
-        android:scaleType="centerCrop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/date"
-        android:src="@mipmap/ic_launcher" />
+        app:cardElevation="0dp"
+        app:cardCornerRadius="4dp">
+        <ImageView
+            android:id="@+id/cover"
+            android:layout_width="72dp"
+            android:layout_height="72dp"
+            android:scaleType="centerCrop"
+            android:src="@mipmap/ic_launcher" />
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

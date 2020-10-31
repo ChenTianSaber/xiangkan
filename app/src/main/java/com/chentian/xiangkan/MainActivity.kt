@@ -14,6 +14,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.blankj.utilcode.util.ToastUtils
 import com.chentian.xiangkan.page.AddFragment
 import com.chentian.xiangkan.page.DetailFragment
@@ -21,7 +22,7 @@ import com.chentian.xiangkan.page.HomeFragment
 import com.chentian.xiangkan.page.ManagerFragment
 import com.githang.statusbar.StatusBarCompat
 
-class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListener{
+class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListener, SwipeRefreshLayout.OnRefreshListener{
 
     companion object{
         const val TAG = "MainActivity"
@@ -47,6 +48,8 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
 
     private lateinit var rssRepository: RssRepository
     lateinit var rssModel: RssModel
+
+    var lastContentSize = 0
 
     //endregion
 
@@ -118,7 +121,16 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         })
         // 监听内容数据的变化
         rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->
-//            Log.d(TAG, "rssItemsData observe ---> $response")
+            val dataList = response.data as MutableList<RssItem>
+            Log.d(TAG, "rssItemsData observe ---> ${response.code} dataList-->${dataList.size} lastContentSize-->$lastContentSize")
+            if(response.code == RssRepository.WEB_SUCCESS){
+                homeFragment.setIsRefreshing(false)
+                updateTip.text = "有${dataList.size - lastContentSize}条更新"
+                updateTip.visibility = if(dataList.size - lastContentSize > 0) View.VISIBLE else View.GONE
+                lastContentSize = dataList.size
+            }else if(response.code == RssRepository.DB_SUCCESS){
+                lastContentSize = dataList.size
+            }
         })
     }
 
@@ -170,6 +182,12 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         Log.d(TAG, "onTabItemClick: $data")
         // 获取内容列表
         rssRepository.getRssItemList(data,false)
+    }
+
+    override fun onRefresh() {
+        Log.d(TAG, "onRefresh ${homeFragment.isRefreshing()}")
+        // 获取内容列表
+        rssRepository.getRssItemList(tabListAdapter.dataList[0], true)
     }
 
 }
