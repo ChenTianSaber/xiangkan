@@ -42,9 +42,11 @@ class RssRepository(
     fun getRssLinks() {
         GlobalScope.launch(Dispatchers.IO) {
             val defaultList = getDefaultRssLinks()
-            if(rssLinkInfoDao.getItemByUrl(defaultList[0].url).isNullOrEmpty()){
-                // 如果没有数据的话，就先存进数据库
-                rssLinkInfoDao.insertAll(defaultList)
+            for(rssLink in defaultList){
+                if(rssLinkInfoDao.getItemByUrl(rssLink.url).isNullOrEmpty()){
+                    // 如果没有数据的话，就先存进数据库
+                    rssLinkInfoDao.insertItem(rssLink)
+                }
             }
             val dbList = getRssLinksFromDB()
             rssLinks.clear()
@@ -73,32 +75,54 @@ class RssRepository(
                         channelTitle = "少数派",
                         channelDescription = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
                         state = true
+                ),
+                RssLinkInfo(
+                        url = "https://rsshub.ioiox.com/zhihu/hotlist",
+                        channelLink = "https://www.zhihu.com/billboard",
+                        channelTitle = "知乎热榜",
+                        channelDescription = "知乎热榜",
+                        state = true
                 )
         )
     }
 
     // 获取内容列表
-    fun getRssItemList() {
+    fun getRssItemList(rssLinkInfo:RssLinkInfo,requestWeb:Boolean) {
         GlobalScope.launch(Dispatchers.IO) {
             //先从数据库将本地数据返回展示，再去取web数据
-            var resultList = rssItemDao.getAllOrderByPubDate()
+            var resultList = if(rssLinkInfo.url == "-1"){
+                rssItemDao.getAllOrderByPubDate()
+            }else{
+                rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
+            }
             rssItemsData.postValue(ResponseData(
                     code = DB_SUCCESS,
                     data = resultList,
                     message = "成功"
             ))
 
-            // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
-            // web数据会有多个订阅源，所有源都请求结束后再获取数据
-            for (rssLinkInfo in rssLinks) {
-                if(rssLinkInfo.state) requestRSSData(rssLinkInfo)
+            if(requestWeb){
+                // 先请求Web数据，然后比对有无更新，有的话将更新的数据插入数据库，再从数据库返回数据，数据库是单一数据源
+                // web数据会有多个订阅源，所有源都请求结束后再获取数据
+                if(rssLinkInfo.url == "-1"){
+                    for (link in rssLinks) {
+                        if(link.state) requestRSSData(link)
+                    }
+                }else{
+                    requestRSSData(rssLinkInfo)
+                }
+
+                resultList = if (rssLinkInfo.url == "-1") {
+                    rssItemDao.getAllOrderByPubDate()
+                } else {
+                    rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
+                }
+                rssItemsData.postValue(ResponseData(
+                        code = WEB_SUCCESS,
+                        data = resultList,
+                        message = "成功"
+                ))
             }
-            resultList = rssItemDao.getAllOrderByPubDate()
-            rssItemsData.postValue(ResponseData(
-                    code = WEB_SUCCESS,
-                    data = resultList,
-                    message = "成功"
-            ))
         }
     }
 

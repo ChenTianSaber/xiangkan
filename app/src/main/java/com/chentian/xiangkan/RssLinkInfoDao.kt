@@ -14,9 +14,6 @@ interface RssLinkInfoDao {
     fun getItemByUrl(url:String): MutableList<RssLinkInfo>
 
     @Insert
-    fun insertAll(rssManagerInfos: MutableList<RssLinkInfo>)
-
-    @Insert
     fun insertItem(vararg rssManagerInfo: RssLinkInfo)
 
     @Update

@@ -8,6 +8,7 @@ import android.view.Window
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,10 +21,13 @@ import com.chentian.xiangkan.page.HomeFragment
 import com.chentian.xiangkan.page.ManagerFragment
 import com.githang.statusbar.StatusBarCompat
 
-class MainActivity : AppCompatActivity() ,View.OnClickListener{
+class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListener{
 
     companion object{
         const val TAG = "MainActivity"
+
+        const val SORTANDMANAGER = 1
+        const val BACK = 2
     }
 
     // region field
@@ -38,6 +42,7 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
 
     private lateinit var sortBtn:ImageView
     private lateinit var managerBtn:ImageView
+    private lateinit var backBtn:ImageView
     private lateinit var updateTip:TextView
 
     private lateinit var rssRepository: RssRepository
@@ -58,6 +63,7 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
     private fun initView() {
         tabList = findViewById(R.id.tab_list)
         tabListAdapter = TabListAdapter()
+        tabListAdapter.itemClick = this
         tabList.adapter = tabListAdapter
         tabList.layoutManager = LinearLayoutManager(this,RecyclerView.HORIZONTAL,false)
 
@@ -71,8 +77,11 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
         sortBtn.setOnClickListener(this)
         managerBtn = findViewById(R.id.manager)
         managerBtn.setOnClickListener(this)
+        backBtn = findViewById(R.id.back)
+        backBtn.setOnClickListener(this)
 
         updateTip = findViewById(R.id.update_tip)
+        updateTip.setOnClickListener(this)
     }
 
     private fun initData() {
@@ -105,12 +114,28 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
             ))
             tabListAdapter.notifyDataSetChanged()
             // 获取内容列表
-            rssRepository.getRssItemList()
+            rssRepository.getRssItemList(tabListAdapter.dataList[0],true)
         })
         // 监听内容数据的变化
         rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->
-            Log.d(TAG, "rssItemsData observe ---> $response")
+//            Log.d(TAG, "rssItemsData observe ---> $response")
         })
+    }
+
+    // 在不同的页面中，需要显示不同的按钮
+    private fun changeIcon(type:Int){
+        when(type){
+            SORTANDMANAGER -> {// 展示排序和管理按钮
+                managerBtn.visibility = View.VISIBLE
+                sortBtn.visibility = View.VISIBLE
+                backBtn.visibility = View.GONE
+            }
+            BACK -> {// 展示返回按钮
+                managerBtn.visibility = View.GONE
+                sortBtn.visibility = View.GONE
+                backBtn.visibility = View.VISIBLE
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -125,8 +150,26 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener{
                     addToBackStack("HomeFragment")
                 }
                 transient.commit()
+                changeIcon(BACK)
+            }
+            R.id.back -> {
+                supportFragmentManager.popBackStack()
+                changeIcon(SORTANDMANAGER)
+            }
+            R.id.update_tip -> {
+                // 点击之后更新列表并返回顶部
             }
         }
+    }
+
+    override fun onContentItemClick(itemView: View, data: RssItem) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onTabItemClick(itemView: View, data: RssLinkInfo) {
+        Log.d(TAG, "onTabItemClick: $data")
+        // 获取内容列表
+        rssRepository.getRssItemList(data,false)
     }
 
 }

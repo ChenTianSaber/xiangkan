@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
     private fun initData() {
         // 监听内容数据的变化
         (activity as MainActivity).rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->
-            Log.d(TAG, "rssItemsData observe ---> $response")
+//            Log.d(TAG, "rssItemsData observe ---> $response")
             contentListAdapter.dataList = response.data as MutableList<RssItem>
             contentListAdapter.notifyDataSetChanged()
         })

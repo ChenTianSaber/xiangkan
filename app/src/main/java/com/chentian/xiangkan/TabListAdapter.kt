@@ -8,11 +8,13 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.blankj.utilcode.util.ToastUtils
+import com.bumptech.glide.Glide
 
 class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
 
     private lateinit var context:Context
     var dataList = mutableListOf<RssLinkInfo>()
+    var itemClick: ItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TabViewHolder {
         context = parent.context
@@ -20,10 +22,9 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            ToastUtils.showShort(dataList[position].channelTitle)
-        }
+        holder.itemView.tag = position
         holder.name.text = dataList[position].channelTitle
+        Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
     }
 
     override fun getItemCount(): Int {
@@ -31,6 +32,11 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
     }
 
     inner class TabViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                itemClick?.onTabItemClick(itemView, dataList[itemView.tag as Int])
+            }
+        }
         val icon: ImageView = itemView.findViewById(R.id.icon)
         val name: TextView = itemView.findViewById(R.id.name)
     }

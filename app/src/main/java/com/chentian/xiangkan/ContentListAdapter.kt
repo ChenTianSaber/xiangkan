@@ -46,6 +46,8 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             Glide.with(context).load(dataList[position].imageUrl).into(holder.cover)
         }
 
+        Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
+
         //是否已读
         if(dataList[position].wasRead!!){
             context.let { holder.title.setTextColor(Color.GRAY) }

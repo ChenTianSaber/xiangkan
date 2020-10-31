@@ -58,13 +58,23 @@
         android:paddingRight="4dp"
         android:elevation="4dp"
         android:gravity="center">
+        
+        <!--返回按钮-->
+        <ImageView
+            android:id="@+id/back"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:src="@mipmap/jiantou_zuo"
+            android:visibility="gone"
+            />
 
         <!--排序按钮-->
         <ImageView
             android:id="@+id/sort"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@mipmap/liebiao"/>
+            android:src="@mipmap/shaixuan"
+            android:visibility="visible"/>
 
         <!--管理订阅按钮-->
         <ImageView
@@ -72,7 +82,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@mipmap/cangku_kucun"
-            android:layout_marginLeft="18dp"/>
+            android:layout_marginLeft="18dp"
+            android:visibility="visible"/>
 
     </LinearLayout>
 

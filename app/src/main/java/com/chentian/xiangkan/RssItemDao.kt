@@ -31,6 +31,12 @@ interface RssItemDao {
     @Query("SELECT * FROM RSSItem WHERE wasRead = 1 ORDER BY pubDate DESC")
     fun getAllWasRead(): MutableList<RssItem>
 
+    /**
+     * 根据url查找数据(时间排序)
+     */
+    @Query("SELECT * FROM RssItem where url = :url ORDER BY pubDate DESC")
+    fun getAllByUrlOrderByPubDate(url:String): MutableList<RssItem>
+
     @Insert
     fun insertAll(rssItems: MutableList<RssItem>)
 
