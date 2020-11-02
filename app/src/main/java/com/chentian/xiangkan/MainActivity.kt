@@ -101,6 +101,11 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         rssRepository.getRssLinks()
     }
 
+    override fun onWindowFocusChanged(hasFocus: Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        homeFragment.setItemClick(this)
+    }
+
     private fun dataListen(){
         // 监听订阅源数据的变化
         rssModel.rssLinksData.observe(this, Observer<ResponseData>{ response ->
@@ -147,11 +152,13 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
                 managerBtn.visibility = View.VISIBLE
                 sortBtn.visibility = View.VISIBLE
                 backBtn.visibility = View.GONE
+                tabList.visibility = View.VISIBLE
             }
             BACK -> {// 展示返回按钮
                 managerBtn.visibility = View.GONE
                 sortBtn.visibility = View.GONE
                 backBtn.visibility = View.VISIBLE
+                tabList.visibility = View.GONE
             }
         }
     }
@@ -162,7 +169,6 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
 
             }
             R.id.manager -> {
-
                 val transient = supportFragmentManager.beginTransaction().apply{
                     replace(R.id.fragment_view,managerFragment)
                     addToBackStack("HomeFragment")
@@ -184,7 +190,15 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     }
 
     override fun onContentItemClick(itemView: View, data: RssItem) {
-        TODO("Not yet implemented")
+        val transient = supportFragmentManager.beginTransaction().apply{
+            replace(R.id.fragment_view,detailFragment)
+            addToBackStack("HomeFragment")
+        }
+        val bundle = Bundle()
+        bundle.putParcelable("RssItem",data)
+        detailFragment.arguments = bundle
+        transient.commit()
+        changeIcon(BACK)
     }
 
     override fun onTabItemClick(itemView: View, data: RssLinkInfo) {

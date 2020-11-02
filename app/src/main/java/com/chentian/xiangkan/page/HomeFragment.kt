@@ -63,6 +63,10 @@ class HomeFragment : Fragment() {
         contentList.smoothScrollToPosition(0)
     }
 
+    fun setItemClick(listener:ItemClickListener){
+        contentListAdapter.itemClick = listener
+    }
+
     private fun initData() {
         // 监听内容数据的变化
         (activity as MainActivity).rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->

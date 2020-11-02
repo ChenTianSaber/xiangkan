@@ -19,6 +19,7 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
 
     private lateinit var context:Context
     var dataList = mutableListOf<RssItem>()
+    var itemClick: ItemClickListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ContentViewHolder {
         context = parent.context
@@ -28,6 +29,8 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
     }
 
     override fun onBindViewHolder(holder: ContentViewHolder, position: Int) {
+        holder.itemView.tag = position
+
         holder.title.text = dataList[position].title
         holder.author.text = dataList[position].author
 
@@ -61,6 +64,11 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
     }
 
     inner class ContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                itemClick?.onContentItemClick(itemView, dataList[itemView.tag as Int])
+            }
+        }
         val title: TextView = itemView.findViewById(R.id.title)
         val description: TextView = itemView.findViewById(R.id.description)
         val author: TextView = itemView.findViewById(R.id.author)

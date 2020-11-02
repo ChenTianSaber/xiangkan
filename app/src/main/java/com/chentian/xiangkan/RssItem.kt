@@ -1,11 +1,15 @@
 package com.chentian.xiangkan
 
+import android.os.Parcelable
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.IgnoredOnParcel
+import kotlinx.android.parcel.Parcelize
 
 /**
  * 订阅返回数据的Item
  */
+@Parcelize
 @Entity
 data class RssItem (
         val url:String, //订阅请求的链接
@@ -17,9 +21,12 @@ data class RssItem (
         val description:String, // 内容详情
         val author:String, // 内容作者
         val pubDate:Long // 内容更新时间
-){
+) : Parcelable {
+    @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)
     var id:Long = 0
+    @IgnoredOnParcel
     var wasRead: Boolean? = false
+    @IgnoredOnParcel
     var imageUrl: String? = ""
 }
