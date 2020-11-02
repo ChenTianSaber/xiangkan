@@ -1,7 +1,7 @@
 package com.chentian.xiangkan
 
 import android.app.Application
-import com.blankj.utilcode.util.AppUtils
+import com.chentian.xiangkan.utils.AppUtils
 import com.tencent.bugly.crashreport.CrashReport
 import com.umeng.analytics.MobclickAgent
 import com.umeng.commonsdk.UMConfigure
@@ -10,7 +10,7 @@ class XiangKanApplication: Application() {
     override fun onCreate() {
         super.onCreate()
         // 初始化bugly
-        CrashReport.initCrashReport(this, "f1eb49d0fb", AppUtils.isAppDebug())
+        CrashReport.initCrashReport(this, "f1eb49d0fb", AppUtils.isAppDebug(this))
         // 初始化友盟
         UMConfigure.init(
             this,

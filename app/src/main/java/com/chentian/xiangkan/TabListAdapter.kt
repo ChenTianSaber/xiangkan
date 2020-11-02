@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.blankj.utilcode.util.ToastUtils
 import com.bumptech.glide.Glide
 
 class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {

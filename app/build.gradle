@@ -61,8 +61,6 @@ dependencies {
     // glide
     implementation 'com.github.bumptech.glide:glide:4.11.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
-    // androidUtils
-    implementation 'com.blankj:utilcodex:1.29.0'
     // bugly
     implementation 'com.tencent.bugly:crashreport:3.2.422'
     // 友盟统计SDK

@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.blankj.utilcode.util.ToastUtils
 import com.chentian.xiangkan.page.AddFragment
 import com.chentian.xiangkan.page.DetailFragment
 import com.chentian.xiangkan.page.HomeFragment
@@ -127,9 +126,16 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
                 homeFragment.setIsRefreshing(false)
                 updateTip.text = "有${dataList.size - lastContentSize}条更新"
                 updateTip.visibility = if(dataList.size - lastContentSize > 0) View.VISIBLE else View.GONE
+                if(lastContentSize <= 0){
+                    homeFragment.refreshData()
+                }
+                if((dataList.size - lastContentSize) <= 0){
+                    Toast.makeText(this,"没有内容更新",Toast.LENGTH_SHORT).show()
+                }
                 lastContentSize = dataList.size
             }else if(response.code == RssRepository.DB_SUCCESS){
                 lastContentSize = dataList.size
+                homeFragment.refreshData()
             }
         })
     }
@@ -153,10 +159,10 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.sort -> {
-                ToastUtils.showShort("排序选项")
+
             }
             R.id.manager -> {
-                ToastUtils.showShort("管理订阅")
+
                 val transient = supportFragmentManager.beginTransaction().apply{
                     replace(R.id.fragment_view,managerFragment)
                     addToBackStack("HomeFragment")
@@ -170,6 +176,9 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
             }
             R.id.update_tip -> {
                 // 点击之后更新列表并返回顶部
+                homeFragment.refreshData()
+                homeFragment.scrollToTop()
+                updateTip.visibility = View.GONE
             }
         }
     }
