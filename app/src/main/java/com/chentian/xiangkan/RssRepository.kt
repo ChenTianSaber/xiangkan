@@ -33,6 +33,10 @@ class RssRepository(
         const val DB_SUCCESS = 0
         const val WEB_SUCCESS = 1
         const val SUCCESS = 2
+
+        const val SORT_TYPE_TIME = 1
+        const val SORT_TYPE_ID = 2
+        var sortType = SORT_TYPE_ID
     }
 
     // 订阅源的链接
@@ -86,14 +90,22 @@ class RssRepository(
         )
     }
 
+    private fun getAll(): MutableList<RssItem> {
+        return if (sortType == SORT_TYPE_TIME) rssItemDao.getAllOrderByPubDate() else rssItemDao.getAll()
+    }
+
+    private fun getAllByUrl(url: String): MutableList<RssItem> {
+        return if (sortType == SORT_TYPE_TIME) rssItemDao.getAllByUrlOrderByPubDate(url) else rssItemDao.getAllByUrl(url)
+    }
+
     // 获取内容列表
     fun getRssItemList(rssLinkInfo:RssLinkInfo,requestWeb:Boolean) {
         GlobalScope.launch(Dispatchers.IO) {
             //先从数据库将本地数据返回展示，再去取web数据
             var resultList = if(rssLinkInfo.url == "-1"){
-                rssItemDao.getAllOrderByPubDate()
+                getAll()
             }else{
-                rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
+                getAllByUrl(rssLinkInfo.url)
             }
             rssItemsData.postValue(ResponseData(
                     code = DB_SUCCESS,
@@ -113,9 +125,9 @@ class RssRepository(
                 }
 
                 resultList = if (rssLinkInfo.url == "-1") {
-                    rssItemDao.getAllOrderByPubDate()
+                    getAll()
                 } else {
-                    rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
+                    getAllByUrl(rssLinkInfo.url)
                 }
                 rssItemsData.postValue(ResponseData(
                         code = WEB_SUCCESS,
