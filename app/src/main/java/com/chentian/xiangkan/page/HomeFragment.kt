@@ -43,6 +43,8 @@ class HomeFragment : Fragment() {
         contentList.adapter = contentListAdapter
         contentList.layoutManager = LinearLayoutManager(activity)
 
+        contentListAdapter.itemClick = activity as MainActivity
+
         swipeRefreshLayout = itemView.findViewById(R.id.swipe_refresh)
         swipeRefreshLayout.setOnRefreshListener(activity as MainActivity)
     }
@@ -61,10 +63,6 @@ class HomeFragment : Fragment() {
 
     fun scrollToTop(){
         contentList.smoothScrollToPosition(0)
-    }
-
-    fun setItemClick(listener:ItemClickListener){
-        contentListAdapter.itemClick = listener
     }
 
     private fun initData() {

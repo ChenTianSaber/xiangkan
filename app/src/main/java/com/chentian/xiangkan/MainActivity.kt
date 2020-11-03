@@ -101,11 +101,6 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         rssRepository.getRssLinks()
     }
 
-    override fun onWindowFocusChanged(hasFocus: Boolean) {
-        super.onWindowFocusChanged(hasFocus)
-        homeFragment.setItemClick(this)
-    }
-
     private fun dataListen(){
         // 监听订阅源数据的变化
         rssModel.rssLinksData.observe(this, Observer<ResponseData>{ response ->
