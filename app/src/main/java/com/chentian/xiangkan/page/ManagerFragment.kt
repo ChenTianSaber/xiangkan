@@ -1,9 +1,50 @@
 package com.chentian.xiangkan.page
 
+import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.chentian.xiangkan.*
 
 /**
  * 订阅管理页
  */
 class ManagerFragment : Fragment() {
+
+    private lateinit var itemView: View
+
+    private lateinit var managerList: RecyclerView
+    private lateinit var managerListAdapter: ManagerListAdapter
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        itemView = inflater.inflate(R.layout.layout_manager,container,false)
+        initView()
+        initData()
+        return itemView
+    }
+
+    private fun initView() {
+        managerList = itemView.findViewById(R.id.manager_list)
+        managerListAdapter = ManagerListAdapter()
+        managerList.adapter = managerListAdapter
+        managerList.layoutManager = GridLayoutManager(activity,3)
+
+        managerListAdapter.itemClick = activity as MainActivity
+    }
+
+    private fun initData() {
+        // 监听订阅源数据的变化
+        (activity as MainActivity).rssModel.rssLinksData.observe(this, Observer<ResponseData>{ response ->
+            Log.d(MainActivity.TAG, "rssLinksData observe ---> $response")
+            managerListAdapter.dataList = response.data as MutableList<RssLinkInfo>
+            managerListAdapter.notifyDataSetChanged()
+        })
+    }
 }

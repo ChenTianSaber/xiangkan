@@ -69,6 +69,15 @@ class RssRepository(
     }
 
     /**
+     * 更新订阅源
+     */
+    fun updateRssLink(rssLinkInfo:RssLinkInfo){
+        GlobalScope.launch(Dispatchers.IO) {
+            rssLinkInfoDao.updateItems(rssLinkInfo)
+        }
+    }
+
+    /**
      * 构建默认的订阅源
      */
     private fun getDefaultRssLinks():MutableList<RssLinkInfo>{

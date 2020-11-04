@@ -1,15 +1,13 @@
 package com.chentian.xiangkan
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.Window
-import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
-import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -128,6 +126,7 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
                 updateTip.visibility = if(dataList.size - lastContentSize > 0) View.VISIBLE else View.GONE
                 if(lastContentSize <= 0){
                     homeFragment.refreshData()
+                    updateTip.visibility = View.GONE
                 }
                 if((dataList.size - lastContentSize) <= 0){
                     Toast.makeText(this,"没有内容更新",Toast.LENGTH_SHORT).show()
@@ -200,6 +199,19 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         Log.d(TAG, "onTabItemClick: $data")
         // 获取内容列表
         rssRepository.getRssItemList(data,false)
+    }
+
+    override fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
+        // 点击订阅管理的Item
+        if(data.url == "-1"){
+//            Toast.makeText(this,"添加订阅",Toast.LENGTH_SHORT).show()
+            AddRssLinkInfoDialog().show(supportFragmentManager, "addRssLinkInfo")
+        }else{
+            Toast.makeText(this,"${data.channelTitle} state --> ${data.state} ",Toast.LENGTH_SHORT).show()
+            data.state = !data.state
+            rssRepository.updateRssLink(data)
+            rssRepository.getRssLinks()
+        }
     }
 
     override fun onRefresh() {

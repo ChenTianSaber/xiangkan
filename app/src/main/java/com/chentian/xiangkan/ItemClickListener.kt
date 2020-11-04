@@ -5,4 +5,5 @@ import android.view.View
 interface ItemClickListener {
     fun onContentItemClick(itemView: View, data: RssItem)
     fun onTabItemClick(itemView: View, data: RssLinkInfo)
+    fun onManagerItemClick(itemView: View, data: RssLinkInfo)
 }
