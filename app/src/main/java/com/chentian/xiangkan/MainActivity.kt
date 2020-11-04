@@ -204,8 +204,10 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     override fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
         // 点击订阅管理的Item
         if(data.url == "-1"){
-//            Toast.makeText(this,"添加订阅",Toast.LENGTH_SHORT).show()
-            AddRssLinkInfoDialog().show(supportFragmentManager, "addRssLinkInfo")
+            Toast.makeText(this,"添加订阅",Toast.LENGTH_SHORT).show()
+//            AddRssLinkInfoDialog().show(supportFragmentManager, "addRssLinkInfo")
+            // TODO(先用假数据测试添加流程)
+            rssRepository.addBiliBiliUpDynamic("7554338")
         }else{
             Toast.makeText(this,"${data.channelTitle} state --> ${data.state} ",Toast.LENGTH_SHORT).show()
             data.state = !data.state

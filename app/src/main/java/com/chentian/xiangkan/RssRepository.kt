@@ -1,14 +1,15 @@
 package com.chentian.xiangkan
 
 import android.util.Log
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.json.JSONObject
+import java.io.BufferedReader
 import java.io.InputStream
+import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
@@ -293,6 +294,82 @@ class RssRepository(
             }
         }
         return dataList
+    }
+
+    /**
+     * 添加B站up主动态订阅
+     */
+    fun addBiliBiliUpDynamic(uid:String){
+        // 先通过接口获取订阅数据
+        GlobalScope.launch(Dispatchers.IO) {
+            var connection: HttpURLConnection? = null
+            try {
+                val url = URL("https://rsshub.ioiox.com/bilibili/user/dynamic/$uid")
+                connection = url.openConnection() as HttpURLConnection
+                //设置请求方法
+                connection.requestMethod = "GET"
+                //设置连接超时时间（毫秒）
+                connection.connectTimeout = 10000
+                //设置读取超时时间（毫秒）
+                connection.readTimeout = 10000
+
+                //返回输入流
+                val inputStream: InputStream = connection.inputStream
+
+                //解析xml数据
+                inputStream.use {
+                    val xmlToJson: XmlToJson = XmlToJson.Builder(inputStream, null).build()
+                    val jsonObject = xmlToJson.toJson()
+                    val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
+
+                    if (channelJsonObject != null) {
+                        Log.d(TAG, "addBiliBiliUpDynamic: $channelJsonObject")
+                        getBiliBiliInfo(uid)
+                    }
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                connection?.disconnect()
+            }
+        }
+        // 在通过接口获取up信息，主要是名字和头像
+    }
+
+    fun getBiliBiliInfo(uid:String){
+        var connection: HttpURLConnection? = null
+        try {
+            val url = URL("https://api.bilibili.com/x/space/acc/info?mid=$uid")
+            connection = url.openConnection() as HttpURLConnection
+            //设置请求方法
+            connection.requestMethod = "GET"
+            //设置连接超时时间（毫秒）
+            connection.connectTimeout = 10000
+            //设置读取超时时间（毫秒）
+            connection.readTimeout = 10000
+
+            //返回输入流
+            val inputStream: InputStream = connection.inputStream
+
+            //解析xml数据
+            inputStream.use {
+                val reader = BufferedReader(inputStream.reader())
+                val content = StringBuilder()
+                reader.use { reader ->
+                    var line = reader.readLine()
+                    while (line != null) {
+                        content.append(line)
+                        line = reader.readLine()
+                    }
+                }
+                val bilibiliJson = JSONObject(content.toString())
+                Log.d(TAG, "getBiliBiliInfo: $bilibiliJson")
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection?.disconnect()
+        }
     }
 
 }

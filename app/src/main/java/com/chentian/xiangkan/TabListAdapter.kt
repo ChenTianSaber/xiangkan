@@ -23,7 +23,8 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
         holder.itemView.tag = position
         holder.name.text = dataList[position].channelTitle
-        Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
+//        Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
+        Glide.with(context).load(dataList[position].icon).into(holder.icon)
     }
 
     override fun getItemCount(): Int {
