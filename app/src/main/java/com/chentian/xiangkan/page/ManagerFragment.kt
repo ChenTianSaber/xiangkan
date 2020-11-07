@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.GridLayoutManager
@@ -22,6 +23,7 @@ class ManagerFragment : Fragment() {
 
     private lateinit var managerList: RecyclerView
     private lateinit var managerListAdapter: ManagerListAdapter
+    private lateinit var bilibiliUpRss: LinearLayout
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         itemView = inflater.inflate(R.layout.layout_manager,container,false)
@@ -34,9 +36,14 @@ class ManagerFragment : Fragment() {
         managerList = itemView.findViewById(R.id.manager_list)
         managerListAdapter = ManagerListAdapter()
         managerList.adapter = managerListAdapter
-        managerList.layoutManager = GridLayoutManager(activity,3)
+        managerList.layoutManager = LinearLayoutManager(activity)
 
         managerListAdapter.itemClick = activity as MainActivity
+
+        bilibiliUpRss = itemView.findViewById(R.id.bilibili_up_rss)
+        bilibiliUpRss.setOnClickListener {
+            AddRssLinkInfoDialog((activity as MainActivity).rssRepository).show((activity as MainActivity).supportFragmentManager, "addRssLinkInfo")
+        }
     }
 
     private fun initData() {

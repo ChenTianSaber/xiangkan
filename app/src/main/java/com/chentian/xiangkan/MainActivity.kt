@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     private lateinit var backBtn:ImageView
     private lateinit var updateTip:TextView
 
-    private lateinit var rssRepository: RssRepository
+    lateinit var rssRepository: RssRepository
     lateinit var rssModel: RssModel
 
     var lastContentSize = 0
