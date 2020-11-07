@@ -299,44 +299,55 @@ class RssRepository(
     /**
      * 添加B站up主动态订阅
      */
-    fun addBiliBiliUpDynamic(uid:String){
+    fun addBiliBiliUpDynamic(uid: String) :RssLinkInfo{
+        val rssLinkInfo = RssLinkInfo()
         // 先通过接口获取订阅数据
-        GlobalScope.launch(Dispatchers.IO) {
-            var connection: HttpURLConnection? = null
-            try {
-                val url = URL("https://rsshub.ioiox.com/bilibili/user/dynamic/$uid")
-                connection = url.openConnection() as HttpURLConnection
-                //设置请求方法
-                connection.requestMethod = "GET"
-                //设置连接超时时间（毫秒）
-                connection.connectTimeout = 10000
-                //设置读取超时时间（毫秒）
-                connection.readTimeout = 10000
+        var connection: HttpURLConnection? = null
+        try {
+            val url = URL("https://rsshub.ioiox.com/bilibili/user/dynamic/$uid")
+            connection = url.openConnection() as HttpURLConnection
+            //设置请求方法
+            connection.requestMethod = "GET"
+            //设置连接超时时间（毫秒）
+            connection.connectTimeout = 10000
+            //设置读取超时时间（毫秒）
+            connection.readTimeout = 10000
 
-                //返回输入流
-                val inputStream: InputStream = connection.inputStream
+            //返回输入流
+            val inputStream: InputStream = connection.inputStream
 
-                //解析xml数据
-                inputStream.use {
-                    val xmlToJson: XmlToJson = XmlToJson.Builder(inputStream, null).build()
-                    val jsonObject = xmlToJson.toJson()
-                    val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
+            //解析xml数据
+            inputStream.use {
+                val xmlToJson: XmlToJson = XmlToJson.Builder(inputStream, null).build()
+                val jsonObject = xmlToJson.toJson()
+                val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
 
-                    if (channelJsonObject != null) {
-                        Log.d(TAG, "addBiliBiliUpDynamic: $channelJsonObject")
-                        getBiliBiliInfo(uid)
+                channelJsonObject?.let {channelData ->
+//                    Log.d(TAG, "addBiliBiliUpDynamic: $channelData")
+                    // 在通过接口获取up信息，主要是名字和头像
+                    getBiliBiliInfo(uid)?.let { json ->
+                        val dataObj = json.optJSONObject("data")
+                        dataObj?.let { data ->
+                            rssLinkInfo.channelTitle = data.optString("name")
+                            rssLinkInfo.channelDescription = data.optString("sign")
+                            rssLinkInfo.url = "https://rsshub.ioiox.com/bilibili/user/dynamic/$uid"
+                            rssLinkInfo.channelLink = channelData.optString("link")
+                            rssLinkInfo.icon = data.optString("face")
+                        }
                     }
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
-            } finally {
-                connection?.disconnect()
             }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection?.disconnect()
         }
-        // 在通过接口获取up信息，主要是名字和头像
+
+        return rssLinkInfo
     }
 
-    fun getBiliBiliInfo(uid:String){
+    fun getBiliBiliInfo(uid:String):JSONObject?{
+        var bilibiliJson:JSONObject? = null
         var connection: HttpURLConnection? = null
         try {
             val url = URL("https://api.bilibili.com/x/space/acc/info?mid=$uid")
@@ -362,14 +373,16 @@ class RssRepository(
                         line = reader.readLine()
                     }
                 }
-                val bilibiliJson = JSONObject(content.toString())
-                Log.d(TAG, "getBiliBiliInfo: $bilibiliJson")
+                bilibiliJson = JSONObject(content.toString())
+//                Log.d(TAG, "getBiliBiliInfo: $bilibiliJson")
             }
         } catch (e: Exception) {
             e.printStackTrace()
         } finally {
             connection?.disconnect()
         }
+
+        return bilibiliJson
     }
 
 }

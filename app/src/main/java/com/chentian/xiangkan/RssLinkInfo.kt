@@ -8,10 +8,10 @@ import androidx.room.PrimaryKey
  */
 @Entity
 data class RssLinkInfo (
-        val url:String, //订阅请求的链接
-        val channelLink:String, //主站的链接
-        val channelTitle:String, //主站名称
-        val channelDescription:String, // 主站的描述
+        var url:String = "", //订阅请求的链接
+        var channelLink:String = "", //主站的链接
+        var channelTitle:String = "", //主站名称
+        var channelDescription:String = "", // 主站的描述
         var state:Boolean = false, // 是否开启订阅
         var icon:String = "http://i1.hdslb.com/bfs/face/426f088e9869768b8d5365a09f55b56e44c8f53e.jpg" // 图标
 ) {

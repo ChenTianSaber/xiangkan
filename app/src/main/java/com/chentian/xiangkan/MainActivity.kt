@@ -18,6 +18,9 @@ import com.chentian.xiangkan.page.DetailFragment
 import com.chentian.xiangkan.page.HomeFragment
 import com.chentian.xiangkan.page.ManagerFragment
 import com.githang.statusbar.StatusBarCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListener, SwipeRefreshLayout.OnRefreshListener{
 
@@ -207,7 +210,12 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
             Toast.makeText(this,"添加订阅",Toast.LENGTH_SHORT).show()
 //            AddRssLinkInfoDialog().show(supportFragmentManager, "addRssLinkInfo")
             // TODO(先用假数据测试添加流程)
-            rssRepository.addBiliBiliUpDynamic("7554338")
+            GlobalScope.launch (Dispatchers.IO){
+                val rssLinkInfo = rssRepository.addBiliBiliUpDynamic("7554338")
+                Log.d(TAG, "onManagerItemClick: $rssLinkInfo")
+                rssRepository.rssLinkInfoDao.insertItem(rssLinkInfo)
+                rssRepository.getRssLinks()
+            }
         }else{
             Toast.makeText(this,"${data.channelTitle} state --> ${data.state} ",Toast.LENGTH_SHORT).show()
             data.state = !data.state
