@@ -293,6 +293,7 @@ class RssRepository(
                             pubDate = getTime(json)
                     )
                     rssItem.imageUrl = getImageUrl(json)
+                    rssItem.icon = rssLinkInfo.icon
                     dataList.add(rssItem)
                 }
             }

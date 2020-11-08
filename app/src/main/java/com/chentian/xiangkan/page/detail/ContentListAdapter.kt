@@ -52,7 +52,11 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             Glide.with(context).load(dataList[position].imageUrl).into(holder.cover)
         }
 
-        Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
+        if(dataList[position].icon.isNullOrEmpty()){
+            Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
+        } else {
+            Glide.with(context).load(dataList[position].icon).into(holder.icon)
+        }
 
         //是否已读
         if(dataList[position].wasRead!!){

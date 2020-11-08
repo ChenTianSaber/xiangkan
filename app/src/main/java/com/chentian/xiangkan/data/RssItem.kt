@@ -29,4 +29,6 @@ data class RssItem (
     var wasRead: Boolean? = false
     @IgnoredOnParcel
     var imageUrl: String? = ""
+    @IgnoredOnParcel
+    var icon: String? = ""
 }
