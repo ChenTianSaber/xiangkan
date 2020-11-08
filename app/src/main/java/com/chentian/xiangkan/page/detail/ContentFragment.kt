@@ -1,9 +1,8 @@
-package com.chentian.xiangkan.page
+package com.chentian.xiangkan.page.detail
 
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
-import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,13 +11,13 @@ import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.chentian.xiangkan.*
+import com.chentian.xiangkan.data.RssItem
 
 /**
  * 内容页
  */
-class DetailFragment : Fragment() {
+class ContentFragment : Fragment() {
 
     companion object{
         const val TAG = "DetailFragment"
@@ -40,7 +39,7 @@ class DetailFragment : Fragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initData() {
-        val data:RssItem = arguments?.get("RssItem") as RssItem
+        val data: RssItem = arguments?.get("RssItem") as RssItem
         Log.d(TAG, "initData: $data")
 
         fullWebView.settings.javaScriptEnabled = true

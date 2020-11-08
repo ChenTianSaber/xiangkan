@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.page
+package com.chentian.xiangkan.page.manager
 
 import android.os.Bundle
 import android.util.Log
@@ -8,11 +8,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.chentian.xiangkan.*
+import com.chentian.xiangkan.data.ResponseData
+import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.main.MainActivity
 
 /**
  * 订阅管理页

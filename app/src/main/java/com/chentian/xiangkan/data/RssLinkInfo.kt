@@ -1,7 +1,8 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import com.chentian.xiangkan.main.RssRepository
 
 /**
  * 这个类是订阅源的数据

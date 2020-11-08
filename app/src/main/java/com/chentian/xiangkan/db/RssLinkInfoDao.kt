@@ -1,9 +1,10 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.db
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import com.chentian.xiangkan.data.RssLinkInfo
 
 @Dao
 interface RssLinkInfoDao {

@@ -1,7 +1,6 @@
-package com.chentian.xiangkan.page
+package com.chentian.xiangkan.page.home
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +10,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.chentian.xiangkan.*
+import com.chentian.xiangkan.data.ResponseData
+import com.chentian.xiangkan.data.RssItem
+import com.chentian.xiangkan.main.MainActivity
+import com.chentian.xiangkan.page.detail.ContentListAdapter
 
 /**
  * 主页

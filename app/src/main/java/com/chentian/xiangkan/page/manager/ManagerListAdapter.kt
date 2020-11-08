@@ -1,19 +1,17 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.page.manager
 
 import android.content.Context
-import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import java.text.SimpleDateFormat
-import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
+import com.chentian.xiangkan.listener.ItemClickListener
+import com.chentian.xiangkan.R
+import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.utils.RssUtils
 
 class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.ManagerViewHolder>() {
 

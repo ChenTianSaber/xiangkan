@@ -1,4 +1,6 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.utils
+
+import com.chentian.xiangkan.R
 
 object RssUtils{
     /**

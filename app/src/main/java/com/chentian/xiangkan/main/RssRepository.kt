@@ -1,7 +1,12 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.main
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
+import com.chentian.xiangkan.data.ResponseData
+import com.chentian.xiangkan.data.RssItem
+import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.db.RssItemDao
+import com.chentian.xiangkan.db.RssLinkInfoDao
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -9,7 +14,6 @@ import kotlinx.coroutines.launch
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
-import java.io.InputStreamReader
 import java.net.HttpURLConnection
 import java.net.URL
 import java.util.*
@@ -72,7 +76,7 @@ class RssRepository(
     /**
      * 更新订阅源
      */
-    fun updateRssLink(rssLinkInfo:RssLinkInfo){
+    fun updateRssLink(rssLinkInfo: RssLinkInfo){
         GlobalScope.launch(Dispatchers.IO) {
             rssLinkInfoDao.updateItems(rssLinkInfo)
         }
@@ -109,7 +113,7 @@ class RssRepository(
     }
 
     // 获取内容列表
-    fun getRssItemList(rssLinkInfo:RssLinkInfo,requestWeb:Boolean) {
+    fun getRssItemList(rssLinkInfo: RssLinkInfo, requestWeb:Boolean) {
         GlobalScope.launch(Dispatchers.IO) {
             //先从数据库将本地数据返回展示，再去取web数据
             var resultList = if(rssLinkInfo.url == "-1"){
@@ -151,7 +155,7 @@ class RssRepository(
     /**
      * 请求web数据
      */
-    private fun requestRSSData(rssLinkInfo:RssLinkInfo) {
+    private fun requestRSSData(rssLinkInfo: RssLinkInfo) {
         var connection: HttpURLConnection? = null
         try {
             val url = URL(rssLinkInfo.url)
@@ -217,7 +221,7 @@ class RssRepository(
     /**
      * 解析RSS数据
      */
-    private fun parseRssData(data: InputStream,rssLinkInfo:RssLinkInfo): MutableList<RssItem> {
+    private fun parseRssData(data: InputStream,rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
         val dataList = mutableListOf<RssItem>()
 
         /**
@@ -285,7 +289,7 @@ class RssRepository(
                             title = json.optString("title"),
                             link = json.optString("link"),
                             description = json.optString("description"),
-                            author = getAuthor(json,rssLinkInfo.channelTitle),
+                            author = getAuthor(json, rssLinkInfo.channelTitle),
                             pubDate = getTime(json)
                     )
                     rssItem.imageUrl = getImageUrl(json)
@@ -299,7 +303,7 @@ class RssRepository(
     /**
      * 添加B站up主动态订阅
      */
-    fun addBiliBiliUpDynamic(uid: String) :RssLinkInfo{
+    fun addBiliBiliUpDynamic(uid: String) : RssLinkInfo {
         val rssLinkInfo = RssLinkInfo()
         // 先通过接口获取订阅数据
         var connection: HttpURLConnection? = null

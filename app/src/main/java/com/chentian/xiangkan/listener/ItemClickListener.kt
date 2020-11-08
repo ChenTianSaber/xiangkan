@@ -1,6 +1,8 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.listener
 
 import android.view.View
+import com.chentian.xiangkan.data.RssItem
+import com.chentian.xiangkan.data.RssLinkInfo
 
 interface ItemClickListener {
     fun onContentItemClick(itemView: View, data: RssItem)

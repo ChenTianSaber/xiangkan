@@ -1,4 +1,4 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.data
 
 data class ResponseData (
         val code:Int, // 返回code

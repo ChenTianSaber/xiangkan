@@ -1,4 +1,4 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.data
 
 import android.os.Parcelable
 import androidx.room.Entity

@@ -1,4 +1,4 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.main
 
 import android.os.Bundle
 import android.util.Log
@@ -13,10 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.chentian.xiangkan.page.AddFragment
-import com.chentian.xiangkan.page.DetailFragment
-import com.chentian.xiangkan.page.HomeFragment
-import com.chentian.xiangkan.page.ManagerFragment
+import com.chentian.xiangkan.*
+import com.chentian.xiangkan.data.ResponseData
+import com.chentian.xiangkan.data.RssItem
+import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.db.AppDatabase
+import com.chentian.xiangkan.listener.ItemClickListener
+import com.chentian.xiangkan.page.detail.ContentFragment
+import com.chentian.xiangkan.page.home.HomeFragment
+import com.chentian.xiangkan.page.manager.ManagerFragment
 import com.githang.statusbar.StatusBarCompat
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -37,9 +42,8 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     private lateinit var tabListAdapter: TabListAdapter
 
     private lateinit var homeFragment: HomeFragment
-    private lateinit var detailFragment: DetailFragment
-    private lateinit var managerFragment:ManagerFragment
-    private lateinit var addFragment: AddFragment
+    private lateinit var contentFragment: ContentFragment
+    private lateinit var managerFragment: ManagerFragment
 
     private lateinit var sortBtn:ImageView
     private lateinit var managerBtn:ImageView
@@ -71,9 +75,8 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         tabList.layoutManager = LinearLayoutManager(this,RecyclerView.HORIZONTAL,false)
 
         homeFragment = HomeFragment()
-        detailFragment = DetailFragment()
+        contentFragment = ContentFragment()
         managerFragment = ManagerFragment()
-        addFragment = AddFragment()
         supportFragmentManager.beginTransaction().add(R.id.fragment_view,homeFragment).commit()
 
         sortBtn = findViewById(R.id.sort)
@@ -188,12 +191,12 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
 
     override fun onContentItemClick(itemView: View, data: RssItem) {
         val transient = supportFragmentManager.beginTransaction().apply{
-            replace(R.id.fragment_view,detailFragment)
+            replace(R.id.fragment_view,contentFragment)
             addToBackStack("HomeFragment")
         }
         val bundle = Bundle()
         bundle.putParcelable("RssItem",data)
-        detailFragment.arguments = bundle
+        contentFragment.arguments = bundle
         transient.commit()
         changeIcon(BACK)
     }

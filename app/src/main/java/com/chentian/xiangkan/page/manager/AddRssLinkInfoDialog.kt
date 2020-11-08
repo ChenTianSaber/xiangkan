@@ -1,4 +1,4 @@
-package com.chentian.xiangkan
+package com.chentian.xiangkan.page.manager
 
 import android.app.Dialog
 import android.os.Bundle
@@ -9,8 +9,11 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.chentian.xiangkan.main.MainActivity
+import com.chentian.xiangkan.R
+import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.main.RssRepository
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Dispatchers
@@ -29,7 +32,7 @@ class AddRssLinkInfoDialog(private val rssRepository: RssRepository): BottomShee
     private lateinit var oneLayout: ConstraintLayout // 第一个页面
     private lateinit var twoLayout: ConstraintLayout // 第二个页面
 
-    private var rssLinkInfo:RssLinkInfo? = null
+    private var rssLinkInfo: RssLinkInfo? = null
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         return if(activity == null){
