@@ -28,14 +28,24 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.ManagerViewHo
 
     override fun onBindViewHolder(holder: ManagerViewHolder, position: Int) {
         holder.itemView.tag = position
-        if(dataList[position].url == "-1"){
-            holder.name.text = ""
-            Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
-            holder.managerBtn.text = "添加订阅"
+        if(dataList[position].url == "-1"){ // 隐藏全部
+            holder.name.visibility = View.GONE
+            holder.managerBtn.visibility = View.GONE
+            holder.icon.visibility = View.GONE
         }else{
-            holder.name.text = dataList[position].channelTitle
-            Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
-            holder.managerBtn.text = if(dataList[position].state) "已订阅" else "未订阅"
+            holder.name.visibility = View.VISIBLE
+            holder.managerBtn.visibility = View.VISIBLE
+            holder.icon.visibility = View.VISIBLE
+
+            val data = dataList[position]
+
+            holder.name.text = data.channelTitle
+            holder.managerBtn.text = if(data.state) "已订阅" else "未订阅"
+            if(data.icon.isNullOrEmpty()){
+                Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
+            } else {
+                Glide.with(context).load(data.icon).into(holder.icon)
+            }
         }
     }
 

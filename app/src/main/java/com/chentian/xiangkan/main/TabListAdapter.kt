@@ -11,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.chentian.xiangkan.listener.ItemClickListener
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.utils.RssUtils
 
 class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
 
@@ -25,9 +26,15 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
 
     override fun onBindViewHolder(holder: TabViewHolder, position: Int) {
         holder.itemView.tag = position
-        holder.name.text = dataList[position].channelTitle
-//        Glide.with(context).load(RssUtils.getRSSIcon(dataList[position].channelLink)).into(holder.icon)
-        Glide.with(context).load(dataList[position].icon).into(holder.icon)
+        val data = dataList[position]
+
+        holder.name.text = data.channelTitle
+
+        if(data.icon.isNullOrEmpty()){
+            Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
+        } else {
+            Glide.with(context).load(data.icon).into(holder.icon)
+        }
     }
 
     override fun getItemCount(): Int {

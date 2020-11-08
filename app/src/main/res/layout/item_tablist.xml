@@ -7,15 +7,27 @@
     android:paddingTop="16dp"
     android:paddingBottom="8dp">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="64dp"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/icon_layout"
+        android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginTop="8dp"
-        android:src="@mipmap/icon_sspai"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:cardCornerRadius="36dp"
+        app:cardElevation="0dp"
+        android:elevation="4dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@mipmap/ic_launcher" />
+
+    </androidx.cardview.widget.CardView>
 
     <TextView
         android:id="@+id/name"
@@ -30,6 +42,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/icon_layout"
         tools:text="少数派" />
 </androidx.constraintlayout.widget.ConstraintLayout>

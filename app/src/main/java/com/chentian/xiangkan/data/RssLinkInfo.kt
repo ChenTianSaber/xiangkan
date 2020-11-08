@@ -14,7 +14,7 @@ data class RssLinkInfo (
         var channelTitle:String = "", //主站名称
         var channelDescription:String = "", // 主站的描述
         var state:Boolean = false, // 是否开启订阅
-        var icon:String = "http://i1.hdslb.com/bfs/face/426f088e9869768b8d5365a09f55b56e44c8f53e.jpg" // 图标
+        var icon:String = "" // 图标
 ) {
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0

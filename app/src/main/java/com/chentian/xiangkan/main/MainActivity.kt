@@ -213,12 +213,12 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
             Toast.makeText(this,"添加订阅",Toast.LENGTH_SHORT).show()
 //            AddRssLinkInfoDialog().show(supportFragmentManager, "addRssLinkInfo")
             // TODO(先用假数据测试添加流程)
-            GlobalScope.launch (Dispatchers.IO){
-                val rssLinkInfo = rssRepository.addBiliBiliUpDynamic("7554338")
-                Log.d(TAG, "onManagerItemClick: $rssLinkInfo")
-                rssRepository.rssLinkInfoDao.insertItem(rssLinkInfo)
-                rssRepository.getRssLinks()
-            }
+//            GlobalScope.launch (Dispatchers.IO){
+//                val rssLinkInfo = rssRepository.addBiliBiliUpDynamic("7554338")
+//                Log.d(TAG, "onManagerItemClick: $rssLinkInfo")
+//                rssRepository.rssLinkInfoDao.insertItem(rssLinkInfo)
+//                rssRepository.getRssLinks()
+//            }
         }else{
             Toast.makeText(this,"${data.channelTitle} state --> ${data.state} ",Toast.LENGTH_SHORT).show()
             data.state = !data.state
