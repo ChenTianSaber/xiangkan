@@ -6,17 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".main.MainActivity">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/tab_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:background="@color/white_2">
-
-    </androidx.recyclerview.widget.RecyclerView>
-
     <FrameLayout
         android:id="@+id/fragment_view"
         android:layout_width="0dp"
@@ -25,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tab_list" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/update_tip"
@@ -47,43 +36,47 @@
         app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="wrap_content"
         android:layout_height="42dp"
-        android:orientation="horizontal"
         android:layout_marginBottom="64dp"
-        android:background="@drawable/coner_side"
+        android:background="@drawable/coner_white_3"
+        android:elevation="4dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingLeft="12dp"
+        android:paddingTop="4dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:paddingLeft="16dp"
-        android:paddingRight="4dp"
-        android:elevation="4dp"
-        android:gravity="center">
-        
-        <!--返回按钮-->
-        <ImageView
-            android:id="@+id/back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@mipmap/jiantou_zuo"
-            android:visibility="gone"
-            />
+        app:layout_constraintStart_toStartOf="parent">
 
         <!--排序按钮-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/sort"-->
+        <!--            android:layout_width="24dp"-->
+        <!--            android:layout_height="24dp"-->
+        <!--            android:src="@mipmap/shaixuan"-->
+        <!--            android:visibility="visible" />-->
+
+        <!--主页按钮-->
         <ImageView
-            android:id="@+id/sort"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@mipmap/shaixuan"
-            android:visibility="visible"/>
+            android:id="@+id/home"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@mipmap/cangku_kucun"
+            android:visibility="visible" />
 
         <!--管理订阅按钮-->
         <ImageView
             android:id="@+id/manager"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@mipmap/cangku_kucun"
-            android:layout_marginLeft="18dp"
-            android:visibility="visible"/>
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="16dp"
+            android:paddingTop="4dp"
+            android:src="@mipmap/tags"
+            android:visibility="visible" />
 
     </LinearLayout>
 

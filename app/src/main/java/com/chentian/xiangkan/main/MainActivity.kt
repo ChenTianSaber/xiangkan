@@ -27,7 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListener, SwipeRefreshLayout.OnRefreshListener{
+class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListener{
 
     companion object{
         const val TAG = "MainActivity"
@@ -38,16 +38,13 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
 
     // region field
 
-    private lateinit var tabList: RecyclerView
-    private lateinit var tabListAdapter: TabListAdapter
-
     private lateinit var homeFragment: HomeFragment
     private lateinit var contentFragment: ContentFragment
     private lateinit var managerFragment: ManagerFragment
 
-    private lateinit var sortBtn:ImageView
+    private lateinit var homeBtn:ImageView
     private lateinit var managerBtn:ImageView
-    private lateinit var backBtn:ImageView
+
     private lateinit var updateTip:TextView
 
     lateinit var rssRepository: RssRepository
@@ -68,23 +65,16 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     }
 
     private fun initView() {
-        tabList = findViewById(R.id.tab_list)
-        tabListAdapter = TabListAdapter()
-        tabListAdapter.itemClick = this
-        tabList.adapter = tabListAdapter
-        tabList.layoutManager = LinearLayoutManager(this,RecyclerView.HORIZONTAL,false)
 
         homeFragment = HomeFragment()
         contentFragment = ContentFragment()
         managerFragment = ManagerFragment()
         supportFragmentManager.beginTransaction().add(R.id.fragment_view,homeFragment).commit()
 
-        sortBtn = findViewById(R.id.sort)
-        sortBtn.setOnClickListener(this)
+        homeBtn = findViewById(R.id.home)
+        homeBtn.setOnClickListener(this)
         managerBtn = findViewById(R.id.manager)
         managerBtn.setOnClickListener(this)
-        backBtn = findViewById(R.id.back)
-        backBtn.setOnClickListener(this)
 
         updateTip = findViewById(R.id.update_tip)
         updateTip.setOnClickListener(this)
@@ -108,19 +98,7 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     private fun dataListen(){
         // 监听订阅源数据的变化
         rssModel.rssLinksData.observe(this, Observer<ResponseData>{ response ->
-            Log.d(TAG, "rssLinksData observe ---> $response")
-            tabListAdapter.dataList = response.data as MutableList<RssLinkInfo>
-            // 设置"全部"TAB
-            tabListAdapter.dataList.add(0, RssLinkInfo(
-                    url = "-1",
-                    channelLink = "-1",
-                    channelTitle = "全部",
-                    channelDescription = "全部内容",
-                    state = false
-            ))
-            tabListAdapter.notifyDataSetChanged()
-            // 获取内容列表
-            rssRepository.getRssItemList(tabListAdapter.dataList[0],true)
+//            Log.d(TAG, "rssLinksData observe ---> $response")
         })
         // 监听内容数据的变化
         rssModel.rssItemsData.observe(this, Observer<ResponseData>{ response ->
@@ -145,40 +123,19 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         })
     }
 
-    // 在不同的页面中，需要显示不同的按钮
-    private fun changeIcon(type:Int){
-        when(type){
-            SORTANDMANAGER -> {// 展示排序和管理按钮
-                managerBtn.visibility = View.VISIBLE
-                sortBtn.visibility = View.VISIBLE
-                backBtn.visibility = View.GONE
-                tabList.visibility = View.VISIBLE
-            }
-            BACK -> {// 展示返回按钮
-                managerBtn.visibility = View.GONE
-                sortBtn.visibility = View.GONE
-                backBtn.visibility = View.VISIBLE
-                tabList.visibility = View.GONE
-            }
-        }
-    }
-
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.sort -> {
-
+            R.id.home -> {
+                val transient = supportFragmentManager.beginTransaction().apply{
+                    replace(R.id.fragment_view,homeFragment)
+                }
+                transient.commit()
             }
             R.id.manager -> {
                 val transient = supportFragmentManager.beginTransaction().apply{
                     replace(R.id.fragment_view,managerFragment)
-                    addToBackStack("HomeFragment")
                 }
                 transient.commit()
-                changeIcon(BACK)
-            }
-            R.id.back -> {
-                supportFragmentManager.popBackStack()
-                changeIcon(SORTANDMANAGER)
             }
             R.id.update_tip -> {
                 // 点击之后更新列表并返回顶部
@@ -198,7 +155,12 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
         bundle.putParcelable("RssItem",data)
         contentFragment.arguments = bundle
         transient.commit()
-        changeIcon(BACK)
+
+        data.wasRead = true
+        GlobalScope.launch (Dispatchers.IO){
+            rssRepository.rssItemDao.updateItems(data)
+        }
+        homeFragment.refreshData()
     }
 
     override fun onTabItemClick(itemView: View, data: RssLinkInfo) {
@@ -210,27 +172,13 @@ class MainActivity : AppCompatActivity() ,View.OnClickListener, ItemClickListene
     override fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
         // 点击订阅管理的Item
         if(data.url == "-1"){
-            Toast.makeText(this,"添加订阅",Toast.LENGTH_SHORT).show()
-//            AddRssLinkInfoDialog().show(supportFragmentManager, "addRssLinkInfo")
-            // TODO(先用假数据测试添加流程)
-//            GlobalScope.launch (Dispatchers.IO){
-//                val rssLinkInfo = rssRepository.addBiliBiliUpDynamic("7554338")
-//                Log.d(TAG, "onManagerItemClick: $rssLinkInfo")
-//                rssRepository.rssLinkInfoDao.insertItem(rssLinkInfo)
-//                rssRepository.getRssLinks()
-//            }
+            Toast.makeText(this,"~",Toast.LENGTH_SHORT).show()
         }else{
             Toast.makeText(this,"${data.channelTitle} state --> ${data.state} ",Toast.LENGTH_SHORT).show()
             data.state = !data.state
             rssRepository.updateRssLink(data)
             rssRepository.getRssLinks()
         }
-    }
-
-    override fun onRefresh() {
-        Log.d(TAG, "onRefresh ${homeFragment.isRefreshing()}")
-        // 获取内容列表
-        rssRepository.getRssItemList(tabListAdapter.dataList[0], true)
     }
 
 }
