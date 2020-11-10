@@ -16,25 +16,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/update_tip"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone"
-        tools:text="有12条更新"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:paddingBottom="6dp"
-        android:paddingTop="6dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
-        android:background="@drawable/coner_white_3"
-        android:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
-
     <LinearLayout
         android:id="@+id/linearLayout"
         android:layout_width="wrap_content"

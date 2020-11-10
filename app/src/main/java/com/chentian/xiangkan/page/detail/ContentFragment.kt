@@ -15,15 +15,20 @@ import com.chentian.xiangkan.*
 import com.chentian.xiangkan.data.RssItem
 
 /**
- * 内容页
+ * 内容页fragment
+ * 这个页面和其他的业务应该是独立的，它就是用来展示内容而已
  */
 class ContentFragment : Fragment() {
 
     companion object{
-        const val TAG = "DetailFragment"
+        const val TAG = "ContentFragment"
     }
 
     private lateinit var itemView: View
+
+    /**
+     * 当选择网页模式的时候会展示这个
+     */
     private lateinit var fullWebView: WebView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -39,13 +44,9 @@ class ContentFragment : Fragment() {
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initData() {
+
         val data: RssItem = arguments?.get("RssItem") as RssItem
         Log.d(TAG, "initData: $data")
-
-        fullWebView.settings.javaScriptEnabled = true
-        fullWebView.settings.domStorageEnabled = true
-        fullWebView.settings.blockNetworkImage = false
-        fullWebView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
         val webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
@@ -60,9 +61,18 @@ class ContentFragment : Fragment() {
             }
         }
 
-        fullWebView.webViewClient = webViewClient
+        fun setupFullWebview(){
+            fullWebView.settings.javaScriptEnabled = true
+            fullWebView.settings.domStorageEnabled = true
+            fullWebView.settings.blockNetworkImage = false
+            fullWebView.settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
 
-        fullWebView.loadUrl(data.link)
+            fullWebView.webViewClient = webViewClient
+
+            fullWebView.loadUrl(data.link)
+        }
+
+        setupFullWebview()
 
     }
 

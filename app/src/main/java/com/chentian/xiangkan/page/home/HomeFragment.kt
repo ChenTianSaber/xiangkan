@@ -22,7 +22,8 @@ import com.chentian.xiangkan.page.detail.ContentListAdapter
 import com.chentian.xiangkan.repository.RssRepository
 
 /**
- * 主页
+ * 主页fragment
+ * 所有的数据操作都需要通过MainActivity来操作，不允许直接接触rssRepository
  */
 class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
 

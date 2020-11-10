@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.page.manager
+package com.chentian.xiangkan.page.manager.bilibili
 
 import android.app.Dialog
 import android.os.Bundle
@@ -13,7 +13,8 @@ import com.bumptech.glide.Glide
 import com.chentian.xiangkan.main.MainActivity
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.main.RssRepository
+import com.chentian.xiangkan.repository.RssRepository
+import com.chentian.xiangkan.utils.RssUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
 
-class AddRssLinkInfoDialog(private val rssRepository: RssRepository): BottomSheetDialogFragment() {
+class AddBiliBiliUpDialog(private val rssRepository: RssRepository): BottomSheetDialogFragment() {
 
     private lateinit var editText: EditText // 输入框
     private lateinit var searchBtn: TextView // 查找按钮
@@ -58,10 +59,10 @@ class AddRssLinkInfoDialog(private val rssRepository: RssRepository): BottomShee
 
         searchBtn.setOnClickListener {
             GlobalScope.launch (Dispatchers.IO){
-                rssLinkInfo = rssRepository.addBiliBiliUpDynamic(editText.text.toString())
+                rssLinkInfo = RssUtils.addBiliBiliUpDynamic(editText.text.toString())
                 rssLinkInfo?.let {rssLink->
                     GlobalScope.launch(Dispatchers.Main) {
-                        Glide.with(this@AddRssLinkInfoDialog).load(rssLink.icon).into(icon)
+                        Glide.with(this@AddBiliBiliUpDialog).load(rssLink.icon).into(icon)
                         name.text = rssLink.channelTitle
                         oneLayout.visibility = View.GONE
                         twoLayout.visibility = View.VISIBLE

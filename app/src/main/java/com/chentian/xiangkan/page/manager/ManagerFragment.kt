@@ -14,6 +14,7 @@ import com.chentian.xiangkan.*
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.main.MainActivity
+import com.chentian.xiangkan.page.manager.bilibili.AddBiliBiliUpDialog
 
 /**
  * 订阅管理页
@@ -43,7 +44,8 @@ class ManagerFragment : Fragment() {
 
         bilibiliUpRss = itemView.findViewById(R.id.bilibili_up_rss)
         bilibiliUpRss.setOnClickListener {
-            AddRssLinkInfoDialog((activity as MainActivity).rssRepository).show((activity as MainActivity).supportFragmentManager, "addRssLinkInfo")
+            AddBiliBiliUpDialog((activity as MainActivity).rssRepository)
+                .show((activity as MainActivity).supportFragmentManager, "addRssLinkInfo")
         }
     }
 
@@ -55,4 +57,21 @@ class ManagerFragment : Fragment() {
             managerListAdapter.notifyDataSetChanged()
         })
     }
+
+    fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
+//        // 点击订阅管理的Item
+//        if (data.url == "-1") {
+//            Toast.makeText(this, "~", Toast.LENGTH_SHORT).show()
+//        } else {
+//            Toast.makeText(
+//                this,
+//                "${data.channelTitle} state --> ${data.state} ",
+//                Toast.LENGTH_SHORT
+//            ).show()
+//            data.state = !data.state
+//            rssRepository.updateRssLink(data)
+//            rssRepository.getRssLinks()
+//        }
+    }
+
 }

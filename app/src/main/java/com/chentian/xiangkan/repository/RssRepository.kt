@@ -18,7 +18,7 @@ import java.net.URL
 /**
  * 数据仓库
  */
-class RssItemRepository(
+class RssRepository(
         var rssLinksData: MutableLiveData<ResponseData>,
         var rssItemsData: MutableLiveData<ResponseData>,
         var rssLinkInfoDao: RssLinkInfoDao,
@@ -36,8 +36,7 @@ class RssItemRepository(
 
         const val SORT_TYPE_TIME = 1
         const val SORT_TYPE_ID = 2
-        var sortType =
-            SORT_TYPE_ID
+        var sortType = SORT_TYPE_ID
     }
 
     // 订阅源的链接
