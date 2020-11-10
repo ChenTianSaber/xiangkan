@@ -22,6 +22,10 @@ import com.chentian.xiangkan.repository.RssRepository
 import com.chentian.xiangkan.utils.RssUtils
 import com.githang.statusbar.StatusBarCompat
 
+/**
+ * 页面的容器，这里会执行对数据的操作，其余的fragment只负责监听数据并更新
+ * 相当于一个Presenter
+ */
 class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListener {
 
     companion object {
@@ -75,6 +79,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         )
 
         dataListen()
+
+        // TODO(在这里请求订阅源的数据)
     }
 
     /**
@@ -95,6 +101,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         })
     }
 
+    // region clickListener
+
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.home -> {
@@ -112,6 +120,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onContentItemClick(itemView: View, data: RssItem) {
         Log.d(TAG, "onContentItemClick: $data")
         homeFragment.onContentItemClick(itemView, data)
+        // TODO(将这个Item置为已读，并存入数据库)
     }
 
     override fun onTabItemClick(itemView: View, data: RssLinkInfo) {
@@ -123,5 +132,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         Log.d(TAG, "onManagerItemClick: $data")
         managerFragment.onManagerItemClick(itemView, data)
     }
+
+    // endregion
 
 }
