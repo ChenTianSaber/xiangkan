@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.page.detail
+package com.chentian.xiangkan.page.content
 
 import android.content.Context
 import android.graphics.Color

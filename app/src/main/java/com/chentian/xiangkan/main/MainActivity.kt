@@ -6,7 +6,6 @@ import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.room.Room
 import com.chentian.xiangkan.*
@@ -15,7 +14,7 @@ import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.listener.ItemClickListener
-import com.chentian.xiangkan.page.detail.ContentFragment
+import com.chentian.xiangkan.page.content.ContentFragment
 import com.chentian.xiangkan.page.home.HomeFragment
 import com.chentian.xiangkan.page.manager.ManagerFragment
 import com.chentian.xiangkan.repository.RssRepository
@@ -91,6 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
             // Log.d(TAG, "rssLinksData observe ---> $response")
             homeFragment.onRssLinkInfoDataChanged(response)
+            managerFragment.onRssLinkInfoDataChanged(response)
         })
 
         // 监听内容数据的变化

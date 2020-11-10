@@ -17,15 +17,28 @@ import com.chentian.xiangkan.main.MainActivity
 import com.chentian.xiangkan.page.manager.bilibili.AddBiliBiliUpDialog
 
 /**
- * 订阅管理页
+ * 订阅管理页Fragment
+ * 这个页面的关注点只有订阅源的数据和订阅源的状态
  */
-class ManagerFragment : Fragment() {
+class ManagerFragment : Fragment() , View.OnClickListener{
+
+    companion object{
+        const val TAG = "ManagerFragment"
+    }
+
+    // region field
 
     private lateinit var itemView: View
 
     private lateinit var managerList: RecyclerView
     private lateinit var managerListAdapter: ManagerListAdapter
-    private lateinit var bilibiliUpRss: LinearLayout
+
+    // endregion
+
+    /**
+     * 下面是特定的创建订阅源的View
+     */
+    private lateinit var bilibiUp: LinearLayout // BiliBili up 的动态
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         itemView = inflater.inflate(R.layout.layout_manager,container,false)
@@ -39,39 +52,38 @@ class ManagerFragment : Fragment() {
         managerListAdapter = ManagerListAdapter()
         managerList.adapter = managerListAdapter
         managerList.layoutManager = LinearLayoutManager(activity)
-
         managerListAdapter.itemClick = activity as MainActivity
 
-        bilibiliUpRss = itemView.findViewById(R.id.bilibili_up_rss)
-        bilibiliUpRss.setOnClickListener {
-            AddBiliBiliUpDialog((activity as MainActivity).rssRepository)
-                .show((activity as MainActivity).supportFragmentManager, "addRssLinkInfo")
-        }
+        bilibiUp = itemView.findViewById(R.id.bilibili_up_rss)
+        bilibiUp.setOnClickListener(this)
     }
 
     private fun initData() {
-        // 监听订阅源数据的变化
-        (activity as MainActivity).rssModel.rssLinksData.observe(this, Observer<ResponseData>{ response ->
-            Log.d(MainActivity.TAG, "rssLinksData observe ---> $response")
-            managerListAdapter.dataList = response.data as MutableList<RssLinkInfo>
-            managerListAdapter.notifyDataSetChanged()
-        })
+
     }
 
+    /**
+     * 订阅源数据更新监听
+     */
+    fun onRssLinkInfoDataChanged(response: ResponseData) {
+        Log.d(TAG, "onRssLinkInfoDataChanged ---> $response")
+        // TODO(渲染对应的list)
+    }
+
+    /**
+     * 监听Item的点击事件
+     */
     fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
-//        // 点击订阅管理的Item
-//        if (data.url == "-1") {
-//            Toast.makeText(this, "~", Toast.LENGTH_SHORT).show()
-//        } else {
-//            Toast.makeText(
-//                this,
-//                "${data.channelTitle} state --> ${data.state} ",
-//                Toast.LENGTH_SHORT
-//            ).show()
-//            data.state = !data.state
-//            rssRepository.updateRssLink(data)
-//            rssRepository.getRssLinks()
-//        }
+        Log.d(TAG, "onManagerItemClick ---> $data")
+        // TODO(更新Item的状态)
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.bilibili_up_rss ->{
+                // TODO(订阅B站up主)
+            }
+        }
     }
 
 }

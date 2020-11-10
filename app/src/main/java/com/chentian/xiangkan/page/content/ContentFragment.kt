@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.page.detail
+package com.chentian.xiangkan.page.content
 
 import android.annotation.SuppressLint
 import android.os.Bundle

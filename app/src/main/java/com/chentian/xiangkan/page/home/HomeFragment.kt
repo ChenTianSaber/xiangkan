@@ -7,7 +7,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,7 +17,7 @@ import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.main.MainActivity
 import com.chentian.xiangkan.main.TabListAdapter
-import com.chentian.xiangkan.page.detail.ContentListAdapter
+import com.chentian.xiangkan.page.content.ContentListAdapter
 import com.chentian.xiangkan.repository.RssRepository
 
 /**
