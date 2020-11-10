@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.main
+package com.chentian.xiangkan
 
 import android.os.Bundle
 import android.util.Log
@@ -8,15 +8,15 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.room.Room
-import com.chentian.xiangkan.*
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.listener.ItemClickListener
-import com.chentian.xiangkan.page.content.ContentFragment
-import com.chentian.xiangkan.page.home.HomeFragment
-import com.chentian.xiangkan.page.manager.ManagerFragment
+import com.chentian.xiangkan.main.RssModel
+import com.chentian.xiangkan.view.ContentFragment
+import com.chentian.xiangkan.view.HomeFragment
+import com.chentian.xiangkan.view.ManagerFragment
 import com.chentian.xiangkan.repository.RssRepository
 import com.chentian.xiangkan.utils.RssUtils
 import com.githang.statusbar.StatusBarCompat

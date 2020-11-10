@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.page.home
+package com.chentian.xiangkan.view
 
 import android.os.Bundle
 import android.util.Log
@@ -15,9 +15,9 @@ import com.chentian.xiangkan.*
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.main.MainActivity
-import com.chentian.xiangkan.main.TabListAdapter
-import com.chentian.xiangkan.page.content.ContentListAdapter
+import com.chentian.xiangkan.MainActivity
+import com.chentian.xiangkan.adapter.TabListAdapter
+import com.chentian.xiangkan.adapter.ContentListAdapter
 import com.chentian.xiangkan.repository.RssRepository
 
 /**
@@ -59,11 +59,11 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
         contentListAdapter = ContentListAdapter()
         contentList.adapter = contentListAdapter
         contentList.layoutManager = LinearLayoutManager(activity)
-        contentListAdapter.itemClick = activity as MainActivity
+        contentListAdapter.setItemClick(activity as MainActivity)
 
         tabList = itemView.findViewById(R.id.tab_list)
         tabListAdapter = TabListAdapter()
-        tabListAdapter.itemClick = activity as MainActivity
+        tabListAdapter.setItemClick(activity as MainActivity)
         tabList.adapter = tabListAdapter
         tabList.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
 
@@ -108,7 +108,7 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
     fun onRssLinkInfoDataChanged(response: ResponseData) {
         Log.d(MainActivity.TAG, "rssLinksData observe ---> $response")
         // 过滤掉未订阅的数据源
-        tabListAdapter.dataList = ((response.data as MutableList<RssLinkInfo>).filter { it.state }).toMutableList()
+        tabListAdapter.setDataList(((response.data as MutableList<RssLinkInfo>).filter { it.state }).toMutableList())
         tabListAdapter.notifyDataSetChanged()
         // TODO(更新内容列表)
     }
@@ -142,7 +142,7 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
          * 检查列表是否是空状态
          */
         fun checkIsListEmpty(){
-            if (contentListAdapter.dataList.isNullOrEmpty()) {
+            if (contentListAdapter.isListEmpty()) {
                 emptyLayout.visibility = View.VISIBLE
             } else {
                 emptyLayout.visibility = View.GONE

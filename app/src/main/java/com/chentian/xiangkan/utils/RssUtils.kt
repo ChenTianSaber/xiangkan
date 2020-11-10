@@ -1,13 +1,12 @@
 package com.chentian.xiangkan.utils
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.main.MainActivity
+import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.repository.RssRepository
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
@@ -41,10 +40,10 @@ object RssUtils {
     }
 
     fun navigateFragment(
-        activity: MainActivity,
-        toFragment: Fragment,
-        arguments: Bundle? = null,
-        backStack: String? = ""
+            activity: MainActivity,
+            toFragment: Fragment,
+            arguments: Bundle? = null,
+            backStack: String? = ""
     ) {
         val transient = activity.supportFragmentManager.beginTransaction().apply {
             replace(R.id.fragment_view, toFragment)

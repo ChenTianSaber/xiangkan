@@ -10,7 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.bumptech.glide.Glide
-import com.chentian.xiangkan.main.MainActivity
+import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.repository.RssRepository
