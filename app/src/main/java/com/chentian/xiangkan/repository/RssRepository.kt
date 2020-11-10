@@ -1,4 +1,4 @@
-package com.chentian.xiangkan.main
+package com.chentian.xiangkan.repository
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -7,23 +7,18 @@ import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.db.RssItemDao
 import com.chentian.xiangkan.db.RssLinkInfoDao
-import fr.arnaudguyon.xmltojsonlib.XmlToJson
+import com.chentian.xiangkan.utils.RssUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import org.json.JSONObject
-import java.io.BufferedReader
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
-import java.util.*
-import java.util.regex.Matcher
-import java.util.regex.Pattern
 
 /**
  * 数据仓库
  */
-class RssRepository(
+class RssItemRepository(
         var rssLinksData: MutableLiveData<ResponseData>,
         var rssItemsData: MutableLiveData<ResponseData>,
         var rssLinkInfoDao: RssLinkInfoDao,
@@ -41,7 +36,8 @@ class RssRepository(
 
         const val SORT_TYPE_TIME = 1
         const val SORT_TYPE_ID = 2
-        var sortType = SORT_TYPE_ID
+        var sortType =
+            SORT_TYPE_ID
     }
 
     // 订阅源的链接
@@ -171,7 +167,7 @@ class RssRepository(
             val inputStream: InputStream = connection.inputStream
 
             //解析xml数据
-            val rssData = parseRssData(inputStream,rssLinkInfo)
+            val rssData = RssUtils.parseRssData(inputStream, rssLinkInfo)
             Log.d(TAG, "requestRSSDate: size --> ${rssData.size}")
             setRssItemsDB(rssData)
         } catch (e: Exception) {
@@ -216,178 +212,6 @@ class RssRepository(
         linkInfo.latsedTitle = rssData[0].title
         // 更新最后时间和标题
         rssLinkInfoDao.updateItems(linkInfo)
-    }
-
-    /**
-     * 解析RSS数据
-     */
-    private fun parseRssData(data: InputStream,rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
-        val dataList = mutableListOf<RssItem>()
-
-        /**
-         * 提取作者的信息，一般都是author，但是知乎这边是dc:creator
-         */
-        fun getAuthor(json: JSONObject, channelTitle:String?):String{
-            var author = json.optString("author")
-            try {
-                if(author.isNullOrEmpty()){
-                    author = json.optJSONObject("dc:creator").optString("content")
-                }
-            }catch (e:NullPointerException){
-                //如果都没有的话，直接用channelTitle代替吧
-                author = channelTitle
-            }
-
-            Log.d(TAG, "getAuthor: $author")
-            return author
-        }
-
-        /**
-         * 提取时间信息
-         */
-        fun getTime(json: JSONObject):Long{
-            return try {
-                Date(json.optString("pubDate")).time
-            }catch (e:java.lang.Exception){
-                Date().time
-            }
-        }
-
-        /**
-         * 解析description获取第一张图片
-         */
-        fun getImageUrl(json: JSONObject):String{
-            val description = json.optString("description")
-            val pics: MutableList<String> = ArrayList()
-            val compile = Pattern.compile("<img.*?>")
-            val matcher: Matcher = compile.matcher(description)
-            while (matcher.find()) {
-                val img: String = matcher.group()
-                pics.add(img)
-            }
-            if(pics.isNullOrEmpty()) return ""
-            val m = Pattern.compile("\"http?(.*?)(\"|>|\\s+)").matcher(pics[0])
-            m.find()
-            val url = m.group()
-            return url.substring(1, url.length - 1)
-        }
-
-        data.use {
-            val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
-            val jsonObject = xmlToJson.toJson()
-            val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
-            val jsonArray = channelJsonObject?.optJSONArray("item")
-
-            if (jsonArray != null) {
-                for (i in 0 until jsonArray.length()) {
-                    val json = (jsonArray.get(i) as JSONObject)
-                    val rssItem = RssItem(
-                            url = rssLinkInfo.url,
-                            channelLink = rssLinkInfo.channelLink,
-                            channelTitle = rssLinkInfo.channelTitle,
-                            channelDescription = rssLinkInfo.channelDescription,
-                            title = json.optString("title"),
-                            link = json.optString("link"),
-                            description = json.optString("description"),
-                            author = getAuthor(json, rssLinkInfo.channelTitle),
-                            pubDate = getTime(json)
-                    )
-                    rssItem.imageUrl = getImageUrl(json)
-                    rssItem.icon = rssLinkInfo.icon
-                    dataList.add(rssItem)
-                }
-            }
-        }
-        return dataList
-    }
-
-    /**
-     * 添加B站up主动态订阅
-     */
-    fun addBiliBiliUpDynamic(uid: String) : RssLinkInfo {
-        val rssLinkInfo = RssLinkInfo()
-        // 先通过接口获取订阅数据
-        var connection: HttpURLConnection? = null
-        try {
-            val url = URL("https://rsshub.ioiox.com/bilibili/user/dynamic/$uid")
-            connection = url.openConnection() as HttpURLConnection
-            //设置请求方法
-            connection.requestMethod = "GET"
-            //设置连接超时时间（毫秒）
-            connection.connectTimeout = 10000
-            //设置读取超时时间（毫秒）
-            connection.readTimeout = 10000
-
-            //返回输入流
-            val inputStream: InputStream = connection.inputStream
-
-            //解析xml数据
-            inputStream.use {
-                val xmlToJson: XmlToJson = XmlToJson.Builder(inputStream, null).build()
-                val jsonObject = xmlToJson.toJson()
-                val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
-
-                channelJsonObject?.let {channelData ->
-//                    Log.d(TAG, "addBiliBiliUpDynamic: $channelData")
-                    // 在通过接口获取up信息，主要是名字和头像
-                    getBiliBiliInfo(uid)?.let { json ->
-                        val dataObj = json.optJSONObject("data")
-                        dataObj?.let { data ->
-                            rssLinkInfo.channelTitle = data.optString("name")
-                            rssLinkInfo.channelDescription = data.optString("sign")
-                            rssLinkInfo.url = "https://rsshub.ioiox.com/bilibili/user/dynamic/$uid"
-                            rssLinkInfo.channelLink = channelData.optString("link")
-                            rssLinkInfo.icon = data.optString("face")
-                        }
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            connection?.disconnect()
-        }
-
-        return rssLinkInfo
-    }
-
-    fun getBiliBiliInfo(uid:String):JSONObject?{
-        var bilibiliJson:JSONObject? = null
-        var connection: HttpURLConnection? = null
-        try {
-            val url = URL("https://api.bilibili.com/x/space/acc/info?mid=$uid")
-            connection = url.openConnection() as HttpURLConnection
-            //设置请求方法
-            connection.requestMethod = "GET"
-            //设置连接超时时间（毫秒）
-            connection.connectTimeout = 10000
-            //设置读取超时时间（毫秒）
-            connection.readTimeout = 10000
-
-            //返回输入流
-            val inputStream: InputStream = connection.inputStream
-
-            //解析xml数据
-            inputStream.use {
-                val reader = BufferedReader(inputStream.reader())
-                val content = StringBuilder()
-                reader.use { reader ->
-                    var line = reader.readLine()
-                    while (line != null) {
-                        content.append(line)
-                        line = reader.readLine()
-                    }
-                }
-                bilibiliJson = JSONObject(content.toString())
-//                Log.d(TAG, "getBiliBiliInfo: $bilibiliJson")
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            connection?.disconnect()
-        }
-
-        return bilibiliJson
     }
 
 }
