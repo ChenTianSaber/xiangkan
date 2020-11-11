@@ -21,48 +21,6 @@ import java.util.regex.Pattern
 object RssUtils {
 
     /**
-     * 获取rssRepository
-     */
-    fun getRssRepository(fragment: Fragment): RssRepository {
-        return (fragment.activity as MainActivity).rssRepository
-    }
-
-    /**
-     * 跳转Fragment
-     */
-    fun navigateFragment(
-        fragment: Fragment,
-        toFragment: Fragment,
-        arguments: Bundle? = null,
-        backStack: String? = ""
-    ) {
-        navigateFragment(fragment.activity as MainActivity, toFragment, arguments, backStack)
-    }
-
-    fun navigateFragment(
-            activity: MainActivity,
-            toFragment: Fragment,
-            arguments: Bundle? = null,
-            backStack: String? = ""
-    ) {
-        val transient = activity.supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_view, toFragment)
-            if (!backStack.isNullOrEmpty()) addToBackStack(backStack)
-        }
-        arguments?.let {
-            toFragment.arguments = arguments
-        }
-        transient.commit()
-    }
-
-    /**
-     * 获取MainActivity
-     */
-    fun getActivity(fragment: Fragment): MainActivity {
-        return fragment.activity as MainActivity
-    }
-
-    /**
      * 根据channelLink返回不同的icon
      */
     fun getRSSIcon(channelLink: String): Int {
@@ -72,6 +30,89 @@ object RssUtils {
             channelLink == "-1" -> R.mipmap.quanbu
             else -> R.mipmap.ic_launcher
         }
+    }
+
+    /**
+     * 解析RSS数据
+     */
+    fun parseRssData(data: InputStream, rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
+        val dataList = mutableListOf<RssItem>()
+
+        /**
+         * 提取作者的信息，一般都是author，但是知乎这边是dc:creator
+         */
+        fun getAuthor(json: JSONObject, channelTitle: String?): String {
+            var author = json.optString("author")
+            try {
+                if (author.isNullOrEmpty()) {
+                    author = json.optJSONObject("dc:creator").optString("content")
+                }
+            } catch (e: NullPointerException) {
+                //如果都没有的话，直接用channelTitle代替吧
+                author = channelTitle
+            }
+
+            Log.d(RssRepository.TAG, "getAuthor: $author")
+            return author
+        }
+
+        /**
+         * 提取时间信息
+         */
+        fun getTime(json: JSONObject): Long {
+            return try {
+                Date(json.optString("pubDate")).time
+            } catch (e: java.lang.Exception) {
+                Date().time
+            }
+        }
+
+        /**
+         * 解析description获取第一张图片
+         */
+        fun getImageUrl(json: JSONObject): String {
+            val description = json.optString("description")
+            val pics: MutableList<String> = ArrayList()
+            val compile = Pattern.compile("<img.*?>")
+            val matcher: Matcher = compile.matcher(description)
+            while (matcher.find()) {
+                val img: String = matcher.group()
+                pics.add(img)
+            }
+            if (pics.isNullOrEmpty()) return ""
+            val m = Pattern.compile("\"http?(.*?)(\"|>|\\s+)").matcher(pics[0])
+            m.find()
+            val url = m.group()
+            return url.substring(1, url.length - 1)
+        }
+
+        data.use {
+            val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
+            val jsonObject = xmlToJson.toJson()
+            val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
+            val jsonArray = channelJsonObject?.optJSONArray("item")
+
+            if (jsonArray != null) {
+                for (i in 0 until jsonArray.length()) {
+                    val json = (jsonArray.get(i) as JSONObject)
+                    val rssItem = RssItem(
+                        url = rssLinkInfo.url,
+                        channelLink = rssLinkInfo.channelLink,
+                        channelTitle = rssLinkInfo.channelTitle,
+                        channelDescription = rssLinkInfo.channelDescription,
+                        title = json.optString("title"),
+                        link = json.optString("link"),
+                        description = json.optString("description"),
+                        author = getAuthor(json, rssLinkInfo.channelTitle),
+                        pubDate = getTime(json)
+                    )
+                    rssItem.imageUrl = getImageUrl(json)
+                    rssItem.icon = rssLinkInfo.icon
+                    dataList.add(rssItem)
+                }
+            }
+        }
+        return dataList
     }
 
     /**
@@ -165,89 +206,6 @@ object RssUtils {
         }
 
         return rssLinkInfo
-    }
-
-    /**
-     * 解析RSS数据
-     */
-    fun parseRssData(data: InputStream, rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
-        val dataList = mutableListOf<RssItem>()
-
-        /**
-         * 提取作者的信息，一般都是author，但是知乎这边是dc:creator
-         */
-        fun getAuthor(json: JSONObject, channelTitle: String?): String {
-            var author = json.optString("author")
-            try {
-                if (author.isNullOrEmpty()) {
-                    author = json.optJSONObject("dc:creator").optString("content")
-                }
-            } catch (e: NullPointerException) {
-                //如果都没有的话，直接用channelTitle代替吧
-                author = channelTitle
-            }
-
-            Log.d(RssRepository.TAG, "getAuthor: $author")
-            return author
-        }
-
-        /**
-         * 提取时间信息
-         */
-        fun getTime(json: JSONObject): Long {
-            return try {
-                Date(json.optString("pubDate")).time
-            } catch (e: java.lang.Exception) {
-                Date().time
-            }
-        }
-
-        /**
-         * 解析description获取第一张图片
-         */
-        fun getImageUrl(json: JSONObject): String {
-            val description = json.optString("description")
-            val pics: MutableList<String> = ArrayList()
-            val compile = Pattern.compile("<img.*?>")
-            val matcher: Matcher = compile.matcher(description)
-            while (matcher.find()) {
-                val img: String = matcher.group()
-                pics.add(img)
-            }
-            if (pics.isNullOrEmpty()) return ""
-            val m = Pattern.compile("\"http?(.*?)(\"|>|\\s+)").matcher(pics[0])
-            m.find()
-            val url = m.group()
-            return url.substring(1, url.length - 1)
-        }
-
-        data.use {
-            val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
-            val jsonObject = xmlToJson.toJson()
-            val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
-            val jsonArray = channelJsonObject?.optJSONArray("item")
-
-            if (jsonArray != null) {
-                for (i in 0 until jsonArray.length()) {
-                    val json = (jsonArray.get(i) as JSONObject)
-                    val rssItem = RssItem(
-                        url = rssLinkInfo.url,
-                        channelLink = rssLinkInfo.channelLink,
-                        channelTitle = rssLinkInfo.channelTitle,
-                        channelDescription = rssLinkInfo.channelDescription,
-                        title = json.optString("title"),
-                        link = json.optString("link"),
-                        description = json.optString("description"),
-                        author = getAuthor(json, rssLinkInfo.channelTitle),
-                        pubDate = getTime(json)
-                    )
-                    rssItem.imageUrl = getImageUrl(json)
-                    rssItem.icon = rssLinkInfo.icon
-                    dataList.add(rssItem)
-                }
-            }
-        }
-        return dataList
     }
 
 }

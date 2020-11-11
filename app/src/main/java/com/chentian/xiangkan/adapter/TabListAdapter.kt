@@ -14,6 +14,9 @@ import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.utils.RssUtils
 
+/**
+ * 首页顶部TAB列表的Adapter
+ */
 class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
 
     companion object{

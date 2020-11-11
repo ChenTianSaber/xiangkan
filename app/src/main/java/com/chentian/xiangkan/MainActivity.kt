@@ -18,6 +18,7 @@ import com.chentian.xiangkan.view.ContentFragment
 import com.chentian.xiangkan.view.HomeFragment
 import com.chentian.xiangkan.view.ManagerFragment
 import com.chentian.xiangkan.repository.RssRepository
+import com.chentian.xiangkan.utils.AppUtils
 import com.chentian.xiangkan.utils.RssUtils
 import com.githang.statusbar.StatusBarCompat
 
@@ -106,10 +107,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.home -> {
-                RssUtils.navigateFragment(this, homeFragment)
+                AppUtils.navigateFragment(this, homeFragment)
             }
             R.id.manager -> {
-                RssUtils.navigateFragment(this, managerFragment)
+                AppUtils.navigateFragment(this, managerFragment)
             }
         }
     }

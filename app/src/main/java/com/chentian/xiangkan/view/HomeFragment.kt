@@ -18,6 +18,7 @@ import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.adapter.ContentListAdapter
+import com.chentian.xiangkan.data.ResponseCode
 import com.chentian.xiangkan.repository.RssRepository
 
 /**
@@ -150,8 +151,8 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
         }
 
         when(code){
-            RssRepository.WEB_SUCCESS -> handleWebResopnse(dataList)
-            RssRepository.DB_SUCCESS -> handleDBResopnse(dataList)
+            ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
+            ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
         }
 
         checkIsListEmpty()

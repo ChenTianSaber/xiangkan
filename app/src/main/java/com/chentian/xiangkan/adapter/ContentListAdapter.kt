@@ -18,6 +18,9 @@ import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
+/**
+ * 内容列表的Adapter
+ */
 class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHolder>() {
 
     companion object{

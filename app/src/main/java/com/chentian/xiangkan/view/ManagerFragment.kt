@@ -13,7 +13,7 @@ import com.chentian.xiangkan.*
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.MainActivity
-import com.chentian.xiangkan.page.manager.ManagerListAdapter
+import com.chentian.xiangkan.adapter.ManagerListAdapter
 
 /**
  * 订阅管理页Fragment
@@ -51,7 +51,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         managerListAdapter = ManagerListAdapter()
         managerList.adapter = managerListAdapter
         managerList.layoutManager = LinearLayoutManager(activity)
-        managerListAdapter.itemClick = activity as MainActivity
+        managerListAdapter.setItemClick(activity as MainActivity)
 
         bilibiUp = itemView.findViewById(R.id.bilibili_up_rss)
         bilibiUp.setOnClickListener(this)

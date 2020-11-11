@@ -2,13 +2,16 @@ package com.chentian.xiangkan.utils
 
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.os.Bundle
+import androidx.fragment.app.Fragment
+import com.chentian.xiangkan.MainActivity
+import com.chentian.xiangkan.R
 
 
 object AppUtils {
+
     /**
-     * Return whether it is a debug application.
-     *
-     * @return `true`: yes<br></br>`false`: no
+     * 判断APP是否处于调试模式
      */
     fun isAppDebug(context:Context): Boolean {
         return try {
@@ -17,6 +20,25 @@ object AppUtils {
         } catch (e: Exception) {
             false
         }
+    }
+
+    /**
+     * 跳转Fragment
+     */
+    fun navigateFragment(
+        activity: MainActivity,
+        toFragment: Fragment,
+        arguments: Bundle? = null,
+        backStack: String? = ""
+    ) {
+        val transient = activity.supportFragmentManager.beginTransaction().apply {
+            replace(R.id.fragment_view, toFragment)
+            if (!backStack.isNullOrEmpty()) addToBackStack(backStack)
+        }
+        arguments?.let {
+            toFragment.arguments = arguments
+        }
+        transient.commit()
     }
 
 }
