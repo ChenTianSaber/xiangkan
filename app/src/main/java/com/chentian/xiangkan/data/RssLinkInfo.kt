@@ -2,7 +2,6 @@ package com.chentian.xiangkan.data
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.chentian.xiangkan.repository.RssRepository
 
 /**
  * 这个类是订阅源的数据
@@ -19,5 +18,5 @@ data class RssLinkInfo(
     @PrimaryKey(autoGenerate = true)
     var id: Long = 0
     var latsedTitle: String = "" // 最新
-    var latestPubDate: Long = RssRepository.NO_DATD
+    var latestPubDate: Long = 0
 }

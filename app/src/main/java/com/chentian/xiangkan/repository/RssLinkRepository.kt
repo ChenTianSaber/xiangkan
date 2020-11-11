@@ -19,29 +19,24 @@ import java.net.URL
  * 数据仓库
  * MainActivity通过这个类来操作数据，MainActivity本身不可直接访问数据库
  */
-class RssRepository(
+class RssLinkRepository(
         var rssLinksData: MutableLiveData<ResponseData>,
-        var rssItemsData: MutableLiveData<ResponseData>,
-        var rssLinkInfoDao: RssLinkInfoDao,
-        var rssItemDao: RssItemDao
+        var rssLinkInfoDao: RssLinkInfoDao
 ) {
 
     companion object {
-        const val TAG = "RssRepository"
+        const val TAG = "RssLinkRepository"
     }
 
     /**
      * 获取当前所有的订阅源
+     * 订阅源分为两种，一种是APP内置的，一种是用户手动创建的
+     * 当获取的时候，会先把APP内置的订阅源存进数据库里，然后再统一从数据库中获取所有的订阅源
      */
-    fun getAllRssLinkInfo(){
+    suspend fun getAllRssLinkInfo(){
+        GlobalScope.launch(Dispatchers.IO) {
 
-    }
-
-    /**
-     * 获取已订阅数据源的内容
-     */
-    fun getRssItems(){
-
+        }
     }
 
 }

@@ -1,13 +1,10 @@
 package com.chentian.xiangkan.utils
 
-import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.MainActivity
-import com.chentian.xiangkan.repository.RssRepository
+import com.chentian.xiangkan.repository.RssItemRepository
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -52,7 +49,7 @@ object RssUtils {
                 author = channelTitle
             }
 
-            Log.d(RssRepository.TAG, "getAuthor: $author")
+            Log.d(RssItemRepository.TAG, "getAuthor: $author")
             return author
         }
 

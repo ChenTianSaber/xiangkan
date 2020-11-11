@@ -17,10 +17,13 @@ import com.chentian.xiangkan.main.RssModel
 import com.chentian.xiangkan.view.ContentFragment
 import com.chentian.xiangkan.view.HomeFragment
 import com.chentian.xiangkan.view.ManagerFragment
-import com.chentian.xiangkan.repository.RssRepository
+import com.chentian.xiangkan.repository.RssItemRepository
+import com.chentian.xiangkan.repository.RssLinkRepository
 import com.chentian.xiangkan.utils.AppUtils
-import com.chentian.xiangkan.utils.RssUtils
 import com.githang.statusbar.StatusBarCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * 页面的容器，这里会执行对数据的操作，其余的fragment只负责监听数据并更新
@@ -41,7 +44,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     private lateinit var homeBtn: ImageView
     private lateinit var managerBtn: ImageView
 
-    lateinit var rssRepository: RssRepository
+    lateinit var rssItemRepository: RssItemRepository
+    lateinit var rssLinkRepository: RssLinkRepository
     lateinit var rssModel: RssModel
 
     //endregion
@@ -71,16 +75,24 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     private fun initData() {
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "xiangkan").build()
         rssModel = RssModel()
-        rssRepository = RssRepository(
-            rssLinksData = rssModel.rssLinksData,
+        rssItemRepository = RssItemRepository(
             rssItemsData = rssModel.rssItemsData,
-            rssLinkInfoDao = db.rssLinkInfoDao(),
             rssItemDao = db.rssItemDao()
+        )
+
+        rssLinkRepository = RssLinkRepository(
+            rssLinksData = rssModel.rssLinksData,
+            rssLinkInfoDao = db.rssLinkInfoDao()
         )
 
         dataListen()
 
         // TODO(在这里请求订阅源的数据)
+        // 先请求订阅源，再请求
+        GlobalScope.launch {
+            rssLinkRepository.getAllRssLinkInfo()
+            rssItemRepository.getRssItems()
+        }
     }
 
     /**

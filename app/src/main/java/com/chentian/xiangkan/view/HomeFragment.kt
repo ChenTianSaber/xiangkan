@@ -19,7 +19,6 @@ import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.adapter.ContentListAdapter
 import com.chentian.xiangkan.data.ResponseCode
-import com.chentian.xiangkan.repository.RssRepository
 
 /**
  * 主页fragment

@@ -2,24 +2,15 @@ package com.chentian.xiangkan.dialog
 
 import android.app.Dialog
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
-import com.bumptech.glide.Glide
-import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.R
-import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.repository.RssRepository
-import com.chentian.xiangkan.utils.RssUtils
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * 添加BiliBili up主动态的弹框
