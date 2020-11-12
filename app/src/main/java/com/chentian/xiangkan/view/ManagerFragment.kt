@@ -14,6 +14,7 @@ import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.ManagerListAdapter
+import com.chentian.xiangkan.data.RssItem
 
 /**
  * 订阅管理页Fragment
@@ -30,7 +31,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
     private lateinit var itemView: View
 
     private lateinit var managerList: RecyclerView
-    private lateinit var managerListAdapter: ManagerListAdapter
+    private var managerListAdapter: ManagerListAdapter? = null
 
     // endregion
 
@@ -51,22 +52,37 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         managerListAdapter = ManagerListAdapter()
         managerList.adapter = managerListAdapter
         managerList.layoutManager = LinearLayoutManager(activity)
-        managerListAdapter.setItemClick(activity as MainActivity)
+        managerListAdapter?.setItemClick(activity as MainActivity)
 
         bilibiUp = itemView.findViewById(R.id.bilibili_up_rss)
         bilibiUp.setOnClickListener(this)
     }
 
     private fun initData() {
+        // 请求一下订阅源数据
+        (activity as MainActivity).getRssLinks()
+    }
 
+    fun refreshData(){
+        managerListAdapter?.notifyDataSetChanged()
     }
 
     /**
      * 订阅源数据更新监听
      */
     fun onRssLinkInfoDataChanged(response: ResponseData) {
-        Log.d(TAG, "onRssLinkInfoDataChanged ---> $response")
+//        Log.d(TAG, "onRssLinkInfoDataChanged ---> $response")
+        val dataList = response.data as MutableList<RssLinkInfo>
+        val code = response.code
+        val message = response.message
+
+        Log.d(TAG, "onRssLinkInfoDataChanged ---> $code dataList--> ${dataList.size} message --> $message")
+
         // TODO(渲染对应的list)
+        managerListAdapter?.let {
+            it.setDataList(dataList)
+            refreshData()
+        }
     }
 
     /**

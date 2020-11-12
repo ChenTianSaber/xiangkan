@@ -173,6 +173,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         rssItemRepository.getSingleRssLinkInfoRssItems(rssLinkInfo)
     }
 
+    /**
+     * 获取订阅源，获取之后不会请求web数据
+     */
+    fun getRssLinks(){
+        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NO_REQUEST)
+    }
+
     // endregion
 
 }
