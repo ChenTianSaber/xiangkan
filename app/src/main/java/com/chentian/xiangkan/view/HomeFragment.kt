@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +20,9 @@ import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.adapter.ContentListAdapter
 import com.chentian.xiangkan.data.ResponseCode
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * 主页fragment
@@ -93,6 +97,7 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
      */
     fun onContentItemClick(itemView: View, data: RssItem){
         // TODO(跳转到内容fragment)
+        Toast.makeText(activity, data.title, Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -100,6 +105,8 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
      */
     fun onTabItemClick(itemView: View, data: RssLinkInfo){
         // TODO(更新当前选中TAB，请求对应的TAB数据)
+        Toast.makeText(activity, data.channelTitle, Toast.LENGTH_SHORT).show()
+        (activity as MainActivity).changeTabData(data)
     }
 
     /**
@@ -127,8 +134,18 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
         /**
          * 处理网络数据返回
          */
-        fun handleWebResopnse(dataList: MutableList<RssItem>){
+        fun handleWebResopnse(dataList: MutableList<RssItem>) {
             // TODO(下拉刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+            when (code) {
+                ResponseCode.WEB_SUCCESS -> {
+                    Toast.makeText(activity, "更新数据成功~", Toast.LENGTH_SHORT).show()
+                    contentListAdapter.setDataList(dataList)
+                    refreshData()
+                }
+                ResponseCode.WEB_FAIL -> {
+                    Toast.makeText(activity, "获取订阅数据失败", Toast.LENGTH_SHORT).show()
+                }
+            }
         }
 
         /**
@@ -151,7 +168,7 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
             }
         }
 
-        when(code){
+        when (code) {
             ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
             ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
         }

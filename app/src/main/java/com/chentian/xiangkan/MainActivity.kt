@@ -163,4 +163,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
     // endregion
 
+    // region api
+
+    /**
+     * 获取这个订阅源中的所有数据，只获取DB数据，不请求web端
+     * 首先将当前TAB数据切换，然后获取当前TAB下的数据
+     */
+    fun changeTabData(rssLinkInfo: RssLinkInfo){
+        rssItemRepository.getSingleRssLinkInfoRssItems(rssLinkInfo)
+    }
+
+    // endregion
+
 }

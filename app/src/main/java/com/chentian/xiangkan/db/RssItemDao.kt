@@ -44,6 +44,12 @@ interface RssItemDao {
     @Query("SELECT * FROM RssItem where url = :url ORDER BY id DESC")
     fun getAllByUrl(url:String): MutableList<RssItem>
 
+    /**
+     * 根据title和author查找数据（id逆序）
+     */
+    @Query("SELECT * FROM RssItem where title = :title AND author = :author ORDER BY id DESC")
+    fun getAllByTitleAndAuthor(title: String, author: String): MutableList<RssItem>
+
     @Insert
     fun insertAll(rssItems: MutableList<RssItem>)
 

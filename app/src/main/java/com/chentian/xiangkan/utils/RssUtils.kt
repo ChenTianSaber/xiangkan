@@ -4,9 +4,7 @@ import android.util.Log
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.data.RssLinkInfoFactory
 import com.chentian.xiangkan.repository.RssItemRepository
-import com.chentian.xiangkan.repository.RssRepositoryBack
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -53,7 +51,7 @@ object RssUtils {
     /**
      * 解析RSS内容数据
      */
-    fun parseRssData(data: InputStream, rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
+    private fun parseRssData(data: InputStream, rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
         val dataList = mutableListOf<RssItem>()
 
         /**
