@@ -12,4 +12,7 @@ object ResponseCode{
 
         const val GET_RSSLINK_SUCCESS_NEED_REQUEST = 3 // 获取Rsslink订阅源数据成功，并且需要请求数据
         const val GET_RSSLINK_SUCCESS_NO_REQUEST = 4 // 获取Rsslink订阅源数据成功，不需要请求数据
+
+        const val WEB_FAIL = 5 // 请求RssItem内容失败
+        const val WEB_FAIL_EMPTY = 6 // 内容为空
 }

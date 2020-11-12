@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
             when(code){
                 ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> {
                     // 请求内容数据
-                    rssItemRepository.getRssItems()
+                    rssItemRepository.getRssItems(data)
                 }
             }
 

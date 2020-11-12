@@ -1,14 +1,21 @@
 package com.chentian.xiangkan.repository
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.chentian.xiangkan.data.ResponseCode
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.db.RssItemDao
+import com.chentian.xiangkan.utils.RssUtils
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.json.JSONObject
+import java.io.BufferedReader
+import java.io.InputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 /**
  * 数据仓库
@@ -31,15 +38,26 @@ class RssItemRepository(
      */
     fun getRssItems(rssLinkInfos: MutableList<RssLinkInfo>) {
         GlobalScope.launch(Dispatchers.IO) {
-            val rssItems = getRssItemsFromDB()
             rssItemsData.postValue(
                 ResponseData(
                     code = ResponseCode.DB_SUCCESS,
-                    data = rssItems,
+                    data = getRssItemsFromDB(),
                     message = "从数据库获取内容成功"
                 )
             )
-            getRssItemsFromWeb()
+
+            for (linkInfo in rssLinkInfos){
+                val resultCode = getRssItemsFromWeb(linkInfo)
+                Log.d(TAG, "getRssItemsFromWeb: resultCode ---> $resultCode")
+            }
+
+            rssItemsData.postValue(
+                    ResponseData(
+                            code = ResponseCode.DB_SUCCESS,
+                            data = getRssItemsFromDB(),
+                            message = "从数据库获取内容成功"
+                    )
+            )
         }
     }
 
@@ -47,8 +65,15 @@ class RssItemRepository(
         return rssItemDao.getAll()
     }
 
-    private fun getRssItemsFromWeb(): Int {
+    private fun getRssItemsFromWeb(rssLinkInfo: RssLinkInfo): Int {
+        val resultList = RssUtils.requestRssItems(rssLinkInfo)
 
+        if (resultList.isNullOrEmpty()) {
+            return ResponseCode.WEB_FAIL
+        }
+
+        rssItemDao.insertAll(resultList)
+        return ResponseCode.WEB_SUCCESS
     }
 
 }

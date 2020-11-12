@@ -4,6 +4,7 @@ import android.util.Log
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.data.RssLinkInfoFactory
 import com.chentian.xiangkan.repository.RssItemRepository
 import com.chentian.xiangkan.repository.RssRepositoryBack
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
@@ -18,13 +19,16 @@ import java.util.regex.Pattern
 
 object RssUtils {
 
+    const val TAG = "RssUtils"
+
     /**
-     * 请求web数据
+     * 请求web RssItem数据
      */
-    private fun request(url: String): InputStream? {
+    fun requestRssItems(rssLinkInfo: RssLinkInfo): MutableList<RssItem>? {
+        Log.d(TAG, "request: url --> ${rssLinkInfo.url}")
         var connection: HttpURLConnection? = null
         try {
-            connection = URL(url).openConnection() as HttpURLConnection
+            connection = URL(rssLinkInfo.url).openConnection() as HttpURLConnection
             //设置请求方法
             connection.requestMethod = "GET"
             //设置连接超时时间（毫秒）
@@ -33,9 +37,11 @@ object RssUtils {
             connection.readTimeout = 10000
 
             //返回输入流
-            return connection.inputStream
+            val inputStream = connection.inputStream
+            return parseRssData(inputStream, rssLinkInfo)
 
         } catch (e: Exception) {
+            Log.d(TAG, "request: Exception --> $e")
             e.printStackTrace()
         } finally {
             connection?.disconnect()
@@ -45,19 +51,7 @@ object RssUtils {
     }
 
     /**
-     * 根据channelLink返回不同的icon
-     */
-    fun getRSSIcon(channelLink: String): Int {
-        return when {
-            channelLink == "https://sspai.com" -> R.mipmap.icon_sspai
-            channelLink.contains("zhihu.com", ignoreCase = false) -> R.mipmap.icon_zhihu
-            channelLink == "-1" -> R.mipmap.quanbu
-            else -> R.mipmap.ic_launcher
-        }
-    }
-
-    /**
-     * 解析RSS数据
+     * 解析RSS内容数据
      */
     fun parseRssData(data: InputStream, rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
         val dataList = mutableListOf<RssItem>()
@@ -111,7 +105,7 @@ object RssUtils {
         }
 
         data.use {
-            val xmlToJson: XmlToJson = XmlToJson.Builder(data, null).build()
+            val xmlToJson: XmlToJson = XmlToJson.Builder(it, null).build()
             val jsonObject = xmlToJson.toJson()
             val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
             val jsonArray = channelJsonObject?.optJSONArray("item")
@@ -120,15 +114,15 @@ object RssUtils {
                 for (i in 0 until jsonArray.length()) {
                     val json = (jsonArray.get(i) as JSONObject)
                     val rssItem = RssItem(
-                        url = rssLinkInfo.url,
-                        channelLink = rssLinkInfo.channelLink,
-                        channelTitle = rssLinkInfo.channelTitle,
-                        channelDescription = rssLinkInfo.channelDescription,
-                        title = json.optString("title"),
-                        link = json.optString("link"),
-                        description = json.optString("description"),
-                        author = getAuthor(json, rssLinkInfo.channelTitle),
-                        pubDate = getTime(json)
+                            url = rssLinkInfo.url,
+                            channelLink = rssLinkInfo.channelLink,
+                            channelTitle = rssLinkInfo.channelTitle,
+                            channelDescription = rssLinkInfo.channelDescription,
+                            title = json.optString("title"),
+                            link = json.optString("link"),
+                            description = json.optString("description"),
+                            author = getAuthor(json, rssLinkInfo.channelTitle),
+                            pubDate = getTime(json)
                     )
                     rssItem.imageUrl = getImageUrl(json)
                     rssItem.icon = rssLinkInfo.icon
@@ -137,6 +131,18 @@ object RssUtils {
             }
         }
         return dataList
+    }
+
+    /**
+     * 根据channelLink返回不同的icon
+     */
+    fun getRSSIcon(channelLink: String): Int {
+        return when {
+            channelLink == "https://sspai.com" -> R.mipmap.icon_sspai
+            channelLink.contains("zhihu.com", ignoreCase = false) -> R.mipmap.icon_zhihu
+            channelLink == "-1" -> R.mipmap.quanbu
+            else -> R.mipmap.ic_launcher
+        }
     }
 
     /**
