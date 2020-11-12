@@ -8,6 +8,7 @@ import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.room.Room
+import com.chentian.xiangkan.data.ResponseCode
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
@@ -21,9 +22,6 @@ import com.chentian.xiangkan.repository.RssItemRepository
 import com.chentian.xiangkan.repository.RssLinkRepository
 import com.chentian.xiangkan.utils.AppUtils
 import com.githang.statusbar.StatusBarCompat
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * 页面的容器，这里会执行对数据的操作，其余的fragment只负责监听数据并更新
@@ -88,22 +86,39 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         dataListen()
 
         // TODO(在这里请求订阅源的数据)
-        // 先请求订阅源，再请求
-        GlobalScope.launch {
-            rssLinkRepository.getAllRssLinkInfo()
-            rssItemRepository.getRssItems()
-        }
+        // 请求订阅源，请求完成后再请求内容数据
+        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
+
     }
 
     /**
      * 监听数据源变动分发给对应的fragment
      */
     private fun dataListen() {
+
+        /**
+         * 处理订阅源变动事件
+         */
+        fun handleRssLinkInfoDataChanged(response: ResponseData) {
+            val code = response.code
+            val data = response.data as MutableList<RssLinkInfo>
+            val message = response.message
+
+            when(code){
+                ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> {
+                    // 请求内容数据
+                    rssItemRepository.getRssItems()
+                }
+            }
+
+        }
+
         // 监听订阅源数据的变化
         rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
             // Log.d(TAG, "rssLinksData observe ---> $response")
             homeFragment.onRssLinkInfoDataChanged(response)
             managerFragment.onRssLinkInfoDataChanged(response)
+            handleRssLinkInfoDataChanged(response)
         })
 
         // 监听内容数据的变化

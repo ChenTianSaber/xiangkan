@@ -136,6 +136,8 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
          */
         fun handleDBResopnse(dataList: MutableList<RssItem>){
             // TODO(直接展示, 更新lastContentSize)
+            contentListAdapter.setDataList(dataList)
+            refreshData()
         }
 
         /**

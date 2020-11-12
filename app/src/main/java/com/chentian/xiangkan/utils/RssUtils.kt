@@ -5,6 +5,7 @@ import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.repository.RssItemRepository
+import com.chentian.xiangkan.repository.RssRepositoryBack
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -16,6 +17,32 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 object RssUtils {
+
+    /**
+     * 请求web数据
+     */
+    private fun request(url: String): InputStream? {
+        var connection: HttpURLConnection? = null
+        try {
+            connection = URL(url).openConnection() as HttpURLConnection
+            //设置请求方法
+            connection.requestMethod = "GET"
+            //设置连接超时时间（毫秒）
+            connection.connectTimeout = 10000
+            //设置读取超时时间（毫秒）
+            connection.readTimeout = 10000
+
+            //返回输入流
+            return connection.inputStream
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        } finally {
+            connection?.disconnect()
+        }
+
+        return null
+    }
 
     /**
      * 根据channelLink返回不同的icon

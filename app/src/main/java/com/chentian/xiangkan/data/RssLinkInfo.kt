@@ -20,3 +20,29 @@ data class RssLinkInfo(
     var latsedTitle: String = "" // 最新
     var latestPubDate: Long = 0
 }
+
+object RssLinkInfoFactory{
+
+    /**
+     * 构造默认的订阅源数据
+     */
+    fun getDefaultRssLinkInfo(): MutableList<RssLinkInfo> {
+        return mutableListOf(
+            RssLinkInfo( // 少数派
+                url = "https://sspai.com/feed",
+                channelLink = "https://sspai.com",
+                channelTitle = "少数派",
+                channelDescription = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
+                state = true
+            ),
+            RssLinkInfo( // 知乎热榜
+                url = "https://rsshub.ioiox.com/zhihu/hotlist",
+                channelLink = "https://www.zhihu.com/billboard",
+                channelTitle = "知乎热榜",
+                channelDescription = "知乎热榜",
+                state = true
+            )
+        )
+    }
+
+}
