@@ -30,15 +30,19 @@ class RssLinkRepository(
      * 获取当前所有的订阅源
      * 订阅源分为两种，一种是APP内置的，一种是用户手动创建的
      * 内置的直接在代码里，用户的存在数据库里
-     * 获取的时候两个都取出来，再返回
+     * 获取的时候两个都取出来，存入数据库再返回
+     * 之所以要这么做是因为对于默认的数据源，也是有订阅状态的
      */
     fun getAllRssLinkInfo(flag: Int) {
         GlobalScope.launch(Dispatchers.IO) {
             val defaultRssLinks = RssLinkInfoFactory.getDefaultRssLinkInfo()
-            val userRssLinks = rssLinkInfoDao.getAll()
-            val allRssLinks = mutableListOf<RssLinkInfo>()
-            allRssLinks.addAll(userRssLinks)
-            allRssLinks.addAll(defaultRssLinks)
+            for(rssLink in defaultRssLinks){
+                if(rssLinkInfoDao.getItemByUrl(rssLink.url).isNullOrEmpty()){
+                    rssLinkInfoDao.insertItem(rssLink)
+                }
+            }
+
+            val allRssLinks = rssLinkInfoDao.getAll()
             rssLinksData.postValue(
                 ResponseData(
                     code = flag,
@@ -46,6 +50,15 @@ class RssLinkRepository(
                     message = "获取订阅源数据成功"
                 )
             )
+        }
+    }
+
+    /**
+     * 更新订阅源数据
+     */
+    fun updateRssLinkInfo(rssLinkInfo: RssLinkInfo){
+        GlobalScope.launch(Dispatchers.IO) {
+            rssLinkInfoDao.updateItems(rssLinkInfo)
         }
     }
 

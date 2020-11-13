@@ -106,8 +106,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
             when(code){
                 ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> {
-                    // 请求内容数据
+                    // 请求web数据
                     rssItemRepository.getRssItems(data)
+                }
+                ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB -> {
+                    // 请求DB数据
+                    rssItemRepository.getRssLinkInfoRssItems(data)
                 }
             }
 
@@ -134,10 +138,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.home -> {
-                AppUtils.navigateFragment(this, homeFragment)
+                AppUtils.navigateFragment(this, homeFragment, backStack = "managerFragment")
             }
             R.id.manager -> {
-                AppUtils.navigateFragment(this, managerFragment)
+                AppUtils.navigateFragment(this, managerFragment, backStack = "homeFragment")
             }
         }
     }
@@ -158,7 +162,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
     override fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
         Log.d(TAG, "onManagerItemClick: $data")
+        // managerFragment会去进行它自己的处理，例如改变data的state，改变列表的UI
         managerFragment.onManagerItemClick(itemView, data)
+        // 接下来是对数据的处理
+        // 更新数据库, 更新首页TAB列表, 更新首页内容数据（只请求DB）
+        rssLinkRepository.updateRssLinkInfo(data)
+        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
     }
 
     // endregion

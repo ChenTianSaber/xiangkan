@@ -42,7 +42,7 @@ class RssItemRepository(
             rssItemsData.postValue(
                     ResponseData(
                             code = ResponseCode.DB_SUCCESS,
-                            data = getRssItemsFromDB(),
+                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
                             message = "从数据库获取内容成功"
                     )
             )
@@ -56,15 +56,15 @@ class RssItemRepository(
             rssItemsData.postValue(
                     ResponseData(
                             code = resultCode,
-                            data = getRssItemsFromDB(),
-                            message = "从数据库获取内容成功"
+                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+                            message = "从网络请求完成"
                     )
             )
         }
     }
 
     /**
-     * 获取单个订阅源中的DB数据
+     * 获取单个订阅源中的DB数据并发送数据回调
      */
     fun getSingleRssLinkInfoRssItems(rssLinkInfo: RssLinkInfo) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -78,12 +78,44 @@ class RssItemRepository(
         }
     }
 
+    /**
+     * 获取所有订阅源中的DB数据并发送数据回调
+     */
+    fun getRssLinkInfoRssItems(rssLinkInfos: MutableList<RssLinkInfo>) {
+        GlobalScope.launch(Dispatchers.IO) {
+            rssItemsData.postValue(
+                ResponseData(
+                    code = ResponseCode.DB_SUCCESS,
+                    data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+                    message = "从数据库获取内容成功"
+                )
+            )
+        }
+    }
+
+    /**
+     * 获取数据库中所有内容数据
+     */
     private fun getRssItemsFromDB(): MutableList<RssItem> {
         return rssItemDao.getAll()
     }
 
+    /**
+     * 获取单个订阅源中的DB数据
+     */
     private fun getSingleRssLinkInfoRssItemsFromDB(rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
         return rssItemDao.getAllByUrl(rssLinkInfo.url)
+    }
+
+    /**
+     * 获取所有已订阅的数据源的数据
+     */
+    private fun getAllRssLinkInfoRssItemsFromDB(rssLinkInfos: MutableList<RssLinkInfo>): MutableList<RssItem> {
+        val resultList = mutableListOf<RssItem>()
+        for (linkInfo in rssLinkInfos) {
+            if(linkInfo.state) resultList.addAll(getSingleRssLinkInfoRssItemsFromDB(linkInfo))
+        }
+        return resultList
     }
 
     private fun getRssItemsFromWeb(rssLinkInfo: RssLinkInfo): Int {

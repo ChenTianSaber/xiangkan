@@ -14,7 +14,6 @@ import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.ManagerListAdapter
-import com.chentian.xiangkan.data.RssItem
 
 /**
  * 订阅管理页Fragment
@@ -63,7 +62,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         (activity as MainActivity).getRssLinks()
     }
 
-    fun refreshData(){
+    private fun refreshData(){
         managerListAdapter?.notifyDataSetChanged()
     }
 
@@ -90,7 +89,30 @@ class ManagerFragment : Fragment() , View.OnClickListener{
      */
     fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
         Log.d(TAG, "onManagerItemClick ---> $data")
+
+        /**
+         * 订阅这个源
+         */
+        fun handleRegisterRssLink(data: RssLinkInfo) {
+            data.state = true
+            refreshData()
+        }
+
+        /**
+         * 取消订阅这个源
+         * 将其state改为false
+         * 更新列表
+         */
+        fun handleUnRegisterRssLink(data: RssLinkInfo) {
+            data.state = false
+            refreshData()
+        }
+
         // TODO(更新Item的状态)
+        when(data.state){
+            true -> handleUnRegisterRssLink(data)
+            false -> handleRegisterRssLink(data)
+        }
     }
 
     override fun onClick(v: View?) {
