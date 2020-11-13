@@ -35,6 +35,7 @@ class RssLinkRepository(
      */
     fun getAllRssLinkInfo(flag: Int) {
         GlobalScope.launch(Dispatchers.IO) {
+            Log.d(TAG, "getAllRssLinkInfo start")
             val defaultRssLinks = RssLinkInfoFactory.getDefaultRssLinkInfo()
             for(rssLink in defaultRssLinks){
                 if(rssLinkInfoDao.getItemByUrl(rssLink.url).isNullOrEmpty()){
@@ -59,6 +60,20 @@ class RssLinkRepository(
     fun updateRssLinkInfo(rssLinkInfo: RssLinkInfo){
         GlobalScope.launch(Dispatchers.IO) {
             rssLinkInfoDao.updateItems(rssLinkInfo)
+        }
+    }
+
+    /**
+     * 插入订阅源数据
+     */
+    fun insertRssLinkInfo(rssLinkInfo: RssLinkInfo){
+        GlobalScope.launch(Dispatchers.IO) {
+            if(rssLinkInfoDao.getItemByUrl(rssLinkInfo.url).isNullOrEmpty()){
+                rssLinkInfoDao.insertItem(rssLinkInfo)
+                getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NO_REQUEST)
+                Log.d(TAG, "插入订阅源数据 success ---> $rssLinkInfo")
+            }
+            Log.d(TAG, "插入订阅源数据 end")
         }
     }
 

@@ -27,6 +27,7 @@ object RssLinkInfoFactory{
      * BiliBili UP的动态订阅链接
      */
     const val BILIBILI_UP = "https://rsshub.ioiox.com/bilibili/user/dynamic/"
+    const val BILIBILI_API = "https://api.bilibili.com/x/space/acc/info?mid="
 
     /**
      * 构造默认的订阅源数据

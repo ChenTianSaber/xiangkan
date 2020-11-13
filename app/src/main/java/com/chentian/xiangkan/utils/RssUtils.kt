@@ -4,6 +4,7 @@ import android.util.Log
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.data.RssLinkInfoFactory
 import com.chentian.xiangkan.repository.RssItemRepository
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
@@ -132,21 +133,11 @@ object RssUtils {
     }
 
     /**
-     * 根据channelLink返回不同的icon
-     */
-    fun getRSSIcon(channelLink: String): Int {
-        return when {
-            channelLink == "https://sspai.com" -> R.mipmap.icon_sspai
-            channelLink.contains("zhihu.com", ignoreCase = false) -> R.mipmap.icon_zhihu
-            channelLink == "-1" -> R.mipmap.quanbu
-            else -> R.mipmap.ic_launcher
-        }
-    }
-
-    /**
      * 添加B站up主动态订阅
      */
     fun addBiliBiliUpDynamic(uid: String): RssLinkInfo {
+
+        val rssLinkInfo = RssLinkInfo()
 
         /**
          * 获取BiliBili用户的信息
@@ -155,7 +146,7 @@ object RssUtils {
             var bilibiliJson: JSONObject? = null
             var infoConnection: HttpURLConnection? = null
             try {
-                val url = URL("https://api.bilibili.com/x/space/acc/info?mid=$uid")
+                val url = URL("${RssLinkInfoFactory.BILIBILI_API}$uid")
                 infoConnection = url.openConnection() as HttpURLConnection
                 //设置请求方法
                 infoConnection.requestMethod = "GET"
@@ -171,15 +162,14 @@ object RssUtils {
                 inputStream.use {
                     val reader = BufferedReader(inputStream.reader())
                     val content = StringBuilder()
-                    reader.use { reader ->
-                        var line = reader.readLine()
+                    reader.use {
+                        var line = it.readLine()
                         while (line != null) {
                             content.append(line)
-                            line = reader.readLine()
+                            line = it.readLine()
                         }
                     }
                     bilibiliJson = JSONObject(content.toString())
-//                Log.d(TAG, "getBiliBiliInfo: $bilibiliJson")
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
@@ -190,50 +180,69 @@ object RssUtils {
             return bilibiliJson
         }
 
-        val rssLinkInfo = RssLinkInfo()
-        // 先通过接口获取订阅数据
-        var connection: HttpURLConnection? = null
-        try {
-            val url = URL("https://rsshub.ioiox.com/bilibili/user/dynamic/$uid")
-            connection = url.openConnection() as HttpURLConnection
-            //设置请求方法
-            connection.requestMethod = "GET"
-            //设置连接超时时间（毫秒）
-            connection.connectTimeout = 10000
-            //设置读取超时时间（毫秒）
-            connection.readTimeout = 10000
+        /**
+         * 先通过接口获取订阅数据，检测是否可以正常获取数据
+         */
+        fun getChannelData(){
+            var connection: HttpURLConnection? = null
+            try {
+                val url = URL("${RssLinkInfoFactory.BILIBILI_UP}$uid")
+                connection = url.openConnection() as HttpURLConnection
+                //设置请求方法
+                connection.requestMethod = "GET"
+                //设置连接超时时间（毫秒）
+                connection.connectTimeout = 10000
+                //设置读取超时时间（毫秒）
+                connection.readTimeout = 10000
 
-            //返回输入流
-            val inputStream: InputStream = connection.inputStream
+                //返回输入流
+                val inputStream: InputStream = connection.inputStream
 
-            //解析xml数据
-            inputStream.use {
-                val xmlToJson: XmlToJson = XmlToJson.Builder(inputStream, null).build()
-                val jsonObject = xmlToJson.toJson()
-                val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
+                //解析xml数据
+                inputStream.use {
+                    val xmlToJson: XmlToJson = XmlToJson.Builder(inputStream, null).build()
+                    val jsonObject = xmlToJson.toJson()
+                    val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
 
-                channelJsonObject?.let { channelData ->
-//                    Log.d(TAG, "addBiliBiliUpDynamic: $channelData")
-                    // 在通过接口获取up信息，主要是名字和头像
-                    getBiliBiliInfo(uid)?.let { json ->
-                        val dataObj = json.optJSONObject("data")
-                        dataObj?.let { data ->
-                            rssLinkInfo.channelTitle = data.optString("name")
-                            rssLinkInfo.channelDescription = data.optString("sign")
-                            rssLinkInfo.url = "https://rsshub.ioiox.com/bilibili/user/dynamic/$uid"
-                            rssLinkInfo.channelLink = channelData.optString("link")
-                            rssLinkInfo.icon = data.optString("face")
+                    channelJsonObject?.let { channelData ->
+                        Log.d(TAG, "addBiliBiliUpDynamic: channelData --> $channelData")
+                        // 在通过接口获取up信息，主要是名字和头像
+                        getBiliBiliInfo(uid)?.let { json ->
+                            val dataObj = json.optJSONObject("data")
+                            Log.d(TAG, "addBiliBiliUpDynamic: dataObj ---> $dataObj")
+                            dataObj?.let { data ->
+                                rssLinkInfo.channelTitle = data.optString("name")
+                                rssLinkInfo.channelDescription = data.optString("sign")
+                                rssLinkInfo.url = "${RssLinkInfoFactory.BILIBILI_UP}$uid"
+                                rssLinkInfo.channelLink = channelData.optString("link")
+                                rssLinkInfo.icon = data.optString("face")
+                            }
                         }
                     }
                 }
+            } catch (e: Exception) {
+                e.printStackTrace()
+            } finally {
+                connection?.disconnect()
             }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        } finally {
-            connection?.disconnect()
         }
 
+        getChannelData()
+
+        Log.d(TAG, "addBiliBiliUpDynamic: rssLinkInfo ---> $rssLinkInfo")
         return rssLinkInfo
+    }
+
+    /**
+     * 根据channelLink返回不同的icon
+     */
+    fun getRSSIcon(channelLink: String): Int {
+        return when {
+            channelLink == "https://sspai.com" -> R.mipmap.icon_sspai
+            channelLink.contains("zhihu.com", ignoreCase = false) -> R.mipmap.icon_zhihu
+            channelLink == "-1" -> R.mipmap.quanbu
+            else -> R.mipmap.ic_launcher
+        }
     }
 
 }

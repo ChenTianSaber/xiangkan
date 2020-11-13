@@ -183,10 +183,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     }
 
     /**
-     * 获取订阅源，获取之后不会请求web数据
+     * 单纯的获取订阅源，获取之后不会请求web数据
      */
-    fun getRssLinks(){
+    fun getRssLinks() {
         rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NO_REQUEST)
+    }
+
+    /**
+     * 插入新的订阅源
+     */
+    fun insertRssLinkInfo(rssLinkInfo: RssLinkInfo){
+        rssLinkRepository.insertRssLinkInfo(rssLinkInfo)
     }
 
     // endregion
