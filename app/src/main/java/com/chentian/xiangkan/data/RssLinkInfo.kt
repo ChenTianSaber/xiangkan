@@ -24,6 +24,11 @@ data class RssLinkInfo(
 object RssLinkInfoFactory{
 
     /**
+     * BiliBili UP的动态订阅链接
+     */
+    const val BILIBILI_UP = "https://rsshub.ioiox.com/bilibili/user/dynamic/"
+
+    /**
      * 构造默认的订阅源数据
      */
     fun getDefaultRssLinkInfo(): MutableList<RssLinkInfo> {

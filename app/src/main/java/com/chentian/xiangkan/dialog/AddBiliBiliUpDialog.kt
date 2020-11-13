@@ -7,8 +7,10 @@ import android.view.View
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.chentian.xiangkan.R
+import com.chentian.xiangkan.data.RssLinkInfoFactory
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -52,6 +54,14 @@ class AddBiliBiliUpDialog(): BottomSheetDialogFragment() {
 
         searchBtn.setOnClickListener {
             // TODO(请求相关的信息，如果请求没有问题的话，那就展示下一步页面)
+            if(uidEditText.text.toString().isEmpty()){
+                Toast.makeText(activity,"uid不能为空~",Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
+            // 用uid拼装rss链接，然后请求确认是否有数据
+            val url = RssLinkInfoFactory.BILIBILI_UP + uidEditText.text.toString()
+
         }
 
         addBtn.setOnClickListener {
