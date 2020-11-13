@@ -22,23 +22,4 @@ object AppUtils {
         }
     }
 
-    /**
-     * 跳转Fragment
-     */
-    fun navigateFragment(
-        activity: MainActivity,
-        toFragment: Fragment,
-        arguments: Bundle? = null,
-        backStack: String? = ""
-    ) {
-        val transient = activity.supportFragmentManager.beginTransaction().apply {
-            replace(R.id.fragment_view, toFragment)
-            if (!backStack.isNullOrEmpty()) addToBackStack(backStack)
-        }
-        arguments?.let {
-            toFragment.arguments = arguments
-        }
-        transient.commit()
-    }
-
 }

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.chentian.xiangkan.*
@@ -31,7 +32,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
     private lateinit var itemView: View
 
     private lateinit var managerList: RecyclerView
-    private var managerListAdapter: ManagerListAdapter? = null
+    private lateinit var managerListAdapter: ManagerListAdapter
 
     // endregion
 
@@ -52,37 +53,36 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         managerListAdapter = ManagerListAdapter()
         managerList.adapter = managerListAdapter
         managerList.layoutManager = LinearLayoutManager(activity)
-        managerListAdapter?.setItemClick(activity as MainActivity)
+        managerListAdapter.setItemClick(activity as MainActivity)
 
         bilibiUp = itemView.findViewById(R.id.bilibili_up_rss)
         bilibiUp.setOnClickListener(this)
     }
 
     private fun initData() {
-        // 请求一下订阅源数据
-        (activity as MainActivity).getRssLinks()
+        onRssLinkInfoDataChanged()
     }
 
     private fun refreshData(){
-        managerListAdapter?.notifyDataSetChanged()
+        managerListAdapter.notifyDataSetChanged()
     }
 
     /**
      * 订阅源数据更新监听
      */
-    fun onRssLinkInfoDataChanged(response: ResponseData) {
-//        Log.d(TAG, "onRssLinkInfoDataChanged ---> $response")
-        val dataList = response.data as MutableList<RssLinkInfo>
-        val code = response.code
-        val message = response.message
+    private fun onRssLinkInfoDataChanged() {
+        (activity as MainActivity).rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
+            // Log.d(TAG, "onRssLinkInfoDataChanged ---> $response")
+            val dataList = response.data as MutableList<RssLinkInfo>
+            val code = response.code
+            val message = response.message
 
-        Log.d(TAG, "onRssLinkInfoDataChanged ---> $code dataList--> ${dataList.size} message --> $message")
+            Log.d(TAG, "onRssLinkInfoDataChanged ---> $code dataList--> ${dataList.size} message --> $message")
 
-        // TODO(渲染对应的list)
-        managerListAdapter?.let {
-            it.setDataList(dataList)
+            // TODO(渲染对应的list)
+            managerListAdapter.setDataList(dataList)
             refreshData()
-        }
+        })
     }
 
     /**

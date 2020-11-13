@@ -6,8 +6,12 @@ import android.view.View
 import android.view.Window
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.room.Room
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.chentian.xiangkan.data.ResponseCode
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssItem
@@ -41,10 +45,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
     private lateinit var homeBtn: ImageView
     private lateinit var managerBtn: ImageView
+    private lateinit var viewPager: ViewPager2
 
     lateinit var rssItemRepository: RssItemRepository
     lateinit var rssLinkRepository: RssLinkRepository
     lateinit var rssModel: RssModel
+
+    private var fragmentList = mutableListOf<Fragment>()
 
     //endregion
 
@@ -62,12 +69,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         homeFragment = HomeFragment()
         contentFragment = ContentFragment()
         managerFragment = ManagerFragment()
-        supportFragmentManager.beginTransaction().add(R.id.fragment_view, homeFragment).commit()
+        fragmentList.add(homeFragment)
+        fragmentList.add(managerFragment)
 
         homeBtn = findViewById(R.id.home)
         homeBtn.setOnClickListener(this)
         managerBtn = findViewById(R.id.manager)
         managerBtn.setOnClickListener(this)
+
+        viewPager = findViewById(R.id.view_pager)
+        val pagerAdapter = ScreenSlidePagerAdapter(this)
+        viewPager.adapter = pagerAdapter
+
     }
 
     private fun initData() {
@@ -120,8 +133,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         // 监听订阅源数据的变化
         rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
             // Log.d(TAG, "rssLinksData observe ---> $response")
-            homeFragment.onRssLinkInfoDataChanged(response)
-            managerFragment.onRssLinkInfoDataChanged(response)
             handleRssLinkInfoDataChanged(response)
         })
 
@@ -129,7 +140,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         rssModel.rssItemsData.observe(this, Observer<ResponseData> { response ->
             // val dataList = response.data as MutableList<RssItem>
             // Log.d(TAG, "rssItemsData observe ---> ${response.code} dataList-->${dataList.size} lastContentSize-->$lastContentSize")
-            homeFragment.onRssItemDataChanged(response)
         })
     }
 
@@ -138,10 +148,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.home -> {
-                AppUtils.navigateFragment(this, homeFragment, backStack = "managerFragment")
+                viewPager.currentItem = 0
             }
             R.id.manager -> {
-                AppUtils.navigateFragment(this, managerFragment, backStack = "homeFragment")
+                viewPager.currentItem = 1
             }
         }
     }
@@ -196,5 +206,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     }
 
     // endregion
+
+    private inner class ScreenSlidePagerAdapter(fa: FragmentActivity) : FragmentStateAdapter(fa){
+        override fun getItemCount(): Int {
+            return fragmentList.size
+        }
+
+        override fun createFragment(position: Int): Fragment {
+            return fragmentList[position]
+        }
+
+    }
 
 }

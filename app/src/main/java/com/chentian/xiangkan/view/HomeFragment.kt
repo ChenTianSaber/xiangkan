@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -20,9 +21,6 @@ import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.adapter.ContentListAdapter
 import com.chentian.xiangkan.data.ResponseCode
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 /**
  * 主页fragment
@@ -83,7 +81,8 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
     }
 
     private fun initData() {
-
+        onRssLinkInfoDataChanged()
+        onRssItemDataChanged()
     }
 
     private fun refreshData(){
@@ -112,68 +111,74 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
     /**
      * 订阅源数据更新
      */
-    fun onRssLinkInfoDataChanged(response: ResponseData) {
-        Log.d(MainActivity.TAG, "rssLinksData observe ---> $response")
-        // 过滤掉未订阅的数据源
-        tabListAdapter.setDataList(((response.data as MutableList<RssLinkInfo>).filter { it.state }).toMutableList())
-        tabListAdapter.notifyDataSetChanged()
-        // TODO(更新内容列表)
+    private fun onRssLinkInfoDataChanged() {
+        // 监听订阅源数据的变化
+        (activity as MainActivity).rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
+            Log.d(MainActivity.TAG, "rssLinksData observe ---> $response")
+            // 过滤掉未订阅的数据源
+            tabListAdapter.setDataList(((response.data as MutableList<RssLinkInfo>).filter { it.state }).toMutableList())
+            tabListAdapter.notifyDataSetChanged()
+            // TODO(更新内容列表)
+        })
     }
 
     /**
      * 内容数据更新
      */
-    fun onRssItemDataChanged(response: ResponseData) {
-        // Log.d(TAG, "rssItemsData observe ---> $response")
-        val dataList = response.data as MutableList<RssItem>
-        val code = response.code
-        val message = response.message
+    private fun onRssItemDataChanged() {
+        // 监听内容数据的变化
+        (activity as MainActivity).rssModel.rssItemsData.observe(this, Observer<ResponseData> { response ->
+            // Log.d(TAG, "rssItemsData observe ---> $response")
+            val dataList = response.data as MutableList<RssItem>
+            val code = response.code
+            val message = response.message
 
-        Log.d(TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message lastContentSize--> $lastContentSize")
+            Log.d(TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message lastContentSize--> $lastContentSize")
 
-        /**
-         * 处理网络数据返回
-         */
-        fun handleWebResopnse(dataList: MutableList<RssItem>) {
-            // TODO(下拉刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+            /**
+             * 处理网络数据返回
+             */
+            fun handleWebResopnse(dataList: MutableList<RssItem>) {
+                // TODO(下拉刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+                when (code) {
+                    ResponseCode.WEB_SUCCESS -> {
+                        Toast.makeText(activity, "更新数据成功~", Toast.LENGTH_SHORT).show()
+                        contentListAdapter.setDataList(dataList)
+                        refreshData()
+                    }
+                    ResponseCode.WEB_FAIL -> {
+                        Toast.makeText(activity, "获取订阅数据失败", Toast.LENGTH_SHORT).show()
+                    }
+                }
+            }
+
+            /**
+             * 处理DB数据返回
+             */
+            fun handleDBResopnse(dataList: MutableList<RssItem>){
+                // TODO(直接展示, 更新lastContentSize)
+                contentListAdapter.setDataList(dataList)
+                refreshData()
+            }
+
+            /**
+             * 检查列表是否是空状态
+             */
+            fun checkIsListEmpty(){
+                if (contentListAdapter.isListEmpty()) {
+                    emptyLayout.visibility = View.VISIBLE
+                } else {
+                    emptyLayout.visibility = View.GONE
+                }
+            }
+
             when (code) {
-                ResponseCode.WEB_SUCCESS -> {
-                    Toast.makeText(activity, "更新数据成功~", Toast.LENGTH_SHORT).show()
-                    contentListAdapter.setDataList(dataList)
-                    refreshData()
-                }
-                ResponseCode.WEB_FAIL -> {
-                    Toast.makeText(activity, "获取订阅数据失败", Toast.LENGTH_SHORT).show()
-                }
+                ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
+                ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
             }
-        }
 
-        /**
-         * 处理DB数据返回
-         */
-        fun handleDBResopnse(dataList: MutableList<RssItem>){
-            // TODO(直接展示, 更新lastContentSize)
-            contentListAdapter.setDataList(dataList)
-            refreshData()
-        }
-
-        /**
-         * 检查列表是否是空状态
-         */
-        fun checkIsListEmpty(){
-            if (contentListAdapter.isListEmpty()) {
-                emptyLayout.visibility = View.VISIBLE
-            } else {
-                emptyLayout.visibility = View.GONE
-            }
-        }
-
-        when (code) {
-            ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
-            ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
-        }
-
-        checkIsListEmpty()
+            checkIsListEmpty()
+        })
     }
 
     /**
