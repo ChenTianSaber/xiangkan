@@ -60,6 +60,7 @@ class RssLinkRepository(
     fun updateRssLinkInfo(rssLinkInfo: RssLinkInfo){
         GlobalScope.launch(Dispatchers.IO) {
             rssLinkInfoDao.updateItems(rssLinkInfo)
+            getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
         }
     }
 

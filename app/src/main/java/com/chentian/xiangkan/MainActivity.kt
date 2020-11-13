@@ -167,7 +167,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         // 接下来是对数据的处理
         // 更新数据库, 更新首页TAB列表, 更新首页内容数据（只请求DB）
         rssLinkRepository.updateRssLinkInfo(data)
-        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
     }
 
     // endregion
