@@ -19,6 +19,7 @@ data class RssLinkInfo(
     var id: Long = 0
     var latsedTitle: String = "" // 最新
     var latestPubDate: Long = 0
+    var isRefreshing: Boolean = false
 }
 
 object RssLinkInfoFactory{
@@ -28,6 +29,11 @@ object RssLinkInfoFactory{
      */
     const val BILIBILI_UP = "https://rsshub.ioiox.com/bilibili/user/dynamic/"
     const val BILIBILI_API = "https://api.bilibili.com/x/space/acc/info?mid="
+
+    /**
+     * 全部TAB的占位数据
+     */
+    const val ALLDATA = "-1"
 
     /**
      * 构造默认的订阅源数据

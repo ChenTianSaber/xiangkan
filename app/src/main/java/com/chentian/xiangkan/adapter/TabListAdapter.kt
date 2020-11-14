@@ -37,6 +37,10 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
         this.dataList = dataList
     }
 
+    fun getDataList(): MutableList<RssLinkInfo> {
+        return this.dataList
+    }
+
     fun setItemClick(itemClick: ItemClickListener) {
         this.itemClick = itemClick
     }
@@ -66,15 +70,19 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
         /**
          * 设置UI
          */
-        fun setupUI(){
+        fun setupUI() {
             // 设置名称
             holder.name.text = data.channelTitle
 
             // 设置图标
-            if(data.icon.isEmpty()){
-                Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
+            if (data.isRefreshing) {
+                Glide.with(context).load(R.mipmap.loading).into(holder.icon)
             } else {
-                Glide.with(context).load(data.icon).into(holder.icon)
+                if (data.icon.isEmpty()) {
+                    Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
+                } else {
+                    Glide.with(context).load(data.icon).into(holder.icon)
+                }
             }
         }
 

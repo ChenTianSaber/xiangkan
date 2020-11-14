@@ -13,10 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.chentian.xiangkan.data.ResponseCode
-import com.chentian.xiangkan.data.ResponseData
-import com.chentian.xiangkan.data.RssItem
-import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.data.*
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.listener.ItemClickListener
 import com.chentian.xiangkan.main.RssModel
@@ -192,8 +189,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
      * 获取这个订阅源中的所有数据，只获取DB数据，不请求web端
      * 首先将当前TAB数据切换，然后获取当前TAB下的数据
      */
-    fun changeTabData(rssLinkInfo: RssLinkInfo){
-        rssItemRepository.getSingleRssLinkInfoRssItems(rssLinkInfo)
+    fun changeTabData(rssLinkInfo: RssLinkInfo) {
+        if (rssLinkInfo.url == RssLinkInfoFactory.ALLDATA) {
+            // 获取全部数据
+            rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
+        } else {
+            // 获取对应的数据源的数据
+            rssItemRepository.getSingleRssLinkInfoRssItems(rssLinkInfo)
+        }
     }
 
     /**

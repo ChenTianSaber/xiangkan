@@ -14,13 +14,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.chentian.xiangkan.*
-import com.chentian.xiangkan.data.ResponseData
-import com.chentian.xiangkan.data.RssItem
-import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.adapter.ContentListAdapter
-import com.chentian.xiangkan.data.ResponseCode
+import com.chentian.xiangkan.data.*
 
 /**
  * 主页fragment
@@ -83,6 +80,7 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
                 refreshData()
                 lastWebContentData = null
                 updateTip.visibility = View.GONE
+                emptyLayout.visibility = View.GONE
             }
         }
     }
@@ -123,9 +121,28 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
         (activity as MainActivity).rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
             Log.d(MainActivity.TAG, "rssLinksData observe ---> $response")
             // 过滤掉未订阅的数据源
-            tabListAdapter.setDataList(((response.data as MutableList<RssLinkInfo>).filter { it.state }).toMutableList())
+            val dataList = mutableListOf<RssLinkInfo>()
+            dataList.addAll(((response.data as MutableList<RssLinkInfo>).filter { it.state }).toMutableList())
+            // 该数据为 "全部" TAB的占位数据
+            dataList.add(0, RssLinkInfo(
+                    url = RssLinkInfoFactory.ALLDATA,
+                    channelLink = RssLinkInfoFactory.ALLDATA,
+                    channelTitle = "全部",
+                    channelDescription = "全部",
+                    state = false,
+                    icon = ""
+            ))
+
+            // 判断是否需要web请求
+            when(response.code){
+                ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> {
+                    // 这个时候我们需要把"全部"TAB变成loading状态
+                    dataList[0].isRefreshing = true
+                }
+            }
+
+            tabListAdapter.setDataList(dataList)
             tabListAdapter.notifyDataSetChanged()
-            // TODO(更新内容列表)
         })
     }
 
@@ -146,7 +163,12 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
              * 处理网络数据返回
              */
             fun handleWebResopnse(dataList: MutableList<RssItem>) {
-                // TODO(下拉刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+                // TODO(刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+
+                // 把顶部全部TAB的loading状态取消
+                tabListAdapter.getDataList()[0].isRefreshing = false
+                tabListAdapter.notifyDataSetChanged()
+
                 when (code) {
                     ResponseCode.WEB_SUCCESS -> {
                         Toast.makeText(activity, "更新数据成功~", Toast.LENGTH_SHORT).show()
