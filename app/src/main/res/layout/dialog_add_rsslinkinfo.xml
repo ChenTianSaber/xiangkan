@@ -101,6 +101,7 @@
         android:layout_height="300dp"
         android:visibility="gone">
         <ImageView
+            android:id="@+id/loading_img"
             android:layout_width="64dp"
             android:layout_height="64dp"
             android:src="@mipmap/loading"

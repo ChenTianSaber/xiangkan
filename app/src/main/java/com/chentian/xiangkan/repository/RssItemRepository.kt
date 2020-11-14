@@ -42,7 +42,8 @@ class RssItemRepository(
             rssItemsData.postValue(
                     ResponseData(
                             code = ResponseCode.DB_SUCCESS,
-                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+//                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+                            data = getRssItemsFromDB(),
                             message = "从数据库获取内容成功"
                     )
             )
@@ -56,7 +57,8 @@ class RssItemRepository(
             rssItemsData.postValue(
                     ResponseData(
                             code = resultCode,
-                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+//                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+                            data = getRssItemsFromDB(),
                             message = "从网络请求完成"
                     )
             )

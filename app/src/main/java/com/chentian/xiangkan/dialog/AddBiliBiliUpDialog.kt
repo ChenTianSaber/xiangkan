@@ -35,6 +35,7 @@ class AddBiliBiliUpDialog : BottomSheetDialogFragment() {
     private lateinit var firstLayout: ConstraintLayout // 第一个页面
     private lateinit var secondLayout: ConstraintLayout // 第二个页面
     private lateinit var loadingView: FrameLayout // loading
+    private lateinit var loadingImg: ImageView // 加载的gif图片
 
     private var rssLinkInfo: RssLinkInfo? = null
 
@@ -61,6 +62,11 @@ class AddBiliBiliUpDialog : BottomSheetDialogFragment() {
         firstLayout = root.findViewById(R.id.one_layout)
         secondLayout = root.findViewById(R.id.two_layout)
         loadingView = root.findViewById(R.id.loading)
+        loadingImg = root.findViewById(R.id.loading_img)
+
+        activity?.let {
+            Glide.with(it).load(R.mipmap.loading).into(loadingImg)
+        }
 
         searchBtn.setOnClickListener {
 
