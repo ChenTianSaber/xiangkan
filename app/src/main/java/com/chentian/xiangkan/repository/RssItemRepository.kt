@@ -88,7 +88,8 @@ class RssItemRepository(
             rssItemsData.postValue(
                 ResponseData(
                     code = ResponseCode.DB_SUCCESS,
-                    data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+//                    data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
+                    data = getRssItemsFromDB(),
                     message = "从数据库获取内容成功"
                 )
             )
@@ -129,7 +130,10 @@ class RssItemRepository(
 
 //        rssItemDao.insertAll(resultList)
         // 先查找有无重复数据，重复的话则不处理
-        for (data in resultList) {
+        // 这里应该倒着存，这样就是时间逆序的
+//        for (data in resultList) {
+        for (index in resultList.size - 1 downTo 0){
+            val data = resultList[index]
             if (rssItemDao.getAllByTitleAndAuthor(data.title, data.author).isNullOrEmpty()) {
                 rssItemDao.insertItem(data)
             }
