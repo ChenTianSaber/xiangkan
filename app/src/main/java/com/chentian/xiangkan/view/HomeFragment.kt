@@ -45,7 +45,8 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
     private lateinit var updateTip: TextView
     private lateinit var itemView: View
 
-    var lastContentSize = 0
+    private var lastContentSize = 0
+    private var lastWebContentData: MutableList<RssItem>? = null
 
     //endregion
 
@@ -77,6 +78,12 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
         updateTip = itemView.findViewById(R.id.update_tip)
         updateTip.setOnClickListener {
             // TODO(点击之后刷新数据，列表回到顶部，然后把自己隐藏)
+            lastWebContentData?.let {
+                contentListAdapter.setDataList(it)
+                refreshData()
+                lastWebContentData = null
+                updateTip.visibility = View.GONE
+            }
         }
     }
 
@@ -143,8 +150,15 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
                 when (code) {
                     ResponseCode.WEB_SUCCESS -> {
                         Toast.makeText(activity, "更新数据成功~", Toast.LENGTH_SHORT).show()
-                        contentListAdapter.setDataList(dataList)
-                        refreshData()
+//                        contentListAdapter.setDataList(dataList)
+//                        refreshData()
+                        val updateSum = dataList.size - lastContentSize
+                        if(updateSum > 0){
+                            updateTip.text = "有 $updateSum 条更新"
+                            updateTip.visibility = View.VISIBLE
+                            lastWebContentData = dataList
+                        }
+                        lastContentSize = dataList.size
                     }
                     ResponseCode.WEB_FAIL -> {
                         Toast.makeText(activity, "获取订阅数据失败", Toast.LENGTH_SHORT).show()
@@ -159,6 +173,8 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
                 // TODO(直接展示, 更新lastContentSize)
                 contentListAdapter.setDataList(dataList)
                 refreshData()
+
+                lastContentSize = dataList.size
             }
 
             /**

@@ -37,20 +37,26 @@
     <!--空数据缺省页-->
     <LinearLayout
         android:id="@+id/empty_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:background="@color/white"
         android:gravity="center"
-        android:visibility="gone">
+        android:orientation="vertical"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_list">
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/empty"/>
+            android:src="@mipmap/empty" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="没有数据"/>
+            android:text="没有数据" />
     </LinearLayout>
 
     <!--更新了多少条的tip-->
@@ -58,19 +64,19 @@
         android:id="@+id/update_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="64dp"
-        android:visibility="gone"
-        tools:text="有12条更新"
-        android:textSize="14sp"
-        android:textColor="@color/black"
-        android:paddingBottom="6dp"
-        android:paddingTop="6dp"
-        android:paddingLeft="12dp"
-        android:paddingRight="12dp"
+        android:layout_marginTop="32dp"
         android:background="@drawable/coner_white_3"
         android:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingLeft="12dp"
+        android:paddingTop="6dp"
+        android:paddingRight="12dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_list"
+        tools:text="有12条更新" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
