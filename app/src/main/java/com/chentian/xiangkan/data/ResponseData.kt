@@ -16,4 +16,6 @@ object ResponseCode{
 
         const val WEB_FAIL = 25 // 请求RssItem内容失败
         const val WEB_FAIL_EMPTY = 26 // 内容为空
+
+        const val UPDATE_RSSITEM = 31 // 更新单个RssItem
 }

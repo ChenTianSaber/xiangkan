@@ -1,0 +1,617 @@
+/*************************************************************************
+ * ! normalize.css v2.0.1 | MIT License | git.io/normalize
+ *************************************************************************/
+
+article, aside, details, figcaption, figure, footer, header, hgroup, nav, section, summary {
+    display: block;
+}
+audio, canvas, video {
+    display: inline-block;
+}
+audio:not([controls]) {
+    display: none;
+    height: 0;
+}
+[hidden] {
+    display: none;
+}
+html {
+    font-family: sans-serif;
+    -webkit-text-size-adjust: 100%;
+    -ms-text-size-adjust: 100%;
+}
+body {
+    margin: 0;
+}
+a:focus {
+    outline: thin dotted;
+}
+a:active, a:hover {
+    outline: 0;
+}
+h1 {
+    font-size: 2em;
+}
+abbr[title] {
+    border-bottom: 1px dotted;
+}
+b, strong {
+    font-weight: bold;
+}
+dfn {
+    font-style: italic;
+}
+i {
+    font-style: normal;
+}
+mark {
+    background: #ff0;
+    color: #000;
+}
+code, kbd, pre, samp {
+    font-family: monospace, serif;
+    font-size: 1em;
+}
+pre {
+    white-space: pre;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+q {
+    quotes: "\201C" "\201D" "\2018" "\2019";
+}
+small {
+    font-size: 80%;
+}
+sub, sup {
+    font-size: 75%;
+    line-height: 0;
+    position: relative;
+    vertical-align: baseline;
+}
+sup {
+    top: -0.5em;
+}
+sub {
+    bottom: -0.25em;
+}
+img {
+    border: 0;
+}
+svg:not(:root) {
+    overflow: hidden;
+}
+figure {
+    margin: 0;
+}
+fieldset {
+    border: 1px solid #c0c0c0;
+    margin: 0 2px;
+    padding: 0.35em 0.625em 0.75em;
+}
+legend {
+    border: 0;
+    padding: 0;
+}
+button, input, select, textarea {
+    font-family: inherit;
+    font-size: 100%;
+    margin: 0;
+}
+button, input {
+    line-height: normal;
+}
+button, html input[type="button"], input[type="reset"], input[type="submit"] {
+    -webkit-appearance: button;
+    cursor: pointer;
+}
+button[disabled], input[disabled] {
+    cursor: default;
+}
+input[type="checkbox"], input[type="radio"] {
+    box-sizing: border-box;
+    padding: 0;
+}
+input[type="search"] {
+    -webkit-appearance: textfield;
+    box-sizing: content-box;
+}
+input[type="search"]::-webkit-search-cancel-button, input[type="search"]::-webkit-search-decoration {
+    -webkit-appearance: none;
+}
+button::-moz-focus-inner, input::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+textarea {
+    overflow: auto;
+    vertical-align: top;
+}
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+/*************************************************************************
+ * base style
+ *************************************************************************/
+
+h1, h2, h3, h4, h5, h6 {
+    margin: 0;
+    word-break: break-all;
+}
+p,a,pre,li,em,i,td{
+    word-break: break-all;
+
+}
+cite, em, var, address, dfn {
+    font-style: normal;
+}
+.rss-wrapper {
+    position: relative;
+    padding: 0 20px;
+}
+.rss-wrapper iframe,
+.rss-wrapper embed {
+    max-width: 100% !important;
+}
+.rss-wrapper iframe {
+    width: 100%;
+}
+.rss-wrapper .iframe_video {
+    margin: 0 auto;
+    padding-bottom: 66%;
+    position: relative;
+    width: 100%;
+}
+.iframe_video iframe {
+    position: absolute;
+    height: 100%;
+}
+.rss-wrapper strong, .rss-wrapper b {
+    font-weight: bold;
+}
+.rss-wrapper .content h1 {
+    margin: 10px 0 15px;
+    color: #191919;
+}
+.rss-wrapper .content .author {
+    color: #999999;
+}
+.rss-wrapper .content img {
+    margin: 0 0 8px 0;
+    max-width: 100%;
+    width: 100%;
+    vertical-align: middle;
+}
+.rss-wrapper .content img[eeimg="1"] {
+    display: inline-block;
+    margin: 0 3px;
+}
+.rss-wrapper .content img[eeimg] {
+    max-width: 100%;
+    vertical-align: middle;
+}
+.rss-wrapper .content div, .rss-wrapper .content p {
+    color: #333333;
+    word-break: break-word;
+    /*text-align: justify;*/
+}
+
+.rss-wrapper .content p svg {
+    width: 20px;
+    height: 20px;
+}
+
+.rss-wrapper .content a {
+    color: #525252;
+}
+.rss-wrapper .footer {
+    overflow: hidden;
+    padding: 26px 0 70px;
+    margin: 30px 0 0;
+    border-top: 1px dashed #ebebeb;
+    line-height: 15px;
+    text-align: center;
+}
+.rss-wrapper .footer h6 {
+    color: #999;
+    font-weight: normal;
+}
+.rss-wrapper .footer a {
+    display: block;
+    margin: 16px 0 0;
+    color: #999;
+}
+.rss-wrapper .content table {
+    display: table;
+    width: 100%;
+    align: center;
+    border-collapse: collapse;
+    word-wrap: break-word;
+    border-spacing: 0;
+    line-height: 1em;
+    margin: 20px 0;
+    padding: 0;
+}
+.rss-wrapper .content table tr {
+    margin: 0;
+    padding: 0;
+    display: table-row;
+    border: 1px solid #808080;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.rss-wrapper .content td {
+    margin: 0;
+    padding: 0;
+    display: table-cell;
+    text-align: center;
+    border: 1px solid #808080;
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.rss-wrapper .content table p {
+    margin: 0;
+}
+.rss-wrapper .header {
+    position: relative;
+    padding: 16px 0 6px;
+    height: 30px;
+    line-height: 30px;
+    overflow: hidden;
+    display: none;
+}
+.rss-wrapper .header img, .rss-wrapper .header span {
+    display: block;
+    float: left;
+}
+.rss-wrapper .header img {
+    margin: 4px 10px 0 0;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: 0;
+}
+.rss-wrapper .header .name, .rss-wrapper .header .date {
+    color: #7f7f7f;
+}
+.rss-wrapper .header .date {
+    float: right;
+}
+.rss-wrapper .author .author-name {
+    margin-right: 12px;
+}  
+
+/*************************************************************************
+ * 适配字号
+ * 小     .screen-s
+ * 默认
+ * 较大   .screen-xl
+ * 超大   .screen-xxl
+ *************************************************************************/
+
+
+/* font: 默认 */
+
+.rss-wrapper .header span {
+    font-size: 12px;
+}
+.rss-wrapper .content h1 {
+    font-size: 20px;
+    line-height: 29px;
+}
+.rss-wrapper .content div, .rss-wrapper .content h2, .rss-wrapper .content h3, .rss-wrapper .content h4, .rss-wrapper .content h5, .rss-wrapper .content h6, .rss-wrapper .content p {
+    margin: 17px 0;
+    font-size: 18px;
+    line-height: 29px;
+}
+.rss-wrapper .footer h6, .rss-wrapper .footer a {
+    font-size: 12px;
+}
+.rss-wrapper .content h6.author {
+    font-size: 12px;
+    font-weight: normal;
+}
+
+/* font: 小 */
+
+.screen-s .rss-wrapper .content h1 {
+    font-size: 16px;
+    line-height: 24px;
+}
+.screen-s .rss-wrapper .content div, .screen-s .rss-wrapper .content h2, .screen-s .rss-wrapper .content h3, .screen-s .rss-wrapper .content h4, .screen-s .rss-wrapper .content h5, .screen-s .rss-wrapper .content h6, .screen-s .rss-wrapper .content p {
+    font-size: 14px;
+}
+.screen-s .rss-wrapper .content h6.author {
+    font-size: 10px;
+    font-weight: normal;
+}
+
+/* font: 较大 */
+
+.screen-xl .rss-wrapper .content h1 {
+    font-size: 20px;
+    line-height: 29px;
+}
+.screen-xl .rss-wrapper .content div, .screen-xl .rss-wrapper .content h2, .screen-xl .rss-wrapper .content h3, .screen-xl .rss-wrapper .content h4, .screen-xl .rss-wrapper .content h5, .screen-xl .rss-wrapper .content h6, .screen-xl .rss-wrapper .content p {
+    margin: 17px 0px;
+    font-size: 18px;
+    line-height: 29px;
+}
+.screen-xl .rss-wrapper .content h6.author {
+    font-size: 14px;
+    font-weight: normal;
+}
+
+/* 超大 */
+
+.screen-xxl .rss-wrapper .content h1 {
+    font-size: 22px;
+    line-height: 33px;
+}
+.screen-xxl .rss-wrapper .content div, .screen-xxl .rss-wrapper .content h2, .screen-xxl .rss-wrapper .content h3, .screen-xxl .rss-wrapper .content h4, .screen-xxl .rss-wrapper .content h5, .screen-xxl .rss-wrapper .content h6, .screen-xxl .rss-wrapper .content p {
+    margin: 20px 0;
+    font-size: 20px;
+    line-height: 33px;
+}
+.screen-xxl .rss-wrapper .content h6.author {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+/*************************************************************************
+ * 音频播放器
+ *************************************************************************/
+
+.rss-wrapper .content div.audio-wrapper {
+    margin: 20px 0;
+}
+.audio-wrapper {
+    overflow: hidden;
+    background: #fafafa;
+    height: 60px;
+    border: 1px solid #ececec;
+}
+.audio-wrapper div, .audio-wrapper img {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+.audio-wrapper .album {
+    float: left;
+    width: 60px;
+    height: 60px;
+    position: relative;
+    background: #ebebeb;
+}
+.audio-wrapper .album img {
+    display: block;
+    height: 100%;
+    height: 60px;
+}
+.audio-wrapper .album .control {
+    display: block;
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 40px;
+    height: 40px;
+}
+.audio-wrapper .album .control.stop {
+    background: url('https://static.smartisanos.cn/reader/img/play.png') no-repeat left top;
+    background-size: 100%;
+}
+.audio-wrapper .album .control.start {
+    background: url('https://static.smartisanos.cn/reader/img/pause.png') no-repeat left top;
+    background-size: 100%;
+}
+.audio-wrapper .singer {
+    float: left;
+    overflow: hidden;
+    max-width: 75%;
+}
+.audio-wrapper .singer h5, .audio-wrapper .singer h6 {
+    padding: 0 0 0 16px;
+    margin: 0 !important;
+    font-weight: normal;
+    overflow:hidden;
+    word-break:keep-all;
+    white-space:nowrap;
+    text-overflow:ellipsis;
+}
+.audio-wrapper .singer h5 {
+    height: 17px;
+    margin: 12px 0 8px 0 !important;
+    font-size: 16px !important;
+    line-height: 16px !important;
+    color: #3e3e3e;
+}
+.audio-wrapper .singer h6 {
+    margin: 0 !important;
+    color: #b0b0b0;
+    font-size: 10px !important;
+    line-height: 11px !important;
+}
+.audio-wrapper audio {
+    display: none;
+}
+
+/*************************************************************************
+ * 下载引导栏
+ *************************************************************************/
+
+.download-wrapper {
+    position: fixed;
+    width: 100%;
+    height: 61px;
+    bottom: 0;
+    left: 0;
+    overflow: hidden;
+    border-top: 0 solid #bbbcbd;
+    background: #f9f9f9;
+    background: -webkit-linear-gradient(#fafafa, #f3f2f2);
+    background: linear-gradient(#fafafa, #f3f2f2);
+    display: none;
+}
+.download-wrapper .intro {
+    overflow: hidden;
+    float: left;
+    margin: 10px 0 auto 10px;
+}
+.download-wrapper .intro h3 {
+    color: #4e4e4e;
+    font-size: 16px;
+    line-height: 19px;
+}
+.download-wrapper .intro h4 {
+    color: #b8b8b8;
+    font-size: 12px;
+    line-height: 18px;
+    font-weight: normal;
+}
+.download-wrapper .logo {
+    float: left;
+    width: 50px;
+    max-height: 50px;
+    height: 40px;
+    border-radius: 4px;
+}
+.download-wrapper .slogan {
+    overflow: hidden;
+    float: left;
+    margin: 3px 0 0 7px;
+}
+.download-wrapper .link {
+    float: right;
+    margin: 13px 5px auto 0;
+}
+.download-wrapper .link-download, .download-wrapper .line, .download-wrapper .link-close {
+    display: block;
+    float: right;
+    height: 33px;
+}
+.download-wrapper .link-download {
+    margin-right: 5px;
+    width: 77px;
+    background: #547ede;
+    background: -webkit-linear-gradient(#5d85e0, #4c75da);
+    background: linear-gradient(#5d85e0, #4c75da);
+    border: 1px solid #3356cc;
+    border-radius: 4px;
+    color: #fff;
+    line-height: 33px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 14px;
+}
+.download-wrapper .link-download:hover, .download-wrapper .link-download:active {
+    background: #486CBF;
+}
+.download-wrapper .link-close {
+    width: 33px;
+    text-align: center;
+    line-height: 30px;
+    text-indent: -9999px;
+    background: url('https://static.smartisanos.cn/reader/img/link-close.png') no-repeat right top;
+    background-size: 100%;
+}
+.download-wrapper .line {
+    width: 1px;
+    margin: 0 0 0 2px;
+    border-right: 1px solid #cecece;
+}
+.mask {
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.85);
+    position: absolute;
+    z-index: 999;
+    overflow: hidden;
+    top: 0;
+    left: 0;
+}
+.weixin-download-intro {
+    height: 100px;
+    background: url('https://static.smartisanos.cn/apps/img/ios_download_5d68b268fd.png') no-repeat right; 
+}
+
+/*************************************************************************
+ * 二维码
+ *************************************************************************/
+
+.fixed-wrapper {
+    display: none;
+}
+@media screen and (max-width:320px) {
+    .rss-wrapper .header {
+        font-size: 12px;
+    }
+    .download-wrapper .link {
+        margin: 13px 0px auto 0;
+    }
+}
+@media screen and (min-width:760px) {
+    html {
+        background-color: #f8f8f8;
+    }
+    .rss-wrapper .header {
+        height: 30px;
+        line-height: 30px;
+        border-bottom: 1px solid #e5e5e5;
+        padding: 30px 0 20px;
+        font-size: 16px;
+    }
+    .rss-wrapper .header img {
+        height: 30px;
+        width: 30px;
+        margin: 0 10px 0 0;
+    }
+    .rss-wrapper .header span {
+        font-size: 15px;
+    }
+    .rss-wrapper {
+        width: 640px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 30px 60px 0 60px;
+        border-left: 1px solid #e8e8e8;
+        border-right: 1px solid #e8e8e8;
+    }
+    .rss-wrapper .content h1 {
+        margin: 40px 0;
+        font-size: 25px;
+    }
+    .rss-wrapper .content .author {
+        padding-bottom: 30px;
+    }
+    .rss-wrapper .footer {
+        margin: 50px 0 0 0;
+        padding: 40px 0 80px;
+        border-top: 1px solid #ebebeb;
+    }
+    .rss-wrapper .footer a {
+        margin: 30px 0 0 0;
+    }
+}
+@media screen and (min-width:1000px) {
+    .fixed-wrapper {
+        position: fixed;
+        top: 20px;
+        margin: 0 0 0 720px;
+        display: block;
+    }
+    .fixed-wrapper .banner, .fixed-wrapper .qrcode {
+        display: block;
+        width: 147px;
+        height: 220px;
+    }
+    .fixed-wrapper .banner {
+        margin: 0 0 20px 0;
+        background: url('https://static.smartisanos.cn/reader/img/banner.png') no-repeat left top;
+        background-image: -webkit-image-set(url('https://static.smartisanos.cn/reader/img/banner.png') 1x, url('https://static.smartisanos.cn/reader/img/banner@2x.png') 2x);
+    }
+    .fixed-wrapper .qrcode {
+        background: url('https://static.smartisanos.cn/reader/img/qrcode.png') no-repeat left top;
+        background-image: -webkit-image-set(url('https://static.smartisanos.cn/reader/img/qrcode.png') 1x, url('https://static.smartisanos.cn/reader/img/qrcode@2x.png') 2x);
+    }
+}

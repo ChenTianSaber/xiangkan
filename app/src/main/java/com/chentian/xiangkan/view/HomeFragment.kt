@@ -175,6 +175,9 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
             when (code) {
                 ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
                 ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
+                ResponseCode.UPDATE_RSSITEM -> {
+                    refreshData()
+                }
             }
 
             checkIsListEmpty()

@@ -136,4 +136,20 @@ class RssItemRepository(
         return ResponseCode.WEB_SUCCESS
     }
 
+    /**
+     * 更新RssItem
+     */
+    fun updateRssItem(rssItem: RssItem){
+        GlobalScope.launch(Dispatchers.IO) {
+            rssItemDao.updateItems(rssItem)
+            rssItemsData.postValue(
+                ResponseData(
+                    code = ResponseCode.UPDATE_RSSITEM,
+                    data = mutableListOf(rssItem),
+                    message = "更新单个RssItem"
+                )
+            )
+        }
+    }
+
 }

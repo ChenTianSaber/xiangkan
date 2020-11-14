@@ -1,5 +1,6 @@
 package com.chentian.xiangkan
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -19,12 +20,12 @@ import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.listener.ItemClickListener
 import com.chentian.xiangkan.main.RssModel
-import com.chentian.xiangkan.view.ContentFragment
 import com.chentian.xiangkan.view.HomeFragment
 import com.chentian.xiangkan.view.ManagerFragment
 import com.chentian.xiangkan.repository.RssItemRepository
 import com.chentian.xiangkan.repository.RssLinkRepository
 import com.chentian.xiangkan.utils.AppUtils
+import com.chentian.xiangkan.view.ContentActivity
 import com.githang.statusbar.StatusBarCompat
 
 /**
@@ -40,7 +41,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     // region field
 
     private lateinit var homeFragment: HomeFragment
-    private lateinit var contentFragment: ContentFragment
     private lateinit var managerFragment: ManagerFragment
 
     private lateinit var homeBtn: ImageView
@@ -67,7 +67,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
     private fun initView() {
         homeFragment = HomeFragment()
-        contentFragment = ContentFragment()
         managerFragment = ManagerFragment()
         fragmentList.add(homeFragment)
         fragmentList.add(managerFragment)
@@ -163,6 +162,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         Log.d(TAG, "onContentItemClick: $data")
         homeFragment.onContentItemClick(itemView, data)
         // TODO(将这个Item置为已读，并存入数据库)
+        val intent = Intent(this, ContentActivity::class.java)
+        intent.putExtra("RssItem", data)
+        startActivity(intent)
+
+        data.wasRead = true
+        rssItemRepository.updateRssItem(data)
     }
 
     override fun onTabItemClick(itemView: View, data: RssLinkInfo) {
@@ -189,13 +194,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
      */
     fun changeTabData(rssLinkInfo: RssLinkInfo){
         rssItemRepository.getSingleRssLinkInfoRssItems(rssLinkInfo)
-    }
-
-    /**
-     * 单纯的获取订阅源，获取之后不会请求web数据
-     */
-    fun getRssLinks() {
-        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NO_REQUEST)
     }
 
     /**
