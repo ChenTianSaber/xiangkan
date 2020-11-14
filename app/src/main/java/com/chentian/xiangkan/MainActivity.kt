@@ -113,14 +113,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
             val data = response.data as MutableList<RssLinkInfo>
             val message = response.message
 
+            // 这里不管是请求DB还是web的数据，都只请求订阅源state为true的数据
+            val dataList = (data.filter { it.state }).toMutableList()
+
             when(code){
                 ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> {
                     // 请求web数据
-                    rssItemRepository.getRssItems(data)
+                    rssItemRepository.getRssItems(dataList)
                 }
                 ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB -> {
                     // 请求DB数据
-                    rssItemRepository.getRssLinkInfoRssItems(data)
+                    rssItemRepository.getRssLinkInfoRssItems(dataList)
                 }
             }
 
