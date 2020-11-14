@@ -73,7 +73,8 @@ class RssItemRepository(
             rssItemsData.postValue(
                     ResponseData(
                             code = ResponseCode.DB_SUCCESS,
-                            data = getSingleRssLinkInfoRssItemsFromDB(rssLinkInfo),
+//                            data = getSingleRssLinkInfoRssItemsFromDB(rssLinkInfo),
+                            data = getSingleRssLinkInfoRssItemsByDateFromDB(rssLinkInfo),
                             message = "从数据库获取内容成功"
                     )
             )
@@ -108,6 +109,13 @@ class RssItemRepository(
      */
     private fun getSingleRssLinkInfoRssItemsFromDB(rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
         return rssItemDao.getAllByUrl(rssLinkInfo.url)
+    }
+
+    /**
+     * 获取单个订阅源中的DB数据
+     */
+    private fun getSingleRssLinkInfoRssItemsByDateFromDB(rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
+        return rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
     }
 
     /**
