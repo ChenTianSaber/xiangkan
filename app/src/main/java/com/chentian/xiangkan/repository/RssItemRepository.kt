@@ -48,7 +48,7 @@ class RssItemRepository(
                     )
             )
 
-            var resultCode = ResponseCode.WEB_FAIL
+            var resultCode = ResponseCode.WEB_SUCCESS
             for (linkInfo in rssLinkInfos) {
                 resultCode = getRssItemsFromWeb(linkInfo)
                 Log.d(TAG, "getRssItemsFromWeb: resultCode ---> $resultCode")
