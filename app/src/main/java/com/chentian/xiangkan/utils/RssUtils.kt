@@ -250,6 +250,7 @@ object RssUtils {
         return when(channelLink){
             "https://www.kaiyanapp.com/" -> true
             "https://www.pingwest.com/status" -> true
+            "https://www.ui.cn/" -> true
             else -> false
         }
     }

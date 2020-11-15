@@ -11,7 +11,7 @@ interface RssLinkInfoDao {
     /**
      * 获取所有RssLinkInfo
      */
-    @Query("SELECT * FROM RssLinkInfo")
+    @Query("SELECT * FROM RssLinkInfo ORDER BY id DESC")
     fun getAll(): MutableList<RssLinkInfo>
 
     /**

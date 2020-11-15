@@ -77,6 +77,78 @@ object RssLinkInfoFactory {
                         channelDescription = "品玩 - 实时要闻",
                         state = false,
                         icon = "http://leancloudfile.chentiansaber.top/8e86a367ee659cf342d3.jpg/icon_pinwan.jpg"
+                ),
+                RssLinkInfo( // 36K
+                        url = "$RSSHUB_DOMAIN/36kr/newsflashes",
+                        channelLink = "https://36kr.com/newsflashes",
+                        channelTitle = "36氪",
+                        channelDescription = "快讯 - 36氪",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // 好奇心日报
+                        url = "$RSSHUB_DOMAIN/qdaily/tag/29",
+                        channelLink = "http://www.qdaily.com/tags/29.html",
+                        channelTitle = "好奇心日报",
+                        channelDescription = "Top 15_好奇心日报",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // Bilibili每周必看
+                        url = "$RSSHUB_DOMAIN/bilibili/weekly",
+                        channelLink = "https://www.bilibili.com/h5/weekly-recommend",
+                        channelTitle = "B站每周必看",
+                        channelDescription = "B站每周必看",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // 3DM新闻中心
+                        url = "$RSSHUB_DOMAIN/3dm/news",
+                        channelLink = "http://www.3dmgame.com/news/",
+                        channelTitle = "3DM新闻中心",
+                        channelDescription = "3DM - 新闻中心",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // 虎嗅
+                        url = "$RSSHUB_DOMAIN/huxiu/article",
+                        channelLink = "https://www.huxiu.com/article",
+                        channelTitle = "虎嗅",
+                        channelDescription = "虎嗅网 - 首页资讯",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // 机核
+                        url = "$RSSHUB_DOMAIN/gcores/category/articles",
+                        channelLink = "https://www.gcores.com/articles",
+                        channelTitle = "机核GCORES",
+                        channelDescription = "文章 | 机核 GCORES",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // UI中国
+                        url = "$RSSHUB_DOMAIN/ui-cn/article",
+                        channelLink = "https://www.ui.cn/",
+                        channelTitle = "UI中国",
+                        channelDescription = "推荐文章 - UI 中国",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // 站酷
+                        url = "$RSSHUB_DOMAIN/zcool/recommend/edit",
+                        channelLink = "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1",
+                        channelTitle = "站酷",
+                        channelDescription = "站酷 - 编辑推荐",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // 什么值得买
+                        url = "$RSSHUB_DOMAIN/smzdm/haowen",
+                        channelLink = "https://post.smzdm.com/p/aqnd9pdp/",
+                        channelTitle = "什么值得买",
+                        channelDescription = "什么值得买的值客原创频道，由晒物广场和经验盒子合并而来，新值客原创频道分为开箱晒物、使用评测、购物攻略、消费知识、摄影旅游、生活记录等六个板块，是众多值友分享消费主张、获取消费经验知识的互动频道。",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
                 )
         )
     }
