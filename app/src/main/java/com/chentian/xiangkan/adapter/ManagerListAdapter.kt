@@ -59,11 +59,7 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.ManagerViewHo
         fun setupUI(){
             holder.name.text = data.channelTitle
             holder.managerBtn.text = if (data.state) "已订阅" else "未订阅"
-            if (data.icon.isEmpty()) {
-                Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
-            } else {
-                Glide.with(context).load(data.icon).into(holder.icon)
-            }
+            Glide.with(context).load(data.icon).into(holder.icon)
         }
 
         setupClickListener()

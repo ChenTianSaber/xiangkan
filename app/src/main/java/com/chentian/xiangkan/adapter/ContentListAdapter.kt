@@ -92,11 +92,7 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             }
 
             // 设置图标
-            if(data.icon.isNullOrEmpty()){
-                Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
-            } else {
-                Glide.with(context).load(data.icon).into(holder.icon)
-            }
+            Glide.with(context).load(data.icon).into(holder.icon)
 
             // 是否已读
             if(data.wasRead!!){

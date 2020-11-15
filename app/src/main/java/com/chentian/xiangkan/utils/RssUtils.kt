@@ -237,11 +237,20 @@ object RssUtils {
      * 根据channelLink返回不同的icon
      */
     fun getRSSIcon(channelLink: String): Int {
-        return when {
-            channelLink == "https://sspai.com" -> R.mipmap.icon_sspai
-            channelLink.contains("zhihu.com", ignoreCase = false) -> R.mipmap.icon_zhihu
-            channelLink == "-1" -> R.mipmap.quanbu
+        return when (channelLink) {
+            "-1" -> R.mipmap.quanbu
             else -> R.mipmap.ic_launcher
+        }
+    }
+
+    /**
+     * 根据channelLink判断这个源是否默认展示网页
+     */
+    fun isShowWeb(channelLink: String): Boolean{
+        return when(channelLink){
+            "https://www.kaiyanapp.com/" -> true
+            "https://www.pingwest.com/status" -> true
+            else -> false
         }
     }
 

@@ -51,28 +51,32 @@ object RssLinkInfoFactory {
                         channelLink = "https://sspai.com",
                         channelTitle = "少数派",
                         channelDescription = "少数派致力于更好地运用数字产品或科学方法，帮助用户提升工作效率和生活品质",
-                        state = false
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/9141cd005566788b0bde.png/icon_sspai.png"
                 ),
                 RssLinkInfo( // 知乎热榜
                         url = "$RSSHUB_DOMAIN/zhihu/hotlist",
                         channelLink = "https://www.zhihu.com/billboard",
                         channelTitle = "知乎热榜",
                         channelDescription = "知乎热榜",
-                        state = false
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/1af55f939856dde8bff1.png/icon_zhihu.png"
                 ),
                 RssLinkInfo( // 开眼
                         url = "$RSSHUB_DOMAIN/kaiyan/index",
                         channelLink = "https://www.kaiyanapp.com/",
                         channelTitle = "开眼",
                         channelDescription = "开眼每日精选",
-                        state = false
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/7a673bbf7068781c8bfe.png/icon_kaiyan.png"
                 ),
                 RssLinkInfo( // 品玩
                         url = "$RSSHUB_DOMAIN/pingwest/status",
                         channelLink = "https://www.pingwest.com/status",
                         channelTitle = "品玩",
                         channelDescription = "品玩 - 实时要闻",
-                        state = false
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/8e86a367ee659cf342d3.jpg/icon_pinwan.jpg"
                 )
         )
     }

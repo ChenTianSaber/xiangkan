@@ -108,6 +108,19 @@ class ContentActivity : AppCompatActivity() {
         val data: RssItem = intent.getParcelableExtra<RssItem>("RssItem") as RssItem
         Log.d(TAG, "initData: $data")
 
+        isTextMode = !RssUtils.isShowWeb(data.channelLink)
+        if (isTextMode) {
+            // 文本模式
+            fullWebView.visibility = View.GONE
+            scrollView.visibility = View.VISIBLE
+            Glide.with(this).load(R.mipmap.book).into(modeBtn)
+        } else {
+            // 网页模式
+            fullWebView.visibility = View.VISIBLE
+            scrollView.visibility = View.GONE
+            Glide.with(this).load(R.mipmap.compass).into(modeBtn)
+        }
+
         val webViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(
                     view: WebView?,
@@ -138,11 +151,7 @@ class ContentActivity : AppCompatActivity() {
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
             val date = Date(data.pubDate)
             pubDate.text = simpleDateFormat.format(date)
-            if (data.icon.isNullOrEmpty()) {
-                Glide.with(this).load(RssUtils.getRSSIcon(data.channelLink)).into(icon)
-            } else {
-                Glide.with(this).load(data.icon).into(icon)
-            }
+            Glide.with(this).load(data.icon).into(icon)
 
             webView.settings.javaScriptEnabled = true
             webView.settings.domStorageEnabled = true
