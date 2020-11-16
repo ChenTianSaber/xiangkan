@@ -84,7 +84,7 @@ object RssLinkInfoFactory {
                         channelTitle = "36氪",
                         channelDescription = "快讯 - 36氪",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/83ec172460dbf30ba932.png/logo_36k.png"
                 ),
                 RssLinkInfo( // 好奇心日报
                         url = "$RSSHUB_DOMAIN/qdaily/tag/29",
@@ -147,6 +147,14 @@ object RssLinkInfoFactory {
                         channelLink = "https://post.smzdm.com/p/aqnd9pdp/",
                         channelTitle = "什么值得买",
                         channelDescription = "什么值得买的值客原创频道，由晒物广场和经验盒子合并而来，新值客原创频道分为开箱晒物、使用评测、购物攻略、消费知识、摄影旅游、生活记录等六个板块，是众多值友分享消费主张、获取消费经验知识的互动频道。",
+                        state = false,
+                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                ),
+                RssLinkInfo( // 差评
+                        url = "$RSSHUB_DOMAIN/chaping/news",
+                        channelLink = "https://chaping.cn/news?cate=",
+                        channelTitle = "差评",
+                        channelDescription = "差评资讯 - 全部",
                         state = false,
                         icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
                 )
