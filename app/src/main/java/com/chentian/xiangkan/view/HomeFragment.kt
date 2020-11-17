@@ -94,6 +94,13 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
         contentListAdapter.notifyDataSetChanged()
     }
 
+    private fun changeTabChoosed(data: RssLinkInfo){
+        for(data in tabListAdapter.getDataList()){
+           data.isChoosed = false
+        }
+        data.isChoosed = true
+    }
+
     // region listen
 
     /**
@@ -101,7 +108,7 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
      */
     fun onContentItemClick(itemView: View, data: RssItem){
         // TODO(跳转到内容fragment)
-        Toast.makeText(activity, data.title, Toast.LENGTH_SHORT).show()
+//        Toast.makeText(activity, data.title, Toast.LENGTH_SHORT).show()
     }
 
     /**
@@ -110,6 +117,11 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
     fun onTabItemClick(itemView: View, data: RssLinkInfo){
         // TODO(更新当前选中TAB，请求对应的TAB数据)
         Toast.makeText(activity, data.channelTitle, Toast.LENGTH_SHORT).show()
+
+        // 更新TAB选中状态
+        changeTabChoosed(data)
+        tabListAdapter.notifyDataSetChanged()
+
         (activity as MainActivity).changeTabData(data)
     }
 
@@ -140,6 +152,9 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
                     dataList[0].isRefreshing = true
                 }
             }
+
+            // 每次订阅源变动的时候，默认 全部 为选中状态
+            changeTabChoosed(dataList[0])
 
             tabListAdapter.setDataList(dataList)
             tabListAdapter.notifyDataSetChanged()

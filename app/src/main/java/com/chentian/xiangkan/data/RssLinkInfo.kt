@@ -1,6 +1,7 @@
 package com.chentian.xiangkan.data
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /**
@@ -15,11 +16,14 @@ data class RssLinkInfo(
         var state: Boolean = false, // 是否开启订阅
         var icon: String = "" // 图标
 ) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Long = 0
-    var latsedTitle: String = "" // 最新
-    var latestPubDate: Long = 0
-    var isRefreshing: Boolean = false
+        @PrimaryKey(autoGenerate = true)
+        var id: Long = 0
+        var latsedTitle: String = "" // 最新
+        var latestPubDate: Long = 0
+        @Ignore
+        var isRefreshing: Boolean = false
+        @Ignore
+        var isChoosed: Boolean = false
 }
 
 object RssLinkInfoFactory {

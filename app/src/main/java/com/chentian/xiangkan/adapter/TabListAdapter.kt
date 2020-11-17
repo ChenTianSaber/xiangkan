@@ -84,6 +84,13 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
                     Glide.with(context).load(data.icon).into(holder.icon)
                 }
             }
+
+            // TODO(设置选中状态，等设计完善了再搞)
+//            if(data.isChoosed){
+//                Glide.with(context).load(R.mipmap.ic_launcher).into(holder.icon)
+//            }else{
+//                Glide.with(context).load(data.icon).into(holder.icon)
+//            }
         }
 
         setupClickListener()
