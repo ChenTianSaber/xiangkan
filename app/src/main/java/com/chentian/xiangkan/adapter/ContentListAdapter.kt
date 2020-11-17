@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.chentian.xiangkan.listener.ItemClickListener
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
+import com.chentian.xiangkan.data.RssItemData
 import com.chentian.xiangkan.utils.RssUtils
 import java.text.SimpleDateFormat
 import java.util.*
@@ -100,6 +101,14 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             }else{
                 holder.title.setTextColor(Color.BLACK)
             }
+            
+            // TODO(判断是否是上次阅读的地方)
+            if(data.id == RssItemData.lastReadRssItem?.id ?: -1){
+                holder.title.setTextColor(Color.RED)
+            }else{
+                holder.title.setTextColor(Color.BLACK)
+            }
+            
         }
 
         setupClickListener()

@@ -35,3 +35,11 @@ data class RssItem(
     @IgnoredOnParcel
     var icon: String? = ""
 }
+
+object RssItemData {
+
+    /**
+     * 上一次阅读到的位置的记录
+     */
+    var lastReadRssItem: RssItem? = null
+}

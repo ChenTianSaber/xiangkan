@@ -208,6 +208,11 @@ class HomeFragment : Fragment() ,SwipeRefreshLayout.OnRefreshListener{
              */
             fun handleDBResopnse(dataList: MutableList<RssItem>){
                 // TODO(直接展示, 更新lastContentSize)
+
+                if(dataList.isNotEmpty()){
+                    RssItemData.lastReadRssItem = dataList[0]
+                }
+
                 contentListAdapter.setDataList(dataList)
                 refreshData()
 
