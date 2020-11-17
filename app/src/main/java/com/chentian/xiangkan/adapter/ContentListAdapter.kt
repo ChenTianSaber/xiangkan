@@ -103,10 +103,10 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             }
             
             // TODO(判断是否是上次阅读的地方)
-            if(data.id == RssItemData.lastReadRssItem?.id ?: -1){
-                holder.title.setTextColor(Color.RED)
+            if(position != 0 && data.id == RssItemData.lastReadRssItem?.id ?: -1){
+                holder.lastReadFlag.visibility = View.VISIBLE
             }else{
-                holder.title.setTextColor(Color.BLACK)
+                holder.lastReadFlag.visibility = View.GONE
             }
             
         }
@@ -122,6 +122,7 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
     // endregion
 
     inner class ContentViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val lastReadFlag: TextView = itemView.findViewById(R.id.last_read_flag)
         val title: TextView = itemView.findViewById(R.id.title)
         val description: TextView = itemView.findViewById(R.id.description)
         val author: TextView = itemView.findViewById(R.id.author)

@@ -107,6 +107,14 @@ object RssUtils {
             return url.substring(1, url.length - 1)
         }
 
+        fun checkItem(rssItem: RssItem): Boolean{
+            if(rssItem.link.isEmpty()){
+                return false
+            }
+
+            return true
+        }
+
         data.use {
             val xmlToJson: XmlToJson = XmlToJson.Builder(it, null).build()
             val jsonObject = xmlToJson.toJson()
@@ -129,7 +137,7 @@ object RssUtils {
                     )
                     rssItem.imageUrl = getImageUrl(json)
                     rssItem.icon = rssLinkInfo.icon
-                    dataList.add(rssItem)
+                    if(checkItem(rssItem)) dataList.add(rssItem)
                 }
             }
         }
