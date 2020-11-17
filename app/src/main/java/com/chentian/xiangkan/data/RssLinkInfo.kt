@@ -92,7 +92,7 @@ object RssLinkInfoFactory {
                         channelTitle = "好奇心日报",
                         channelDescription = "Top 15_好奇心日报",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/f35d3d1faf199c1acfd9.jpg/icon_haoqixinribao.jpg"
                 ),
                 RssLinkInfo( // Bilibili每周必看
                         url = "$RSSHUB_DOMAIN/bilibili/weekly",
@@ -100,7 +100,7 @@ object RssLinkInfoFactory {
                         channelTitle = "B站每周必看",
                         channelDescription = "B站每周必看",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/780d46690997834f8827.png/bilibili%20%282%29.png"
                 ),
                 RssLinkInfo( // 3DM新闻中心
                         url = "$RSSHUB_DOMAIN/3dm/news",
@@ -108,7 +108,7 @@ object RssLinkInfoFactory {
                         channelTitle = "3DM新闻中心",
                         channelDescription = "3DM - 新闻中心",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/1a3728e2c785034c6938.jpg/icon_3dm.jpg"
                 ),
                 RssLinkInfo( // 虎嗅
                         url = "$RSSHUB_DOMAIN/huxiu/article",
@@ -116,7 +116,7 @@ object RssLinkInfoFactory {
                         channelTitle = "虎嗅",
                         channelDescription = "虎嗅网 - 首页资讯",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/5b3bdfc4f9c22549ab3f.png/icon_huxiu.png"
                 ),
                 RssLinkInfo( // 机核
                         url = "$RSSHUB_DOMAIN/gcores/category/articles",
@@ -124,7 +124,7 @@ object RssLinkInfoFactory {
                         channelTitle = "机核GCORES",
                         channelDescription = "文章 | 机核 GCORES",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/b7b0facd9da6eb3fba68.png/icon_jihe.png"
                 ),
                 RssLinkInfo( // UI中国
                         url = "$RSSHUB_DOMAIN/ui-cn/article",
@@ -132,7 +132,7 @@ object RssLinkInfoFactory {
                         channelTitle = "UI中国",
                         channelDescription = "推荐文章 - UI 中国",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/18ecd4bd99ebba61466a.jpg/icon_uichina.jpg"
                 ),
                 RssLinkInfo( // 站酷
                         url = "$RSSHUB_DOMAIN/zcool/recommend/edit",
@@ -140,7 +140,7 @@ object RssLinkInfoFactory {
                         channelTitle = "站酷",
                         channelDescription = "站酷 - 编辑推荐",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/b9feca1ab08a238e2893.jpg/icon_zcool.jpg"
                 ),
                 RssLinkInfo( // 什么值得买
                         url = "$RSSHUB_DOMAIN/smzdm/haowen",
@@ -148,7 +148,7 @@ object RssLinkInfoFactory {
                         channelTitle = "什么值得买",
                         channelDescription = "什么值得买的值客原创频道，由晒物广场和经验盒子合并而来，新值客原创频道分为开箱晒物、使用评测、购物攻略、消费知识、摄影旅游、生活记录等六个板块，是众多值友分享消费主张、获取消费经验知识的互动频道。",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/b3757558bd3bef9c76ee.jpg/icon_shenmezhidemai.jpg"
                 ),
                 RssLinkInfo( // 差评
                         url = "$RSSHUB_DOMAIN/chaping/news",
@@ -156,7 +156,7 @@ object RssLinkInfoFactory {
                         channelTitle = "差评",
                         channelDescription = "差评资讯 - 全部",
                         state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/e38b83c487fb4ceee466.png/icon_rss.png"
+                        icon = "http://leancloudfile.chentiansaber.top/a11b12759e435f6ba59e.jpg/icon_chaping.jpg"
                 )
         )
     }
