@@ -1,11 +1,15 @@
 package com.chentian.xiangkan.utils
 
+import android.content.Context
 import android.util.Log
+import android.widget.ImageView
+import com.bumptech.glide.Glide
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.data.RssLinkInfoFactory
 import com.chentian.xiangkan.repository.RssItemRepository
+import com.chentian.xiangkan.repository.RssLinkRepository
 import fr.arnaudguyon.xmltojsonlib.XmlToJson
 import org.json.JSONObject
 import java.io.BufferedReader
@@ -235,12 +239,36 @@ object RssUtils {
 
     /**
      * 根据channelLink返回不同的icon
+     * 先从当前的订阅源中icon找，没有的话再从本地找
      */
     fun getRSSIcon(channelLink: String): Int {
         return when (channelLink) {
             "-1" -> R.mipmap.quanbu
             else -> R.mipmap.ic_launcher
         }
+    }
+
+    fun setIcon(contex: Context, channelLink: String, view: ImageView) {
+
+        // 看看是不是全部图标
+        when (channelLink) {
+            "-1" -> {
+                Glide.with(contex).load(R.mipmap.quanbu).into(view)
+                return
+            }
+        }
+
+        // 从rssLink里查找
+        for (rssLink in RssLinkRepository.rssLinkList) {
+            if (rssLink.channelLink == channelLink) {
+                Glide.with(contex).load(rssLink.icon).into(view)
+                return
+            }
+        }
+
+        // 设置默认图标
+        Glide.with(contex).load(R.mipmap.ic_launcher).into(view)
+
     }
 
     /**

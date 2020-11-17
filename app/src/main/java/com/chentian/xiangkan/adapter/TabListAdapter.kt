@@ -78,11 +78,12 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
             if (data.isRefreshing) {
                 Glide.with(context).load(R.mipmap.loading).into(holder.icon)
             } else {
-                if (data.icon.isEmpty()) {
-                    Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
-                } else {
-                    Glide.with(context).load(data.icon).into(holder.icon)
-                }
+//                if (data.icon.isEmpty()) {
+//                    Glide.with(context).load(RssUtils.getRSSIcon(data.channelLink)).into(holder.icon)
+//                } else {
+//                    Glide.with(context).load(data.icon).into(holder.icon)
+//                }
+                RssUtils.setIcon(context, data.channelLink, holder.icon)
             }
 
             // TODO(设置选中状态，等设计完善了再搞)

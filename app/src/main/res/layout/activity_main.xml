@@ -10,55 +10,66 @@
         android:id="@+id/view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="42dp"
-        android:layout_marginBottom="64dp"
-        android:background="@drawable/coner_white_3"
-        android:elevation="4dp"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:paddingLeft="12dp"
-        android:paddingTop="4dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white_3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
-
-        <!--排序按钮-->
-        <!--        <ImageView-->
-        <!--            android:id="@+id/sort"-->
-        <!--            android:layout_width="24dp"-->
-        <!--            android:layout_height="24dp"-->
-        <!--            android:src="@mipmap/shaixuan"-->
-        <!--            android:visibility="visible" />-->
 
         <!--主页按钮-->
         <ImageView
             android:id="@+id/home"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@mipmap/cangku_kucun"
-            android:visibility="visible" />
+            android:layout_marginStart="16dp"
+            android:src="@mipmap/home"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <!--管理订阅按钮-->
+        <!--管理订阅页按钮-->
+
+        <!--设置页面按钮-->
         <ImageView
             android:id="@+id/manager"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginLeft="16dp"
-            android:paddingTop="4dp"
-            android:src="@mipmap/tags"
-            android:visibility="visible" />
+            android:layout_marginStart="24dp"
+            android:src="@mipmap/tag"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/home"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+        <!--排序按钮-->
+        <ImageView
+            android:id="@+id/setting"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="24dp"
+            android:src="@mipmap/setting"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/manager"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/sort"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginEnd="16dp"
+            android:src="@mipmap/align_left"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

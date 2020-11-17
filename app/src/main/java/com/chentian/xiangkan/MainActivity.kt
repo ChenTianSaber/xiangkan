@@ -23,6 +23,7 @@ import com.chentian.xiangkan.repository.RssItemRepository
 import com.chentian.xiangkan.repository.RssLinkRepository
 import com.chentian.xiangkan.utils.AppUtils
 import com.chentian.xiangkan.view.ContentActivity
+import com.chentian.xiangkan.view.SettingFragment
 import com.githang.statusbar.StatusBarCompat
 
 /**
@@ -39,9 +40,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
     private lateinit var homeFragment: HomeFragment
     private lateinit var managerFragment: ManagerFragment
+    private lateinit var settingFragment: SettingFragment
 
     private lateinit var homeBtn: ImageView
     private lateinit var managerBtn: ImageView
+    private lateinit var settingBtn: ImageView
     private lateinit var viewPager: ViewPager2
 
     lateinit var rssItemRepository: RssItemRepository
@@ -65,17 +68,22 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     private fun initView() {
         homeFragment = HomeFragment()
         managerFragment = ManagerFragment()
+        settingFragment = SettingFragment()
         fragmentList.add(homeFragment)
         fragmentList.add(managerFragment)
+        fragmentList.add(settingFragment)
 
         homeBtn = findViewById(R.id.home)
         homeBtn.setOnClickListener(this)
         managerBtn = findViewById(R.id.manager)
         managerBtn.setOnClickListener(this)
+        settingBtn = findViewById(R.id.setting)
+        settingBtn.setOnClickListener(this)
 
         viewPager = findViewById(R.id.view_pager)
         val pagerAdapter = ScreenSlidePagerAdapter(this)
         viewPager.adapter = pagerAdapter
+        viewPager.isUserInputEnabled = false
 
     }
 
@@ -151,6 +159,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
             }
             R.id.manager -> {
                 viewPager.currentItem = 1
+            }
+            R.id.setting -> {
+                viewPager.currentItem = 2
             }
         }
     }

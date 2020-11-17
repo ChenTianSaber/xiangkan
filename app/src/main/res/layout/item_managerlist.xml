@@ -26,10 +26,11 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:textAlignment="center"
+        android:textAlignment="textStart"
         android:textColor="@color/black"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/rss_manager_btn"
         app:layout_constraintStart_toEndOf="@+id/icon_layout"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="少数派" />

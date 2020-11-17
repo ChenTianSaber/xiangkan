@@ -24,6 +24,9 @@ class RssLinkRepository(
 
     companion object {
         const val TAG = "RssLinkRepository"
+
+        // 当前的订阅源
+        val rssLinkList = mutableListOf<RssLinkInfo>()
     }
 
     /**
@@ -44,6 +47,10 @@ class RssLinkRepository(
             }
 
             val allRssLinks = rssLinkInfoDao.getAll()
+
+            rssLinkList.clear()
+            rssLinkList.addAll(allRssLinks)
+
             rssLinksData.postValue(
                 ResponseData(
                     code = flag,

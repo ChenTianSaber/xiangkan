@@ -148,10 +148,13 @@ class ContentActivity : AppCompatActivity() {
         fun setupTextMode() {
             title.text = data.title
             author.text = data.author
+
             val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
             val date = Date(data.pubDate)
             pubDate.text = simpleDateFormat.format(date)
-            Glide.with(this).load(data.icon).into(icon)
+
+//            Glide.with(this).load(data.icon).into(icon)
+            RssUtils.setIcon(this, data.channelLink, icon)
 
             webView.settings.javaScriptEnabled = true
             webView.settings.domStorageEnabled = true
