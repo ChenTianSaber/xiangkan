@@ -107,7 +107,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
         // TODO(在这里请求订阅源的数据)
         // 请求订阅源，请求完成后再请求内容数据
-        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
+        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
 
         // 创建WorkManager任务
         val updateDataWorkRequest: PeriodicWorkRequest = PeriodicWorkRequestBuilder<UpdateDataWork>(8,TimeUnit.HOURS).build()
