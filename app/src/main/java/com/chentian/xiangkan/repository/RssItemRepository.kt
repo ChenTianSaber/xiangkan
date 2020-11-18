@@ -29,6 +29,11 @@ class RssItemRepository(
 
     companion object {
         const val TAG = "RssItemRepository"
+
+        const val SORT_ALL = 0 // 全部
+        const val SORT_UNREAD = 1 // 未读
+        const val SORT_READ = 2 // 已读
+        var SORT_TYPE = SORT_ALL
     }
 
     /**
@@ -101,7 +106,12 @@ class RssItemRepository(
      * 获取数据库中所有内容数据
      */
     private fun getRssItemsFromDB(): MutableList<RssItem> {
-        return rssItemDao.getAll()
+        return when(SORT_TYPE){
+            SORT_ALL -> rssItemDao.getAll()
+            SORT_READ -> rssItemDao.getAllWasRead()
+            SORT_UNREAD -> rssItemDao.getAllUnRead()
+            else -> rssItemDao.getAll()
+        }
     }
 
     /**
@@ -115,7 +125,12 @@ class RssItemRepository(
      * 获取单个订阅源中的DB数据
      */
     private fun getSingleRssLinkInfoRssItemsByDateFromDB(rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
-        return rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
+        return when(SORT_TYPE){
+            SORT_ALL -> rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
+            SORT_UNREAD -> rssItemDao.getAllByUrlOrderByPubDateUnRead(rssLinkInfo.url)
+            SORT_READ -> rssItemDao.getAllByUrlOrderByPubDateWasRead(rssLinkInfo.url)
+            else -> rssItemDao.getAllByUrlOrderByPubDate(rssLinkInfo.url)
+        }
     }
 
     /**

@@ -16,6 +16,8 @@ import androidx.viewpager2.widget.ViewPager2
 import androidx.work.*
 import com.chentian.xiangkan.data.*
 import com.chentian.xiangkan.db.AppDatabase
+import com.chentian.xiangkan.dialog.AddBiliBiliUpDialog
+import com.chentian.xiangkan.dialog.SortDialog
 import com.chentian.xiangkan.listener.ItemClickListener
 import com.chentian.xiangkan.main.RssModel
 import com.chentian.xiangkan.view.HomeFragment
@@ -48,6 +50,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     private lateinit var homeBtn: ImageView
     private lateinit var managerBtn: ImageView
     private lateinit var settingBtn: ImageView
+    private lateinit var sortBtn: ImageView
     private lateinit var viewPager: ViewPager2
 
     lateinit var rssItemRepository: RssItemRepository
@@ -82,6 +85,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         managerBtn.setOnClickListener(this)
         settingBtn = findViewById(R.id.setting)
         settingBtn.setOnClickListener(this)
+        sortBtn = findViewById(R.id.sort)
+        sortBtn.setOnClickListener(this)
 
         viewPager = findViewById(R.id.view_pager)
         val pagerAdapter = ScreenSlidePagerAdapter(this)
@@ -174,6 +179,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
             R.id.setting -> {
                 viewPager.currentItem = 2
             }
+            R.id.sort -> {
+                // 打开筛选面板，可以选择 全部，已读，未读
+                SortDialog().show(supportFragmentManager,"sort")
+            }
         }
     }
 
@@ -229,6 +238,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
      */
     fun insertRssLinkInfo(rssLinkInfo: RssLinkInfo){
         rssLinkRepository.insertRssLinkInfo(rssLinkInfo)
+    }
+
+    /**
+     * 变更筛选条件
+     */
+    fun changeSortType(sortType: Int){
+        RssItemRepository.SORT_TYPE = sortType
+        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
     }
 
     // endregion

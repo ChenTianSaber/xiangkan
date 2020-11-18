@@ -39,6 +39,18 @@ interface RssItemDao {
     fun getAllByUrlOrderByPubDate(url:String): MutableList<RssItem>
 
     /**
+     * 根据url查找数据(未读，时间逆序)
+     */
+    @Query("SELECT * FROM RssItem where url = :url AND wasRead = 0 ORDER BY pubDate DESC")
+    fun getAllByUrlOrderByPubDateUnRead(url:String): MutableList<RssItem>
+
+    /**
+     * 根据url查找数据(已读，时间逆序)
+     */
+    @Query("SELECT * FROM RssItem where url = :url AND wasRead = 1 ORDER BY pubDate DESC")
+    fun getAllByUrlOrderByPubDateWasRead(url:String): MutableList<RssItem>
+
+    /**
      * 根据url查找数据（id逆序）
      */
     @Query("SELECT * FROM RssItem where url = :url ORDER BY id DESC")
