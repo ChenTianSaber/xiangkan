@@ -147,7 +147,7 @@ object RssLinkInfoFactory {
                         icon = "http://leancloudfile.chentiansaber.top/b9feca1ab08a238e2893.jpg/icon_zcool.jpg"
                 ),
                 RssLinkInfo( // 什么值得买
-                        url = "$RSSHUB_DOMAIN/smzdm/haowen",
+                        url = "$RSSHUB_DOMAIN/smzdm/haowen/1",
                         channelLink = "https://post.smzdm.com/p/aqnd9pdp/",
                         channelTitle = "什么值得买",
                         channelDescription = "什么值得买的值客原创频道，由晒物广场和经验盒子合并而来，新值客原创频道分为开箱晒物、使用评测、购物攻略、消费知识、摄影旅游、生活记录等六个板块，是众多值友分享消费主张、获取消费经验知识的互动频道。",

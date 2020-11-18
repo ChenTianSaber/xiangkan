@@ -28,7 +28,7 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginEnd="16dp"
                 android:textColor="@color/black"
-                android:textSize="18sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -42,8 +42,8 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/black"
-                android:textSize="12sp"
-                app:layout_constraintStart_toEndOf="@+id/icon"
+                android:textSize="14sp"
+                app:layout_constraintStart_toEndOf="@+id/icon_layout"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:text="陈添" />
 
@@ -54,20 +54,27 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="16dp"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="14sp"
                 app:layout_constraintStart_toEndOf="@+id/author"
                 app:layout_constraintTop_toBottomOf="@+id/title"
                 tools:text="2020.10.01 16:08" />
 
-            <ImageView
-                android:id="@+id/icon"
-                android:layout_width="16dp"
-                android:layout_height="16dp"
+            <androidx.cardview.widget.CardView
+                android:id="@+id/icon_layout"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/title"
-                app:srcCompat="@mipmap/ic_launcher" />
+                app:cardCornerRadius="10dp"
+                android:elevation="4dp">
+                <ImageView
+                    android:id="@+id/icon"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    app:srcCompat="@mipmap/ic_launcher" />
+            </androidx.cardview.widget.CardView>
 
             <WebView
                 android:id="@+id/web_view"
