@@ -71,4 +71,10 @@ dependencies {
     implementation  'com.umeng.umsdk:oaid_mi:1.0.0'
     implementation  'com.umeng.umsdk:oaid_oppo:1.0.4'
     implementation  'com.umeng.umsdk:oaid_vivo:1.0.0.1'
+    // workmanager
+    def work_version = "2.4.0"
+    // (Java only)
+    implementation "androidx.work:work-runtime:$work_version"
+    // Kotlin + coroutines
+    implementation "androidx.work:work-runtime-ktx:$work_version"
 }

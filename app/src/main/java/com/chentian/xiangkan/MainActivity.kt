@@ -13,6 +13,7 @@ import androidx.lifecycle.Observer
 import androidx.room.Room
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import androidx.work.*
 import com.chentian.xiangkan.data.*
 import com.chentian.xiangkan.db.AppDatabase
 import com.chentian.xiangkan.listener.ItemClickListener
@@ -24,7 +25,9 @@ import com.chentian.xiangkan.repository.RssLinkRepository
 import com.chentian.xiangkan.utils.AppUtils
 import com.chentian.xiangkan.view.ContentActivity
 import com.chentian.xiangkan.view.SettingFragment
+import com.chentian.xiangkan.workmanager.UpdateDataWork
 import com.githang.statusbar.StatusBarCompat
+import java.util.concurrent.TimeUnit
 
 /**
  * 页面的容器，这里会执行对数据的操作，其余的fragment只负责监听数据并更新
@@ -105,6 +108,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         // TODO(在这里请求订阅源的数据)
         // 请求订阅源，请求完成后再请求内容数据
         rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
+
+        // 创建WorkManager任务
+        val updateDataWorkRequest: PeriodicWorkRequest = PeriodicWorkRequestBuilder<UpdateDataWork>(8,TimeUnit.HOURS).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "updateRssItems",
+            ExistingPeriodicWorkPolicy.KEEP,
+            updateDataWorkRequest
+        )
 
     }
 
