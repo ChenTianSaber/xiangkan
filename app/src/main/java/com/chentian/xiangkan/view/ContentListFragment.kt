@@ -79,8 +79,9 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
             val dataList = response.data as MutableList<RssItem>
             val code = response.code
             val message = response.message
+            val tag = response.tag
 
-            Log.d(TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message")
+            Log.d(TAG, "[${rssLinkInfo.channelTitle}] rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag")
 
             /**
              * 处理DB数据返回
@@ -88,8 +89,7 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
             fun handleDBResopnse(dataList: MutableList<RssItem>){
                 // TODO(直接展示, 更新lastContentSize)
                 // 先判断是不是这个TAB下的数据
-                if(response.tag == ResponseCode.SINGLE && (dataList.isNotEmpty() && dataList[0].channelLink == rssLinkInfo.channelLink)){
-                    RssItemData.lastReadRssItem = dataList[0]
+                if(tag == ResponseCode.SINGLE && (dataList.isNotEmpty() && dataList[0].channelLink == rssLinkInfo.channelLink)){
                     contentListAdapter.setDataList(dataList)
                     refreshData()
                 }

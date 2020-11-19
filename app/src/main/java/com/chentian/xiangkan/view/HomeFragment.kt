@@ -56,6 +56,18 @@ class HomeFragment : Fragment() {
         val pagerAdapter = ScreenSlidePagerAdapter(this)
         viewPager = itemView.findViewById(R.id.view_pager)
         viewPager.adapter = pagerAdapter
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                super.onPageSelected(position)
+                Log.d(TAG, "onPageSelected: $position")
+                val data = tabListAdapter.getDataList()[position]
+                Toast.makeText(activity, data.channelTitle, Toast.LENGTH_SHORT).show()
+                // 更新TAB选中状态
+                changeTabChoosed(data)
+                tabList.smoothScrollToPosition(position)
+                tabListAdapter.notifyDataSetChanged()
+            }
+        })
 
     }
 
@@ -88,10 +100,13 @@ class HomeFragment : Fragment() {
         Toast.makeText(activity, data.channelTitle, Toast.LENGTH_SHORT).show()
 
         // 更新TAB选中状态
-        changeTabChoosed(data)
-        tabListAdapter.notifyDataSetChanged()
+//        changeTabChoosed(data)
+//        tabListAdapter.notifyDataSetChanged()
+//
+//        (activity as MainActivity).changeTabData(data)qiehuan
 
-        (activity as MainActivity).changeTabData(data)
+        // 切换到对应的页面
+//        viewPager.setCurrentItem(tabListAdapter.getDataList().indexOf(data),true)
     }
 
     /**
