@@ -3,7 +3,8 @@ package com.chentian.xiangkan.data
 data class ResponseData(
         val code: Int, // 返回code
         val data: Any, // 具体数据
-        val message: String // 错误信息
+        val message: String, // 错误信息
+        val tag: Int = 0 //类型，占位数据
 )
 
 object ResponseCode{
@@ -15,7 +16,9 @@ object ResponseCode{
         const val GET_RSSLINK_SUCCESS_NEED_REQUEST_DB = 15 // 获取Rsslink订阅源数据成功，并且需要请求DB数据
 
         const val WEB_FAIL = 25 // 请求RssItem内容失败
-        const val WEB_FAIL_EMPTY = 26 // 内容为空
 
         const val UPDATE_RSSITEM = 31 // 更新单个RssItem
+
+        const val ALL = 41
+        const val SINGLE = 42
 }

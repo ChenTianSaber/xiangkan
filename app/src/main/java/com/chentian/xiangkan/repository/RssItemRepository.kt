@@ -45,12 +45,12 @@ class RssItemRepository(
     fun getRssItems(rssLinkInfos: MutableList<RssLinkInfo>) {
         GlobalScope.launch(Dispatchers.IO) {
             rssItemsData.postValue(
-                    ResponseData(
-                            code = ResponseCode.DB_SUCCESS,
-//                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
-                            data = getRssItemsFromDB(),
-                            message = "从数据库获取内容成功"
-                    )
+                ResponseData(
+                    code = ResponseCode.DB_SUCCESS,
+                    data = getRssItemsFromDB(),
+                    message = "从数据库获取内容成功",
+                    tag = ResponseCode.ALL
+                )
             )
 
             var resultCode = ResponseCode.WEB_SUCCESS
@@ -60,12 +60,12 @@ class RssItemRepository(
             }
 
             rssItemsData.postValue(
-                    ResponseData(
-                            code = resultCode,
-//                            data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
-                            data = getRssItemsFromDB(),
-                            message = "从网络请求完成"
-                    )
+                ResponseData(
+                    code = resultCode,
+                    data = getRssItemsFromDB(),
+                    message = "从网络请求完成",
+                    tag = ResponseCode.ALL
+                )
             )
         }
     }
@@ -76,12 +76,12 @@ class RssItemRepository(
     fun getSingleRssLinkInfoRssItems(rssLinkInfo: RssLinkInfo) {
         GlobalScope.launch(Dispatchers.IO) {
             rssItemsData.postValue(
-                    ResponseData(
-                            code = ResponseCode.DB_SUCCESS,
-//                            data = getSingleRssLinkInfoRssItemsFromDB(rssLinkInfo),
-                            data = getSingleRssLinkInfoRssItemsByDateFromDB(rssLinkInfo),
-                            message = "从数据库获取内容成功"
-                    )
+                ResponseData(
+                    code = ResponseCode.DB_SUCCESS,
+                    data = getSingleRssLinkInfoRssItemsByDateFromDB(rssLinkInfo),
+                    message = "从数据库获取内容成功",
+                    tag = ResponseCode.SINGLE
+                )
             )
         }
     }
@@ -89,14 +89,14 @@ class RssItemRepository(
     /**
      * 获取所有订阅源中的DB数据并发送数据回调
      */
-    fun getRssLinkInfoRssItems(rssLinkInfos: MutableList<RssLinkInfo>) {
+    fun getRssLinkInfoRssItems() {
         GlobalScope.launch(Dispatchers.IO) {
             rssItemsData.postValue(
                 ResponseData(
                     code = ResponseCode.DB_SUCCESS,
-//                    data = getAllRssLinkInfoRssItemsFromDB(rssLinkInfos),
                     data = getRssItemsFromDB(),
-                    message = "从数据库获取内容成功"
+                    message = "从数据库获取内容成功",
+                    tag = ResponseCode.ALL
                 )
             )
         }
