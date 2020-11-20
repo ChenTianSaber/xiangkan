@@ -50,21 +50,18 @@
     <!--更新了多少条的tip-->
     <TextView
         android:id="@+id/update_tip"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/coner_white_3"
-        android:elevation="4dp"
-        android:paddingLeft="12dp"
-        android:paddingTop="6dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="6dp"
+        android:background="@color/white_3"
+        android:gravity="center"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
         android:textColor="@color/black"
         android:textSize="14sp"
         android:visibility="gone"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tab_list"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="有12条更新" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

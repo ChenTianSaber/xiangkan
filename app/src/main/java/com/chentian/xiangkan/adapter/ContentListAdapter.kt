@@ -71,6 +71,10 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             holder.itemView.setOnClickListener {
                 itemClick?.onContentItemClick(itemView = holder.itemView, data = data)
             }
+
+            holder.markReadBtn.setOnClickListener {
+                itemClick?.onMarkReadClick(itemView = holder.itemView, data = data)
+            }
         }
 
         fun setupUI(){
@@ -102,8 +106,10 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             // 是否已读
             if(data.wasRead!!){
                 holder.title.setTextColor(Color.GRAY)
+                holder.markReadBtn.text = "已读"
             }else{
                 holder.title.setTextColor(Color.BLACK)
+                holder.markReadBtn.text = "未读"
             }
             
             // TODO(判断是否是上次阅读的地方)
@@ -133,5 +139,6 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
         val date: TextView = itemView.findViewById(R.id.date)
         val icon: ImageView = itemView.findViewById(R.id.icon)
         val cover: ImageView = itemView.findViewById(R.id.cover)
+        val markReadBtn: TextView = itemView.findViewById(R.id.mark_read_btn)
     }
 }

@@ -222,6 +222,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         rssItemRepository.updateRssItem(data)
     }
 
+    override fun onMarkReadClick(itemView: View, data: RssItem) {
+        data.wasRead = true
+        rssItemRepository.updateRssItem(data)
+    }
+
     override fun onTabItemClick(itemView: View, data: RssLinkInfo) {
         Log.d(TAG, "onTabItemClick: $data")
         homeFragment.onTabItemClick(itemView, data)

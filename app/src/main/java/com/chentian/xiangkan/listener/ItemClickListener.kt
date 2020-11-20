@@ -14,6 +14,11 @@ interface ItemClickListener {
     fun onContentItemClick(itemView: View, data: RssItem)
 
     /**
+     * 当点击已读按钮时，将其标记为已读
+     */
+    fun onMarkReadClick(itemView: View, data: RssItem)
+
+    /**
      * 当点击首页顶部TAB的时候
      */
     fun onTabItemClick(itemView: View, data: RssLinkInfo)
