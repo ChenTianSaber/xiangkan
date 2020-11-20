@@ -75,6 +75,18 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
                 emptyLayout.visibility = View.GONE
             }
         }
+
+        contentList.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
+                //滑动结束
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    // 记录第一个可见的item，这就是上次阅读的位置
+                    val position = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
+                    RssItemData.tempLastReadRssLink = contentListAdapter.getDataList()[position].link
+                    Log.d(TAG, "onScrollStateChanged: RssItemData.tempLastReadRssLink --> ${RssItemData.tempLastReadRssLink}")
+                }
+            }
+        })
     }
 
     private fun initData() {
@@ -133,7 +145,6 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
                 // TODO(直接展示, 更新lastContentSize)
                 // 先判断是不是这个TAB下的数据
                 if(tag == ResponseCode.ALL){
-                    RssItemData.lastReadRssItem = dataList[0]
                     contentListAdapter.setDataList(dataList)
                     refreshData()
 

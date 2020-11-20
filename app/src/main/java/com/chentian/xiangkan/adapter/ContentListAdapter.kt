@@ -42,6 +42,10 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
         this.dataList = dataList
     }
 
+    fun getDataList(): MutableList<RssItem> {
+        return this.dataList
+    }
+
     fun setItemClick(itemClick: ItemClickListener) {
         this.itemClick = itemClick
     }
@@ -103,7 +107,7 @@ class ContentListAdapter : RecyclerView.Adapter<ContentListAdapter.ContentViewHo
             }
             
             // TODO(判断是否是上次阅读的地方)
-            if(position != 0 && data.id == RssItemData.lastReadRssItem?.id ?: -1){
+            if(position != 0 && data.link == RssItemData.lastReadRssLink){
                 holder.lastReadFlag.visibility = View.VISIBLE
             }else{
                 holder.lastReadFlag.visibility = View.GONE

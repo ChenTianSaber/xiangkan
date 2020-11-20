@@ -1,6 +1,8 @@
 package com.chentian.xiangkan
 
+import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -59,6 +61,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
     private var fragmentList = mutableListOf<Fragment>()
 
+    private lateinit var sharedPreferences: SharedPreferences
+    private lateinit var editor: SharedPreferences.Editor
+
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -69,6 +74,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
         initView()
         initData()
+    }
+
+    override fun onPause() {
+        // 记录上次阅读位置
+        editor.putString("lastReadRssLink", RssItemData.tempLastReadRssLink)
+        editor.commit()
+        super.onPause()
     }
 
     private fun initView() {
@@ -96,6 +108,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     }
 
     private fun initData() {
+        // 获取上次的最后一次阅读位置
+        sharedPreferences = getSharedPreferences("rssData", Context.MODE_PRIVATE)
+        editor = sharedPreferences.edit()
+        RssItemData.lastReadRssLink = sharedPreferences.getString("lastReadRssLink","") ?: ""
+        Log.d(TAG, "initData: RssItemData.lastReadRssLink --> ${RssItemData.lastReadRssLink}")
+
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "xiangkan").build()
         rssModel = RssModel()
         rssItemRepository = RssItemRepository(

@@ -41,5 +41,6 @@ object RssItemData {
     /**
      * 上一次阅读到的位置的记录
      */
-    var lastReadRssItem: RssItem? = null
+    var lastReadRssLink: String = ""
+    var tempLastReadRssLink: String = ""
 }
