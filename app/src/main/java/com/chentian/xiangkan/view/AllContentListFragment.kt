@@ -97,6 +97,13 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
 
     private fun refreshData(){
         contentListAdapter.notifyDataSetChanged()
+        for(index in 0 until contentListAdapter.getDataList().size){
+            val data = contentListAdapter.getDataList()[index]
+            if(data.link == RssItemData.lastReadRssLink){
+                contentList.smoothScrollToPosition(index)
+                return
+            }
+        }
     }
 
     // region listen
