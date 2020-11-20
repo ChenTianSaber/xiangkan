@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.room.Room
+import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import androidx.work.*
@@ -64,6 +65,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     private lateinit var sharedPreferences: SharedPreferences
     private lateinit var editor: SharedPreferences.Editor
 
+    private var needRequestRssData: Boolean = false
+
     //endregion
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,6 +108,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         viewPager.adapter = pagerAdapter
         viewPager.isUserInputEnabled = false
 
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                if(position == 0){
+                    // 当回到首页的时候，需要判断一下是否需要刷新数据，要的话那就去请求数据
+                    if(needRequestRssData){
+                        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
+                        needRequestRssData = false
+                    }
+                }
+            }
+        })
+
     }
 
     private fun initData() {
@@ -136,12 +151,12 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NO_REQUEST)
 
         // 创建WorkManager任务
-//        val updateDataWorkRequest: PeriodicWorkRequest = PeriodicWorkRequestBuilder<UpdateDataWork>(8,TimeUnit.HOURS).build()
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-//            "updateRssItems",
-//            ExistingPeriodicWorkPolicy.KEEP,
-//            updateDataWorkRequest
-//        )
+        val updateDataWorkRequest: PeriodicWorkRequest = PeriodicWorkRequestBuilder<UpdateDataWork>(4,TimeUnit.HOURS).build()
+        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
+            "updateRssItems",
+            ExistingPeriodicWorkPolicy.KEEP,
+            updateDataWorkRequest
+        )
 
     }
 
@@ -239,6 +254,11 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         // 接下来是对数据的处理
         // 更新数据库, 更新首页TAB列表, 更新首页内容数据（只请求DB）
         rssLinkRepository.updateRssLinkInfo(data)
+
+        // 当把订阅源从未订阅变成已订阅之后，就需要请求
+        if(data.state){
+            needRequestRssData = true
+        }
     }
 
     // endregion

@@ -73,6 +73,7 @@ class HomeFragment : Fragment() {
 
     private fun initData() {
         onRssLinkInfoDataChanged()
+        onRssItemDataChanged()
     }
 
     private fun changeTabChoosed(data: RssLinkInfo){
@@ -153,6 +154,37 @@ class HomeFragment : Fragment() {
 
             tabListAdapter.setDataList(dataList)
             tabListAdapter.notifyDataSetChanged()
+        })
+    }
+
+    /**
+     * 内容数据更新
+     */
+    private fun onRssItemDataChanged() {
+        // 监听内容数据的变化
+        (activity as MainActivity).rssModel.rssItemsData.observe(this, Observer<ResponseData> { response ->
+            // Log.d(TAG, "rssItemsData observe ---> $response")
+            val dataList = response.data as MutableList<RssItem>
+            val code = response.code
+            val message = response.message
+            val tag = response.tag
+
+            Log.d(AllContentListFragment.TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag ")
+
+            /**
+             * 处理网络数据返回
+             */
+            fun handleWebResopnse(dataList: MutableList<RssItem>) {
+                // TODO(刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+                tabListAdapter.getDataList()[0].isRefreshing = false
+                tabListAdapter.notifyDataSetChanged()
+            }
+
+            when (code) {
+                ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
+                ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
+            }
+
         })
     }
 
