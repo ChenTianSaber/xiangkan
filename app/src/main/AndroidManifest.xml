@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.ContentActivity"/>
+        <activity android:name=".view.ReportActivity"/>
     </application>
 
 </manifest>

@@ -1,21 +1,13 @@
 package com.chentian.xiangkan.view
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.chentian.xiangkan.*
-import com.chentian.xiangkan.data.ResponseData
-import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.MainActivity
-import com.chentian.xiangkan.adapter.ManagerListAdapter
-import com.chentian.xiangkan.dialog.AddBiliBiliUpDialog
 
 /**
  * 设置页
@@ -29,6 +21,7 @@ class SettingFragment : Fragment() {
     // region field
 
     private lateinit var itemView: View
+    private lateinit var reportBtn: TextView
 
     // endregion
 
@@ -40,7 +33,10 @@ class SettingFragment : Fragment() {
     }
 
     private fun initView() {
-
+        reportBtn = itemView.findViewById(R.id.report)
+        reportBtn.setOnClickListener {
+            startActivity(Intent(activity, ReportActivity::class.java))
+        }
     }
 
     private fun initData() {
