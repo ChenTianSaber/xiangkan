@@ -245,17 +245,6 @@ object RssUtils {
         return rssLinkInfo
     }
 
-    /**
-     * 根据channelLink返回不同的icon
-     * 先从当前的订阅源中icon找，没有的话再从本地找
-     */
-    fun getRSSIcon(channelLink: String): Int {
-        return when (channelLink) {
-            "-1" -> R.mipmap.quanbu
-            else -> R.mipmap.ic_launcher
-        }
-    }
-
     fun setIcon(contex: Context, channelLink: String, view: ImageView) {
 
         // 看看是不是全部图标
@@ -291,6 +280,7 @@ object RssUtils {
             "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> true
             "https://www.gcores.com/articles" -> true
             "https://sspai.com" -> true
+            "https://www.bilibili.com/h5/weekly-recommend" -> true
             else -> false
         }
     }

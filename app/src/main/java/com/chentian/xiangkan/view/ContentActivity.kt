@@ -24,6 +24,8 @@ import com.chentian.xiangkan.utils.RssUtils
 import com.githang.statusbar.StatusBarCompat
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 /**
  * 内容页fragment
@@ -110,6 +112,21 @@ class ContentActivity : AppCompatActivity() {
         Log.d(TAG, "initData: $data")
 
         isTextMode = !RssUtils.isShowWeb(data.channelLink)
+
+        // 对B站up主动态做适配
+        // 把模式默认设置为网页模式，取出description里的视频链接，赋值给link
+        if(data.link.startsWith("https://t.bilibili.com")){
+            val m = Pattern.compile("视频地址.*?<br>").matcher(data.description)
+            if (m.find()) {
+                val str = m.group()
+                Log.d(TAG, "videoUrl: $str")
+                val videoUrl = str.substring(5, str.length - 4)
+                Log.d(TAG, "videoUrl: $videoUrl")
+                isTextMode = false
+                data.link = videoUrl
+            }
+        }
+
         if (isTextMode) {
             // 文本模式
             fullWebView.visibility = View.GONE

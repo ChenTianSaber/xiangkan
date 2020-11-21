@@ -17,7 +17,7 @@ data class RssItem(
     val channelTitle: String, //主站名称
     val channelDescription: String, // 主站的描述
     val title: String, // 内容标题
-    val link: String, // 内容跳转的链接
+    var link: String, // 内容跳转的链接
     val description: String, // 内容详情
     val author: String, // 内容作者
     val pubDate: Long // 内容更新时间
