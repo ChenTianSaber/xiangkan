@@ -82,8 +82,10 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
                 if (newState == RecyclerView.SCROLL_STATE_IDLE) {
                     // 记录第一个可见的item，这就是上次阅读的位置
                     val position = (recyclerView.layoutManager as LinearLayoutManager).findFirstCompletelyVisibleItemPosition()
-                    RssItemData.tempLastReadRssLink = contentListAdapter.getDataList()[position].link
-                    Log.d(TAG, "onScrollStateChanged: RssItemData.tempLastReadRssLink --> ${RssItemData.tempLastReadRssLink}")
+                    if(position >= 0){
+                        RssItemData.tempLastReadRssLink = contentListAdapter.getDataList()[position].link
+                        Log.d(TAG, "onScrollStateChanged: RssItemData.tempLastReadRssLink --> ${RssItemData.tempLastReadRssLink}")
+                    }
                 }
             }
         })

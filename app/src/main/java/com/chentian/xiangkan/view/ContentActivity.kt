@@ -63,7 +63,8 @@ class ContentActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.layout_content)
-        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_2), true)
+//        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_2), true)
+        StatusBarCompat.setTranslucent(window,true)
 
         initView()
         initData()

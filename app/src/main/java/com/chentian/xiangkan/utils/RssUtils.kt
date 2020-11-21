@@ -287,6 +287,10 @@ object RssUtils {
             "https://www.kaiyanapp.com/" -> true
             "https://www.pingwest.com/status" -> true
             "https://www.ui.cn/" -> true
+            "https://chaping.cn/news?cate=" -> true
+            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> true
+            "https://www.gcores.com/articles" -> true
+            "https://sspai.com" -> true
             else -> false
         }
     }

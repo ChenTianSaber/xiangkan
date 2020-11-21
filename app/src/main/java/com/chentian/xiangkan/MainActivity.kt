@@ -273,6 +273,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         if (rssLinkInfo.url == RssLinkInfoFactory.ALLDATA) {
             // 获取全部数据
             rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
+//            rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
         } else {
             // 获取对应的数据源的数据
             rssItemRepository.getSingleRssLinkInfoRssItems(rssLinkInfo)

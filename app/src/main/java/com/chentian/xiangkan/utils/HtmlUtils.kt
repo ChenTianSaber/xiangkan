@@ -1,5 +1,6 @@
 package com.chentian.xiangkan.utils
 
+import android.util.Log
 import com.chentian.xiangkan.data.RssItem
 
 /**
@@ -7,7 +8,12 @@ import com.chentian.xiangkan.data.RssItem
  */
 object HtmlUtils {
 
+    const val TAG = "HtmlUtils"
+
     fun buildHtml(rssItem: RssItem):String{
+
+//        Log.d(TAG, "buildHtml: ---> ${rssItem.description}")
+
         return """
             <!DOCTYPE html>
             <html>
@@ -30,6 +36,7 @@ object HtmlUtils {
 
             </html>
         """.trimIndent()
+
     }
 
 }
