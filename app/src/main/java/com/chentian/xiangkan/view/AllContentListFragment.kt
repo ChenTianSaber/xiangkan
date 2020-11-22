@@ -56,6 +56,7 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
     private fun initView() {
         contentList = itemView.findViewById(R.id.content_list)
         contentListAdapter = ContentListAdapter()
+        contentListAdapter.setContentListType(ResponseCode.ALL)
         contentList.adapter = contentListAdapter
         contentList.layoutManager = LinearLayoutManager(activity)
         contentListAdapter.setItemClick(activity as MainActivity)

@@ -51,6 +51,7 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
     private fun initView() {
         contentList = itemView.findViewById(R.id.content_list)
         contentListAdapter = ContentListAdapter()
+        contentListAdapter.setContentListType(ResponseCode.SINGLE)
         contentList.adapter = contentListAdapter
         contentList.layoutManager = LinearLayoutManager(activity)
         contentListAdapter.setItemClick(activity as MainActivity)
