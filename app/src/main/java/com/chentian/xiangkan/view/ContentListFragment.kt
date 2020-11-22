@@ -34,6 +34,7 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
 
     private lateinit var contentList: RecyclerView
     private lateinit var contentListAdapter: ContentListAdapter
+    private lateinit var swipeRefreshLayout: SwipeRefreshLayout
 
     private lateinit var emptyLayout: LinearLayout
     private lateinit var itemView: View
@@ -53,6 +54,9 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
         contentList.adapter = contentListAdapter
         contentList.layoutManager = LinearLayoutManager(activity)
         contentListAdapter.setItemClick(activity as MainActivity)
+
+        swipeRefreshLayout = itemView.findViewById(R.id.swipe_refresh)
+        swipeRefreshLayout.isEnabled = false
 
         emptyLayout = itemView.findViewById(R.id.empty_layout)
     }
