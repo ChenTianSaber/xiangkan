@@ -8,6 +8,8 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.ImageView
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -50,10 +52,16 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     private lateinit var managerFragment: ManagerFragment
     private lateinit var settingFragment: SettingFragment
 
-    private lateinit var homeBtn: ImageView
-    private lateinit var managerBtn: ImageView
-    private lateinit var settingBtn: ImageView
-    private lateinit var sortBtn: ImageView
+    private lateinit var homeBtn: LinearLayout
+    private lateinit var managerBtn: LinearLayout
+    private lateinit var settingBtn: LinearLayout
+    private lateinit var homeImage: ImageView
+    private lateinit var managerImage: ImageView
+    private lateinit var settingImage: ImageView
+    private lateinit var homeText: TextView
+    private lateinit var managerText: TextView
+    private lateinit var settingText: TextView
+
     private lateinit var viewPager: ViewPager2
 
     lateinit var rssItemRepository: RssItemRepository
@@ -73,7 +81,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.activity_main)
-        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_2), true)
+        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white), true)
 
         initView()
         initData()
@@ -96,12 +104,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
         homeBtn = findViewById(R.id.home)
         homeBtn.setOnClickListener(this)
+        homeImage = findViewById(R.id.home_image)
+        homeText = findViewById(R.id.home_text)
         managerBtn = findViewById(R.id.manager)
         managerBtn.setOnClickListener(this)
+        managerImage = findViewById(R.id.manager_image)
+        managerText = findViewById(R.id.manager_text)
         settingBtn = findViewById(R.id.setting)
         settingBtn.setOnClickListener(this)
-        sortBtn = findViewById(R.id.sort)
-        sortBtn.setOnClickListener(this)
+        settingImage = findViewById(R.id.setting_image)
+        settingText = findViewById(R.id.setting_text)
+
+        changeBottomTab(0)
 
         viewPager = findViewById(R.id.view_pager)
         val pagerAdapter = ScreenSlidePagerAdapter(this)
@@ -207,17 +221,45 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.home -> {
-                viewPager.currentItem = 0
+                viewPager.setCurrentItem(0,true)
+                changeBottomTab(0)
             }
             R.id.manager -> {
-                viewPager.currentItem = 1
+                viewPager.setCurrentItem(1,true)
+                changeBottomTab(1)
             }
             R.id.setting -> {
-                viewPager.currentItem = 2
+                viewPager.setCurrentItem(2,true)
+                changeBottomTab(2)
             }
-            R.id.sort -> {
-                // 打开筛选面板，可以选择 全部，已读，未读
-                SortDialog().show(supportFragmentManager,"sort")
+//            R.id.sort -> {
+//                // 打开筛选面板，可以选择 全部，已读，未读
+//                SortDialog().show(supportFragmentManager,"sort")
+//            }
+        }
+    }
+
+    private fun changeBottomTab(position: Int){
+        homeImage.setImageResource(R.mipmap.bell_fill_gray)
+        managerImage.setImageResource(R.mipmap.book_gray)
+        settingImage.setImageResource(R.mipmap.bulb_gray)
+
+        homeText.visibility = View.GONE
+        managerText.visibility = View.GONE
+        settingText.visibility = View.GONE
+
+        when(position){
+            0 -> {
+                homeImage.setImageResource(R.mipmap.bell_fill_black)
+                homeText.visibility = View.VISIBLE
+            }
+            1 -> {
+                managerImage.setImageResource(R.mipmap.book_black)
+                managerText.visibility = View.VISIBLE
+            }
+            2 -> {
+                settingImage.setImageResource(R.mipmap.bulb_black)
+                settingText.visibility = View.VISIBLE
             }
         }
     }

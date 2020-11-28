@@ -6,70 +6,118 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <!--内容区-->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/view_pager"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!--底部Bar-->
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/linearLayout"
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:background="@color/white_3"
+        android:background="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
         <!--主页按钮-->
-        <ImageView
+        <LinearLayout
             android:id="@+id/home"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="32dp"
-            android:src="@mipmap/home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="82dp"
+            android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintEnd_toStartOf="@+id/manager"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/home_image"
+                android:layout_width="32dp"
+                android:layout_height="24dp"
+                android:src="@mipmap/bell_fill_gray" />
+
+            <TextView
+                android:id="@+id/home_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Home"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:textColor="@color/black_2"
+                android:visibility="gone"/>
+
+        </LinearLayout>
 
         <!--管理订阅页按钮-->
-
-        <!--主页按钮-->
-        <ImageView
+        <LinearLayout
             android:id="@+id/manager"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="24dp"
-            android:src="@mipmap/tag"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/home"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!--设置按钮-->
-        <ImageView
-            android:id="@+id/setting"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="24dp"
-            android:src="@mipmap/setting"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/manager"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <!--排序按钮-->
-        <ImageView
-            android:id="@+id/sort"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginEnd="32dp"
-            android:src="@mipmap/align_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <ImageView
+                android:id="@+id/manager_image"
+                android:layout_width="32dp"
+                android:layout_height="22dp"
+                android:src="@mipmap/book_gray" />
+
+            <TextView
+                android:id="@+id/manager_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Manager"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:textColor="@color/black_2"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <!--设置按钮-->
+        <LinearLayout
+            android:id="@+id/setting"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/manager"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginStart="82dp">
+
+            <ImageView
+                android:id="@+id/setting_image"
+                android:layout_width="32dp"
+                android:layout_height="22dp"
+                android:src="@mipmap/bulb_gray" />
+
+            <TextView
+                android:id="@+id/setting_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Setting"
+                android:textStyle="bold"
+                android:textSize="10sp"
+                android:textColor="@color/black_2"
+                android:visibility="gone"/>
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
