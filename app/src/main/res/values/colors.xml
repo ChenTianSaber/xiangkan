@@ -14,4 +14,6 @@
     <color name="white_2">#F2F1EF</color>
     <!--一般用于内容背景色-->
     <color name="white_3">#F6F5F3</color>
+    <!--分割线-->
+    <color name="white_4">#ECECEC</color>
 </resources>

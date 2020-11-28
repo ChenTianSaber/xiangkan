@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.chentian.xiangkan.*
@@ -21,7 +22,7 @@ class SettingFragment : Fragment() {
     // region field
 
     private lateinit var itemView: View
-    private lateinit var reportBtn: TextView
+    private lateinit var reportBtn: LinearLayout
 
     // endregion
 
