@@ -46,7 +46,7 @@ class ReportActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
         setContentView(R.layout.layout_report)
-        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white_2), true)
+        StatusBarCompat.setStatusBarColor(this, resources.getColor(R.color.white), true)
 
         initView()
         initData()
