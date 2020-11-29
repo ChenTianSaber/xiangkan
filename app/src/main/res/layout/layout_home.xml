@@ -54,8 +54,8 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/tab_list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white_2"
+        android:layout_height="104dp"
+        android:background="@color/white_6"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/constraintLayout2">

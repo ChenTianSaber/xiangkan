@@ -63,30 +63,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingTop="8dp">
 
                 <ImageView
                     android:id="@+id/bilibili_up_rss"
-                    android:layout_width="120dp"
-                    android:layout_height="86dp"
+                    android:layout_width="146dp"
+                    android:layout_height="104dp"
                     android:src="@mipmap/create_bilibili_rss"
                     android:layout_marginLeft="24dp"/>
 
                 <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="86dp"
-                    android:src="@mipmap/create_more_comesoon"
-                    android:layout_marginLeft="20dp"/>
-
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="86dp"
-                    android:src="@mipmap/create_more_comesoon"
-                    android:layout_marginLeft="20dp"/>
-
-                <ImageView
-                    android:layout_width="120dp"
-                    android:layout_height="86dp"
+                    android:layout_width="146dp"
+                    android:layout_height="104dp"
                     android:src="@mipmap/create_more_comesoon"
                     android:layout_marginLeft="20dp"/>
 
