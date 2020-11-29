@@ -6,20 +6,22 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.chentian.xiangkan.listener.ItemClickListener
 import com.chentian.xiangkan.R
 import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.utils.AppUtils
 import com.chentian.xiangkan.utils.RssUtils
 
 /**
- * 管理订阅源页面中订阅源列表的Adapter
+ * 管理订阅源页面中自己创建列表的Adapter
  */
-class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.ManagerViewHolder>() {
+class UserCreateRssListAdapter : RecyclerView.Adapter<UserCreateRssListAdapter.ManagerViewHolder>() {
 
     companion object{
-        const val TAG = "ManagerListAdapter"
+        const val TAG = "UserCreateRssListAdapter"
     }
 
     // region field
@@ -44,31 +46,40 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.ManagerViewHo
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ManagerViewHolder {
         context = parent.context
-        return ManagerViewHolder(LayoutInflater.from(context).inflate(R.layout.item_managerlist, parent,false))
+        return ManagerViewHolder(LayoutInflater.from(context).inflate(R.layout.item_user_create_list, parent,false))
     }
 
     override fun onBindViewHolder(holder: ManagerViewHolder, position: Int) {
         val data = dataList[position]
 
         fun setupClickListener(){
-            holder.managerBtnYes.setOnClickListener {
-                itemClick?.onManagerItemClick(itemView = holder.itemView, data = data)
-            }
-            holder.managerBtnNo.setOnClickListener {
-                itemClick?.onManagerItemClick(itemView = holder.itemView, data = data)
-            }
+
         }
 
         fun setupUI(){
+            when (position) {
+                0 -> {
+                    val layoutParams = holder.itemView.layoutParams
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginStart = AppUtils.dp2px(12f)
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginEnd = AppUtils.dp2px(0f)
+                    holder.itemView.layoutParams = layoutParams
+                }
+                dataList.size - 1 -> {
+                    val layoutParams = holder.itemView.layoutParams
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginStart = AppUtils.dp2px(0f)
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginEnd = AppUtils.dp2px(12f)
+                    holder.itemView.layoutParams = layoutParams
+                }
+                else -> {
+                    val layoutParams = holder.itemView.layoutParams
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginStart = AppUtils.dp2px(0f)
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginEnd = AppUtils.dp2px(0f)
+                    holder.itemView.layoutParams = layoutParams
+                }
+            }
+
             holder.name.text = data.channelTitle
             Glide.with(context).load(data.icon).into(holder.icon)
-            if (data.state){
-                holder.managerBtnYes.visibility = View.VISIBLE
-                holder.managerBtnNo.visibility = View.GONE
-            }else{
-                holder.managerBtnYes.visibility = View.GONE
-                holder.managerBtnNo.visibility = View.VISIBLE
-            }
         }
 
         setupClickListener()
@@ -80,9 +91,8 @@ class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.ManagerViewHo
     }
 
     inner class ManagerViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val managerBtnYes: TextView = itemView.findViewById(R.id.rss_manager_btn_yes)
-        val managerBtnNo: TextView = itemView.findViewById(R.id.rss_manager_btn_no)
         val name: TextView = itemView.findViewById(R.id.name)
         val icon: ImageView = itemView.findViewById(R.id.icon)
+        val iconLayout: CardView = itemView.findViewById(R.id.icon_layout)
     }
 }

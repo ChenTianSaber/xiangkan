@@ -9,50 +9,95 @@
         android:id="@+id/icon_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        app:cardCornerRadius="14dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/border_coner"
+        app:cardCornerRadius="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
+
         <ImageView
             android:id="@+id/icon"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:src="@mipmap/icon_sspai" />
+            android:layout_width="64dp"
+            android:layout_height="64dp"
+            android:src="@mipmap/icon_sspai"
+            android:background="@color/white"
+            android:layout_gravity="center"/>
+
     </androidx.cardview.widget.CardView>
 
-    <TextView
-        android:id="@+id/name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:textAlignment="textStart"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/rss_manager_btn"
-        app:layout_constraintStart_toEndOf="@+id/icon_layout"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="少数派" />
-
-    <TextView
-        android:id="@+id/rss_manager_btn"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/coner_white_3"
-        android:elevation="4dp"
-        android:paddingLeft="18dp"
-        android:paddingTop="4dp"
-        android:paddingRight="18dp"
-        android:paddingBottom="4dp"
-        android:textColor="@color/black"
-        android:textSize="14sp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/icon_layout"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            tools:layout_editor_absoluteX="88dp"
+            tools:text="少数派" />
+
+        <TextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="textStart"
+            android:textColor="@color/black_3"
+            android:textSize="16sp"
+            android:layout_marginTop="6dp"
+            tools:layout_editor_absoluteX="88dp"
+            tools:layout_editor_absoluteY="45dp"
+            tools:text="这是描述这是描述" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/rss_manager_btn_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/coner_black_2"
+        android:paddingLeft="14dp"
+        android:paddingTop="6dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="订阅" />
+        android:text="订阅" />
+
+    <TextView
+        android:id="@+id/rss_manager_btn_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/border_coner_2"
+        android:paddingLeft="14dp"
+        android:paddingTop="6dp"
+        android:paddingRight="14dp"
+        android:paddingBottom="6dp"
+        android:textColor="@color/white_5"
+        android:textSize="16sp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="已订" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

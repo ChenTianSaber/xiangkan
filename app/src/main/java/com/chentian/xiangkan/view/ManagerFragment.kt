@@ -5,16 +5,17 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.chentian.xiangkan.*
+import com.chentian.xiangkan.MainActivity
+import com.chentian.xiangkan.R
+import com.chentian.xiangkan.adapter.ManagerListAdapter
+import com.chentian.xiangkan.adapter.UserCreateRssListAdapter
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssLinkInfo
-import com.chentian.xiangkan.MainActivity
-import com.chentian.xiangkan.adapter.ManagerListAdapter
 import com.chentian.xiangkan.dialog.AddBiliBiliUpDialog
 
 /**
@@ -34,12 +35,15 @@ class ManagerFragment : Fragment() , View.OnClickListener{
     private lateinit var managerList: RecyclerView
     private lateinit var managerListAdapter: ManagerListAdapter
 
+    private lateinit var userRrcateList: RecyclerView
+    private lateinit var userRrcateListAdapter: UserCreateRssListAdapter
+
     // endregion
 
     /**
      * 下面是特定的创建订阅源的View
      */
-    private lateinit var bilibiUp: LinearLayout // BiliBili up 的动态
+    private lateinit var bilibiUp: ImageView // BiliBili up 的动态
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         itemView = inflater.inflate(R.layout.layout_manager,container,false)
@@ -52,8 +56,18 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         managerList = itemView.findViewById(R.id.manager_list)
         managerListAdapter = ManagerListAdapter()
         managerList.adapter = managerListAdapter
-        managerList.layoutManager = LinearLayoutManager(activity)
+        val layoutManager: LinearLayoutManager = object : LinearLayoutManager(context) {
+            override fun canScrollVertically(): Boolean {
+                return false
+            }
+        }
+        managerList.layoutManager = layoutManager
         managerListAdapter.setItemClick(activity as MainActivity)
+
+        userRrcateList = itemView.findViewById(R.id.user_create_list)
+        userRrcateListAdapter = UserCreateRssListAdapter()
+        userRrcateList.adapter = userRrcateListAdapter
+        userRrcateList.layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL,false)
 
         bilibiUp = itemView.findViewById(R.id.bilibili_up_rss)
         bilibiUp.setOnClickListener(this)
@@ -65,6 +79,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
 
     private fun refreshData(){
         managerListAdapter.notifyDataSetChanged()
+        userRrcateListAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -81,6 +96,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
 
             // TODO(渲染对应的list)
             managerListAdapter.setDataList(dataList)
+            userRrcateListAdapter.setDataList(dataList)
             refreshData()
         })
     }

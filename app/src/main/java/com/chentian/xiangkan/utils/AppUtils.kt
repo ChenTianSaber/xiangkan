@@ -3,6 +3,7 @@ package com.chentian.xiangkan.utils
 import android.app.Activity
 import android.content.Context
 import android.content.pm.ApplicationInfo
+import android.content.res.Resources
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import com.chentian.xiangkan.MainActivity
@@ -36,6 +37,11 @@ object AppUtils {
 
     fun setCurrentActivity(activity: Activity) {
         activityWeakRef = WeakReference(activity)
+    }
+
+    fun dp2px(dpValue: Float): Int{
+        val scale = Resources.getSystem().displayMetrics.density
+        return ((dpValue * scale + 0.5f).toInt())
     }
 
 }
