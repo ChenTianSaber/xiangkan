@@ -9,6 +9,7 @@
     <color name="black">#000000</color>
     <color name="black_2">#3C3C3C</color>
     <color name="black_3">#A6A5A4</color>
+    <color name="black_4">#434343</color>
 
     <color name="white">#FFFFFF</color>
     <!--一般用于标题栏-->
