@@ -165,7 +165,7 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/manager_list"
             android:layout_width="match_parent"
-            android:layout_height="1232dp"
+            android:layout_height="1036dp"
             android:background="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"

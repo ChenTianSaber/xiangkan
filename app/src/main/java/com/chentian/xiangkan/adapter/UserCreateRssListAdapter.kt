@@ -60,14 +60,14 @@ class UserCreateRssListAdapter : RecyclerView.Adapter<UserCreateRssListAdapter.M
             when (position) {
                 0 -> {
                     val layoutParams = holder.itemView.layoutParams
-                    (layoutParams as ViewGroup.MarginLayoutParams).marginStart = AppUtils.dp2px(12f)
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginStart = AppUtils.dp2px(20f)
                     (layoutParams as ViewGroup.MarginLayoutParams).marginEnd = AppUtils.dp2px(0f)
                     holder.itemView.layoutParams = layoutParams
                 }
                 dataList.size - 1 -> {
                     val layoutParams = holder.itemView.layoutParams
                     (layoutParams as ViewGroup.MarginLayoutParams).marginStart = AppUtils.dp2px(0f)
-                    (layoutParams as ViewGroup.MarginLayoutParams).marginEnd = AppUtils.dp2px(12f)
+                    (layoutParams as ViewGroup.MarginLayoutParams).marginEnd = AppUtils.dp2px(20f)
                     holder.itemView.layoutParams = layoutParams
                 }
                 else -> {
