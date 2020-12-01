@@ -25,6 +25,13 @@ object RssUtils {
     const val TAG = "RssUtils"
 
     /**
+     * Item展示的ViewType
+     */
+    const val VIEW_TYPE_TEXT = 0
+    const val VIEW_TYPE_IMAGE = 1
+    const val VIEW_TYPE_VIDEO = 2
+
+    /**
      * 请求web RssItem数据
      */
     fun requestRssItems(rssLinkInfo: RssLinkInfo): MutableList<RssItem>? {
@@ -282,6 +289,17 @@ object RssUtils {
             "https://sspai.com" -> true
             "https://www.bilibili.com/h5/weekly-recommend" -> true
             else -> false
+        }
+    }
+
+    /**
+     * 根据channelLink判断这个Item的ViewType
+     */
+    fun getViewTypeByChannelLink(channelLink: String): Int{
+        return when(channelLink){
+            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> VIEW_TYPE_IMAGE
+            "https://sspai.com" -> VIEW_TYPE_VIDEO
+            else -> VIEW_TYPE_TEXT
         }
     }
 
