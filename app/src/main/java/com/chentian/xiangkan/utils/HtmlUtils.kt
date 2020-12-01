@@ -3,6 +3,7 @@ package com.chentian.xiangkan.utils
 import android.util.Log
 import com.chentian.xiangkan.data.RssItem
 import com.chentian.xiangkan.data.RssLinkInfoFactory
+import com.chentian.xiangkan.data.RssLinkInfoFactory.RSSHUB_DOMAIN
 import java.util.ArrayList
 import java.util.regex.Matcher
 import java.util.regex.Pattern
@@ -16,13 +17,13 @@ object HtmlUtils {
 
     fun buildHtml(rssItem: RssItem):String{
 
-        Log.d(TAG, "buildHtml: ---> ${rssItem.description}")
+        Log.d(TAG, "buildHtml: ---> $rssItem")
 
-//        if(rssItem.url.startsWith(RssLinkInfoFactory.BILIBILI_UP)){
+        if(rssItem.url == "$RSSHUB_DOMAIN/bilibili/weekly"){
             return buildBilibiliHtml(rssItem)
-//        }
+        }
 
-//        return buildCommomHtml(rssItem)
+        return buildCommomHtml(rssItem)
     }
 
     private fun buildBilibiliHtml(rssItem: RssItem): String {
