@@ -298,7 +298,9 @@ object RssUtils {
     fun getViewTypeByChannelLink(channelLink: String): Int{
         return when(channelLink){
             "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> VIEW_TYPE_IMAGE
-            "https://sspai.com" -> VIEW_TYPE_VIDEO
+            "https://www.ui.cn/" -> VIEW_TYPE_IMAGE
+            "https://www.kaiyanapp.com/" -> VIEW_TYPE_VIDEO
+            "https://www.bilibili.com/h5/weekly-recommend" -> VIEW_TYPE_VIDEO
             else -> VIEW_TYPE_TEXT
         }
     }

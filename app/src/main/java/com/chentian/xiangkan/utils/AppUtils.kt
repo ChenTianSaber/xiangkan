@@ -55,19 +55,25 @@ object AppUtils {
      */
     fun formatTime(pubDate: Long): String {
         if(isDateToday(pubDate)){
-            val simpleDateFormat = SimpleDateFormat("HH:mm:ss", Locale.CHINESE)
+            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.CHINESE)
             val date = Date(pubDate)
             return "· 今天 ${simpleDateFormat.format(date)}"
         }
 
+        if(isDateYesterday(pubDate)){
+            val simpleDateFormat = SimpleDateFormat("HH:mm", Locale.CHINESE)
+            val date = Date(pubDate)
+            return "· 昨天 ${simpleDateFormat.format(date)}"
+        }
+
         if(isCurYear(pubDate)){
-            val simpleDateFormat = SimpleDateFormat("MM-dd HH:mm:ss", Locale.CHINESE)
+            val simpleDateFormat = SimpleDateFormat("MM-dd", Locale.CHINESE)
             val date = Date(pubDate)
             return "· ${simpleDateFormat.format(date)}"
         }
 
         // 设置日期
-        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
+        val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd", Locale.CHINESE)
         val date = Date(pubDate)
         return "· ${simpleDateFormat.format(date)}"
     }
@@ -87,6 +93,29 @@ object AppUtils {
         return (thenYear == time.year
                 && thenMonth == time.month
                 && thenMonthDay == time.monthDay)
+    }
+
+    /**
+     * 判断是否是昨天
+     */
+    fun isDateYesterday(pubDate: Long): Boolean {
+        val DAY = 24 * 60 * 60 * 1000L
+        pubDate?.let {
+            var fomrat = SimpleDateFormat("yyyy-MM-dd")
+            var t1 = fomrat.format(Date(System.currentTimeMillis()))
+            var t2 = fomrat.format(Date(it))
+            val today = fomrat.parse(t1).time
+            val target = fomrat.parse(t2).time
+
+            var d = today - target
+            // 只获取周几，和哪一天
+            //return when (d) {
+            // 2019-06-20 周几/哪一天
+            return when (d) {
+                DAY -> true
+                else -> false
+            }
+        }
     }
 
     /**
