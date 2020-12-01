@@ -90,6 +90,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onPause() {
         // 记录上次阅读位置
         editor.putString("lastReadRssLink", RssItemData.tempLastReadRssLink)
+        editor.putString("rssLinkLastRequest", RssItemRepository.rssLinkLastRequest.toString())
         editor.commit()
         super.onPause()
     }
@@ -140,8 +141,26 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         // 获取上次的最后一次阅读位置
         sharedPreferences = getSharedPreferences("rssData", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
+
         RssItemData.lastReadRssLink = sharedPreferences.getString("lastReadRssLink","") ?: ""
         Log.d(TAG, "initData: RssItemData.lastReadRssLink --> ${RssItemData.lastReadRssLink}")
+
+        fun parseStringToMap(mapString: String){
+            if(mapString == "{}") return
+            val string = mapString.substring(1, mapString.length - 1)
+            val list = string.trim().split(",")
+            for(str in list){
+                val mapList = str.trim().split("=")
+                RssItemRepository.rssLinkLastRequest[mapList[0]] = mapList[1].toLong()
+            }
+            Log.d(TAG, "parseStringToMap ---> ${RssItemRepository.rssLinkLastRequest}")
+        }
+
+        val str = sharedPreferences.getString("rssLinkLastRequest","")
+        if (str != null) {
+            parseStringToMap(str)
+        }
+//        Log.d(TAG, "initData: rssLinkLastRequest --> $str")
 
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "xiangkan").build()
         rssModel = RssModel()

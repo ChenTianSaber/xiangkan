@@ -18,6 +18,7 @@ import java.io.BufferedReader
 import java.io.InputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 /**
  * 数据仓库
@@ -35,7 +36,9 @@ class RssItemRepository(
         const val SORT_READ = 2 // 已读
         var SORT_TYPE = SORT_ALL
 
-        val rssLinkLastRequest = mutableMapOf<String, Int>()
+        val rssLinkLastRequest = mutableMapOf<String, Long>()
+        const val REQUEST_SPACE_TIME = 4 * 60 *60 * 1000
+
     }
 
     /**
@@ -57,6 +60,11 @@ class RssItemRepository(
 
             var resultCode = ResponseCode.WEB_SUCCESS
             for (linkInfo in rssLinkInfos) {
+                if(rssLinkLastRequest[linkInfo.url] != null && (Date().time - rssLinkLastRequest[linkInfo.url]!!) < REQUEST_SPACE_TIME){
+                    Log.d(TAG, "四小时之内请求过，现在跳过 url ---> ${linkInfo.url}")
+                    continue
+                }
+
                 resultCode = getRssItemsFromWeb(linkInfo)
                 Log.d(TAG, "getRssItemsFromWeb: resultCode ---> $resultCode")
                 EventBus.getDefault().post(
@@ -70,7 +78,7 @@ class RssItemRepository(
             }
 
             ResponseData(
-                code = resultCode,
+                code = if(resultCode == ResponseCode.WEB_FAIL) ResponseCode.WEB_FAIL else ResponseCode.WEB_SUCCESS,
                 data = getRssItemsFromDB(),
                 message = "从网络请求完成",
                 tag = ResponseCode.ALL
@@ -169,6 +177,9 @@ class RssItemRepository(
                 rssItemDao.insertItem(data)
             }
         }
+
+        // 记录下请求时间
+        rssLinkLastRequest[rssLinkInfo.url] = Date().time
 
         return ResponseCode.WEB_PROGRESS_SUCCESS
     }

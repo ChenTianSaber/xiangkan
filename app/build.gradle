@@ -79,4 +79,6 @@ dependencies {
     implementation "androidx.work:work-runtime-ktx:$work_version"
     // EventBus
     implementation 'org.greenrobot:eventbus:3.2.0'
+    // Volley
+    implementation 'com.android.volley:volley:1.1.1'
 }

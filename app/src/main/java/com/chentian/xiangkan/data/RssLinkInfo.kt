@@ -130,14 +130,6 @@ object RssLinkInfoFactory {
                         state = false,
                         icon = "http://leancloudfile.chentiansaber.top/b7b0facd9da6eb3fba68.png/icon_jihe.png"
                 ),
-                RssLinkInfo( // UI中国
-                        url = "$RSSHUB_DOMAIN/ui-cn/article",
-                        channelLink = "https://www.ui.cn/",
-                        channelTitle = "UI中国",
-                        channelDescription = "推荐文章 - UI 中国",
-                        state = false,
-                        icon = "http://leancloudfile.chentiansaber.top/18ecd4bd99ebba61466a.jpg/icon_uichina.jpg"
-                ),
                 RssLinkInfo( // 站酷
                         url = "$RSSHUB_DOMAIN/zcool/recommend/edit",
                         channelLink = "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1",
