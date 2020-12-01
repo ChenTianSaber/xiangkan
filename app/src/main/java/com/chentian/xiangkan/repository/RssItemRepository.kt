@@ -34,6 +34,8 @@ class RssItemRepository(
         const val SORT_UNREAD = 1 // 未读
         const val SORT_READ = 2 // 已读
         var SORT_TYPE = SORT_ALL
+
+        val rssLinkLastRequest = mutableMapOf<String, Int>()
     }
 
     /**
@@ -41,6 +43,8 @@ class RssItemRepository(
      * 数据来源单一为数据库
      * 先返回数据库中的内容展示数据，再去请求web数据
      * web数据请求后先存入DB，然后再统一从DB取
+     *
+     * update:这边需要一个map记录每个源上次请求的时间，频率默认为4小时请求一次，4小时之内的重复请求则忽略
      */
     fun getRssItems(rssLinkInfos: MutableList<RssLinkInfo>) {
         GlobalScope.launch(Dispatchers.IO) {
@@ -55,15 +59,21 @@ class RssItemRepository(
             for (linkInfo in rssLinkInfos) {
                 resultCode = getRssItemsFromWeb(linkInfo)
                 Log.d(TAG, "getRssItemsFromWeb: resultCode ---> $resultCode")
+                EventBus.getDefault().post(
+                    ResponseData(
+                        code = resultCode,
+                        data = getRssItemsFromDB(),
+                        message = "从网络请求完成",
+                        tag = ResponseCode.ALL
+                    )
+                )
             }
 
-            EventBus.getDefault().post(
-                ResponseData(
-                    code = resultCode,
-                    data = getRssItemsFromDB(),
-                    message = "从网络请求完成",
-                    tag = ResponseCode.ALL
-                )
+            ResponseData(
+                code = resultCode,
+                data = getRssItemsFromDB(),
+                message = "从网络请求完成",
+                tag = ResponseCode.ALL
             )
         }
     }
@@ -160,7 +170,7 @@ class RssItemRepository(
             }
         }
 
-        return ResponseCode.WEB_SUCCESS
+        return ResponseCode.WEB_PROGRESS_SUCCESS
     }
 
     /**

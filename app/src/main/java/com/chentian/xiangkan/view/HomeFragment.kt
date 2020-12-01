@@ -182,7 +182,7 @@ class HomeFragment : Fragment() {
         val message = response.message
         val tag = response.tag
 
-        Log.d(AllContentListFragment.TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag ")
+        Log.d(TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag ")
 
         /**
          * 处理网络数据返回
@@ -194,7 +194,13 @@ class HomeFragment : Fragment() {
         }
 
         when (code) {
-            ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
+            ResponseCode.WEB_SUCCESS -> {
+                Log.d(TAG, "全部请求完毕")
+                handleWebResopnse(dataList)
+            }
+            ResponseCode.WEB_PROGRESS_SUCCESS -> {
+                Log.d(TAG, "请求完一个")
+            }
             ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
         }
     }

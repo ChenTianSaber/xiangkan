@@ -10,6 +10,7 @@ data class ResponseData(
 object ResponseCode{
         const val WEB_SUCCESS = 1
         const val DB_SUCCESS = 2
+        const val WEB_PROGRESS_SUCCESS = 3
 
         const val GET_RSSLINK_SUCCESS_NEED_REQUEST = 13 // 获取Rsslink订阅源数据成功，并且需要请求web数据
         const val GET_RSSLINK_SUCCESS_NO_REQUEST = 14 // 获取Rsslink订阅源数据成功，不需要请求数据
