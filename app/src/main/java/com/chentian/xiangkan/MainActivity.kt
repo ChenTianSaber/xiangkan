@@ -146,7 +146,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "xiangkan").build()
         rssModel = RssModel()
         rssItemRepository = RssItemRepository(
-            rssItemsData = rssModel.rssItemsData,
             rssItemDao = db.rssItemDao()
         )
 
@@ -207,12 +206,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
             // Log.d(TAG, "rssLinksData observe ---> $response")
             handleRssLinkInfoDataChanged(response)
-        })
-
-        // 监听内容数据的变化
-        rssModel.rssItemsData.observe(this, Observer<ResponseData> { response ->
-            // val dataList = response.data as MutableList<RssItem>
-            // Log.d(TAG, "rssItemsData observe ---> ${response.code} dataList-->${dataList.size} lastContentSize-->$lastContentSize")
         })
     }
 

@@ -19,6 +19,9 @@ import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.adapter.ContentListAdapter
 import com.chentian.xiangkan.data.*
 import com.chentian.xiangkan.repository.RssLinkRepository
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 主页列表全部内容的fragment
@@ -51,6 +54,16 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
         initView()
         initData()
         return itemView
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun initView() {
@@ -95,7 +108,7 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
 
     private fun initData() {
         Log.d(TAG, "initData: $rssLinkInfo")
-        onRssItemDataChanged()
+//        onRssItemDataChanged()
         (activity as MainActivity).changeTabData(rssLinkInfo)
     }
 
@@ -118,76 +131,75 @@ class AllContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() ,SwipeRe
     /**
      * 内容数据更新
      */
-    private fun onRssItemDataChanged() {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRssItemDataChanged(response: ResponseData) {
         // 监听内容数据的变化
-        (activity as MainActivity).rssModel.rssItemsData.observe(this, Observer<ResponseData> { response ->
-            // Log.d(TAG, "rssItemsData observe ---> $response")
-            val dataList = response.data as MutableList<RssItem>
-            val code = response.code
-            val message = response.message
-            val tag = response.tag
+        // Log.d(TAG, "rssItemsData observe ---> $response")
+        val dataList = response.data as MutableList<RssItem>
+        val code = response.code
+        val message = response.message
+        val tag = response.tag
 
-            Log.d(TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag lastContentSize--> $lastContentSize ")
+        Log.d(TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag lastContentSize--> $lastContentSize ")
 
-            /**
-             * 处理网络数据返回
-             */
-            fun handleWebResopnse(dataList: MutableList<RssItem>) {
-                // TODO(刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
-
-                when (code) {
-                    ResponseCode.WEB_SUCCESS -> {
-                        Toast.makeText(activity, "更新数据成功~", Toast.LENGTH_SHORT).show()
-                        val updateSum = dataList.size - lastContentSize
-                        if(updateSum > 0){
-                            updateTip.text = "有 $updateSum 条更新"
-                            updateTip.visibility = View.VISIBLE
-                            lastWebContentData = dataList
-                        }
-                        lastContentSize = dataList.size
-                    }
-                    ResponseCode.WEB_FAIL -> {
-                        Toast.makeText(activity, "获取订阅数据失败", Toast.LENGTH_SHORT).show()
-                    }
-                }
-            }
-
-            /**
-             * 处理DB数据返回
-             */
-            fun handleDBResopnse(dataList: MutableList<RssItem>){
-                // TODO(直接展示, 更新lastContentSize)
-                // 先判断是不是这个TAB下的数据
-                if(tag == ResponseCode.ALL){
-                    contentListAdapter.setDataList(dataList)
-                    refreshData()
-
-                    lastContentSize = dataList.size
-                }
-            }
-
-            /**
-             * 检查列表是否是空状态
-             */
-            fun checkIsListEmpty(){
-                if (contentListAdapter.isListEmpty()) {
-                    emptyLayout.visibility = View.VISIBLE
-                } else {
-                    emptyLayout.visibility = View.GONE
-                }
-            }
+        /**
+         * 处理网络数据返回
+         */
+        fun handleWebResopnse(dataList: MutableList<RssItem>) {
+            // TODO(刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
 
             when (code) {
-                ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
-                ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
-                ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
-                ResponseCode.UPDATE_RSSITEM -> {
-                    refreshData()
+                ResponseCode.WEB_SUCCESS -> {
+                    Toast.makeText(activity, "更新数据成功~", Toast.LENGTH_SHORT).show()
+                    val updateSum = dataList.size - lastContentSize
+                    if(updateSum > 0){
+                        updateTip.text = "有 $updateSum 条更新"
+                        updateTip.visibility = View.VISIBLE
+                        lastWebContentData = dataList
+                    }
+                    lastContentSize = dataList.size
+                }
+                ResponseCode.WEB_FAIL -> {
+                    Toast.makeText(activity, "获取订阅数据失败", Toast.LENGTH_SHORT).show()
                 }
             }
+        }
 
-            checkIsListEmpty()
-        })
+        /**
+         * 处理DB数据返回
+         */
+        fun handleDBResopnse(dataList: MutableList<RssItem>){
+            // TODO(直接展示, 更新lastContentSize)
+            // 先判断是不是这个TAB下的数据
+            if(tag == ResponseCode.ALL){
+                contentListAdapter.setDataList(dataList)
+                refreshData()
+
+                lastContentSize = dataList.size
+            }
+        }
+
+        /**
+         * 检查列表是否是空状态
+         */
+        fun checkIsListEmpty(){
+            if (contentListAdapter.isListEmpty()) {
+                emptyLayout.visibility = View.VISIBLE
+            } else {
+                emptyLayout.visibility = View.GONE
+            }
+        }
+
+        when (code) {
+            ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
+            ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
+            ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
+            ResponseCode.UPDATE_RSSITEM -> {
+                refreshData()
+            }
+        }
+
+        checkIsListEmpty()
     }
 
     /**

@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.item_contentlist.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStream
@@ -23,7 +24,6 @@ import java.net.URL
  * MainActivity通过这个类来操作数据，MainActivity本身不可直接访问数据库
  */
 class RssItemRepository(
-        var rssItemsData: MutableLiveData<ResponseData>,
         var rssItemDao: RssItemDao
 ) {
 
@@ -44,14 +44,12 @@ class RssItemRepository(
      */
     fun getRssItems(rssLinkInfos: MutableList<RssLinkInfo>) {
         GlobalScope.launch(Dispatchers.IO) {
-            rssItemsData.postValue(
-                ResponseData(
-                    code = ResponseCode.DB_SUCCESS,
-                    data = getRssItemsFromDB(),
-                    message = "从数据库获取内容成功",
-                    tag = ResponseCode.ALL
-                )
-            )
+            EventBus.getDefault().post(ResponseData(
+                code = ResponseCode.DB_SUCCESS,
+                data = getRssItemsFromDB(),
+                message = "从数据库获取内容成功",
+                tag = ResponseCode.ALL
+            ))
 
             var resultCode = ResponseCode.WEB_SUCCESS
             for (linkInfo in rssLinkInfos) {
@@ -59,7 +57,7 @@ class RssItemRepository(
                 Log.d(TAG, "getRssItemsFromWeb: resultCode ---> $resultCode")
             }
 
-            rssItemsData.postValue(
+            EventBus.getDefault().post(
                 ResponseData(
                     code = resultCode,
                     data = getRssItemsFromDB(),
@@ -75,7 +73,7 @@ class RssItemRepository(
      */
     fun getSingleRssLinkInfoRssItems(rssLinkInfo: RssLinkInfo) {
         GlobalScope.launch(Dispatchers.IO) {
-            rssItemsData.postValue(
+            EventBus.getDefault().post(
                 ResponseData(
                     code = ResponseCode.DB_SUCCESS,
                     data = getSingleRssLinkInfoRssItemsByDateFromDB(rssLinkInfo),
@@ -91,7 +89,7 @@ class RssItemRepository(
      */
     fun getRssLinkInfoRssItems() {
         GlobalScope.launch(Dispatchers.IO) {
-            rssItemsData.postValue(
+            EventBus.getDefault().post(
                 ResponseData(
                     code = ResponseCode.DB_SUCCESS,
                     data = getRssItemsFromDB(),
@@ -171,7 +169,7 @@ class RssItemRepository(
     fun updateRssItem(rssItem: RssItem){
         GlobalScope.launch(Dispatchers.IO) {
             rssItemDao.updateItems(rssItem)
-            rssItemsData.postValue(
+            EventBus.getDefault().post(
                 ResponseData(
                     code = ResponseCode.UPDATE_RSSITEM,
                     data = mutableListOf(rssItem),

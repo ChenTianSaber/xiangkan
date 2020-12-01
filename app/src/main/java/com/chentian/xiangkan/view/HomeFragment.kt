@@ -16,6 +16,9 @@ import com.chentian.xiangkan.*
 import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.data.*
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 
 /**
  * 主页fragment
@@ -43,6 +46,16 @@ class HomeFragment : Fragment() {
         initView()
         initData()
         return itemView
+    }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
     }
 
     private fun initView() {
@@ -73,7 +86,7 @@ class HomeFragment : Fragment() {
 
     private fun initData() {
         onRssLinkInfoDataChanged()
-        onRssItemDataChanged()
+//        onRssItemDataChanged()
     }
 
     private fun changeTabChoosed(data: RssLinkInfo){
@@ -160,32 +173,30 @@ class HomeFragment : Fragment() {
     /**
      * 内容数据更新
      */
-    private fun onRssItemDataChanged() {
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onRssItemDataChanged(response: ResponseData) {
         // 监听内容数据的变化
-        (activity as MainActivity).rssModel.rssItemsData.observe(this, Observer<ResponseData> { response ->
-            // Log.d(TAG, "rssItemsData observe ---> $response")
-            val dataList = response.data as MutableList<RssItem>
-            val code = response.code
-            val message = response.message
-            val tag = response.tag
+        // Log.d(TAG, "rssItemsData observe ---> $response")
+        val dataList = response.data as MutableList<RssItem>
+        val code = response.code
+        val message = response.message
+        val tag = response.tag
 
-            Log.d(AllContentListFragment.TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag ")
+        Log.d(AllContentListFragment.TAG, "rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag ")
 
-            /**
-             * 处理网络数据返回
-             */
-            fun handleWebResopnse(dataList: MutableList<RssItem>) {
-                // TODO(刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
-                tabListAdapter.getDataList()[0].isRefreshing = false
-                tabListAdapter.notifyDataSetChanged()
-            }
+        /**
+         * 处理网络数据返回
+         */
+        fun handleWebResopnse(dataList: MutableList<RssItem>) {
+            // TODO(刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+            tabListAdapter.getDataList()[0].isRefreshing = false
+            tabListAdapter.notifyDataSetChanged()
+        }
 
-            when (code) {
-                ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
-                ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
-            }
-
-        })
+        when (code) {
+            ResponseCode.WEB_SUCCESS -> handleWebResopnse(dataList)
+            ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
+        }
     }
 
     // endregion

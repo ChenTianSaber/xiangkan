@@ -77,4 +77,6 @@ dependencies {
     implementation "androidx.work:work-runtime:$work_version"
     // Kotlin + coroutines
     implementation "androidx.work:work-runtime-ktx:$work_version"
+    // EventBus
+    implementation 'org.greenrobot:eventbus:3.2.0'
 }
