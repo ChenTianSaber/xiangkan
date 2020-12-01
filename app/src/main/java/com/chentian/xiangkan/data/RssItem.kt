@@ -33,6 +33,9 @@ data class RssItem(
     var imageUrl: String? = ""
 
     @IgnoredOnParcel
+    var videoUrl: String? = ""
+
+    @IgnoredOnParcel
     var icon: String? = ""
 }
 

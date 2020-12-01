@@ -114,6 +114,25 @@ object RssUtils {
             return url.substring(1, url.length - 1)
         }
 
+        /**
+         * 解析description获取第一个视频
+         */
+        fun getVideoUrl(json: JSONObject): String {
+            val description = json.optString("description")
+            val pics: MutableList<String> = ArrayList()
+            val compile = Pattern.compile("<video.*?>")
+            val matcher: Matcher = compile.matcher(description)
+            while (matcher.find()) {
+                val img: String = matcher.group()
+                pics.add(img)
+            }
+            if (pics.isNullOrEmpty()) return ""
+            val m = Pattern.compile("\"http?(.*?)(\"|>|\\s+)").matcher(pics[0])
+            m.find()
+            val url = m.group()
+            return url.substring(1, url.length - 1)
+        }
+
         fun checkItem(rssItem: RssItem): Boolean{
             if(rssItem.link.isEmpty()){
                 return false
@@ -143,7 +162,9 @@ object RssUtils {
                             pubDate = getTime(json)
                     )
                     rssItem.imageUrl = getImageUrl(json)
+                    rssItem.videoUrl = getVideoUrl(json)
                     rssItem.icon = rssLinkInfo.icon
+                    Log.d(TAG, "parseRssData: rssItem --> ${rssItem.videoUrl}")
                     if(checkItem(rssItem)) dataList.add(rssItem)
                 }
             }

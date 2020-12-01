@@ -157,7 +157,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         }
 
         val str = sharedPreferences.getString("rssLinkLastRequest","")
-        if (str != null) {
+        if (!str.isNullOrEmpty()) {
             parseStringToMap(str)
         }
 //        Log.d(TAG, "initData: rssLinkLastRequest --> $str")
