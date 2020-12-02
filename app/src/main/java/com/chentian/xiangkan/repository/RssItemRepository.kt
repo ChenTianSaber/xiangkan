@@ -70,9 +70,10 @@ class RssItemRepository(
                 EventBus.getDefault().post(
                     ResponseData(
                         code = resultCode,
-                        data = getRssItemsFromDB(),
+//                        data = getRssItemsFromDB(),
+                        data = getSingleRssLinkInfoRssItemsByDateFromDB(linkInfo),
                         message = "从网络请求完成",
-                        tag = ResponseCode.ALL
+                        tag = ResponseCode.SINGLE
                     )
                 )
             }

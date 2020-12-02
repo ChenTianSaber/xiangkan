@@ -32,7 +32,6 @@ import com.chentian.xiangkan.repository.RssLinkRepository
 import com.chentian.xiangkan.utils.AppUtils
 import com.chentian.xiangkan.view.ContentActivity
 import com.chentian.xiangkan.view.SettingFragment
-import com.chentian.xiangkan.workmanager.UpdateDataWork
 import com.githang.statusbar.StatusBarCompat
 import java.util.concurrent.TimeUnit
 
@@ -123,17 +122,17 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         viewPager.adapter = pagerAdapter
         viewPager.isUserInputEnabled = false
 
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-            override fun onPageSelected(position: Int) {
-                if(position == 0){
-                    // 当回到首页的时候，需要判断一下是否需要刷新数据，要的话那就去请求数据
-                    if(needRequestRssData){
-                        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
-                        needRequestRssData = false
-                    }
-                }
-            }
-        })
+//        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+//            override fun onPageSelected(position: Int) {
+//                if(position == 0){
+//                    // 当回到首页的时候，需要判断一下是否需要刷新数据，要的话那就去请求数据
+//                    if(needRequestRssData){
+//                        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
+//                        needRequestRssData = false
+//                    }
+//                }
+//            }
+//        })
 
     }
 
