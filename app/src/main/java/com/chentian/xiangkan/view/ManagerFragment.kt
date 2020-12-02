@@ -18,6 +18,7 @@ import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.data.RssLinkInfoFactory
 import com.chentian.xiangkan.dialog.AddBiliBiliUpDialog
+import com.chentian.xiangkan.dialog.AddBiliBiliUpDialogBack
 import com.chentian.xiangkan.utils.AppUtils
 
 /**
@@ -154,7 +155,8 @@ class ManagerFragment : Fragment(), View.OnClickListener {
             R.id.bilibili_up_rss -> {
                 // TODO(订阅B站up主)
                 activity?.let {
-                    AddBiliBiliUpDialog().show(it.supportFragmentManager, "bilibiliup")
+//                    AddBiliBiliUpDialog().show(it.supportFragmentManager, "bilibiliup")
+                    AddBiliBiliUpDialogBack().show(it.supportFragmentManager, "bilibiliup")
                 }
             }
         }

@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -16,6 +18,7 @@ import com.chentian.xiangkan.*
 import com.chentian.xiangkan.MainActivity
 import com.chentian.xiangkan.adapter.TabListAdapter
 import com.chentian.xiangkan.data.*
+import com.chentian.xiangkan.dialog.SortDialog
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,6 +39,7 @@ class HomeFragment : Fragment() {
     private lateinit var tabListAdapter: TabListAdapter
     private lateinit var viewPager: ViewPager2
     private lateinit var itemView: View
+    private lateinit var sortBtn: ImageView
 
     private var fragmentList = mutableListOf<Fragment>()
 
@@ -59,6 +63,14 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() {
+
+        sortBtn = itemView.findViewById(R.id.sort)
+        sortBtn.setOnClickListener {
+            // 打开筛选面板，可以选择 全部，已读，未读
+            activity?.let {
+                SortDialog().show(it.supportFragmentManager,"sort")
+            }
+        }
 
         tabList = itemView.findViewById(R.id.tab_list)
         tabListAdapter = TabListAdapter()

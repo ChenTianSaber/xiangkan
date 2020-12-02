@@ -45,7 +45,7 @@ class AddBiliBiliUpDialogBack : BottomSheetDialogFragment() {
         return if(activity == null){
             super.onCreateDialog(savedInstanceState)
         }else{
-            val root = LayoutInflater.from(activity).inflate(R.layout.dialog_add_rsslinkinfo,null)
+            val root = LayoutInflater.from(activity).inflate(R.layout.dialog_add_rsslinkinfo_back,null)
             val dialog = BottomSheetDialog(activity!!)
             dialog.setContentView(root)
             initView(root)

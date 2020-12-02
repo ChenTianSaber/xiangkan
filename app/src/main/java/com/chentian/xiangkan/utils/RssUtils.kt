@@ -257,6 +257,7 @@ object RssUtils {
                                 rssLinkInfo.channelLink = channelData.optString("link")
                                 rssLinkInfo.icon = data.optString("face")
                                 rssLinkInfo.source = RssLinkInfoFactory.SOURCE_BILIBILI
+                                rssLinkInfo.state = true
                             }
                         }
                     }
