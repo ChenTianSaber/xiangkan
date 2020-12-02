@@ -256,6 +256,7 @@ object RssUtils {
                                 rssLinkInfo.url = "${RssLinkInfoFactory.BILIBILI_UP}$uid"
                                 rssLinkInfo.channelLink = channelData.optString("link")
                                 rssLinkInfo.icon = data.optString("face")
+                                rssLinkInfo.source = RssLinkInfoFactory.SOURCE_BILIBILI
                             }
                         }
                     }

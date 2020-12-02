@@ -16,15 +16,17 @@ import com.chentian.xiangkan.adapter.ManagerListAdapter
 import com.chentian.xiangkan.adapter.UserCreateRssListAdapter
 import com.chentian.xiangkan.data.ResponseData
 import com.chentian.xiangkan.data.RssLinkInfo
+import com.chentian.xiangkan.data.RssLinkInfoFactory
 import com.chentian.xiangkan.dialog.AddBiliBiliUpDialog
+import com.chentian.xiangkan.utils.AppUtils
 
 /**
  * 订阅管理页Fragment
  * 这个页面的关注点只有订阅源的数据和订阅源的状态
  */
-class ManagerFragment : Fragment() , View.OnClickListener{
+class ManagerFragment : Fragment(), View.OnClickListener {
 
-    companion object{
+    companion object {
         const val TAG = "ManagerFragment"
     }
 
@@ -46,7 +48,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
     private lateinit var bilibiUp: ImageView // BiliBili up 的动态
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        itemView = inflater.inflate(R.layout.layout_manager,container,false)
+        itemView = inflater.inflate(R.layout.layout_manager, container, false)
         initView()
         initData()
         return itemView
@@ -67,7 +69,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         userRrcateList = itemView.findViewById(R.id.user_create_list)
         userRrcateListAdapter = UserCreateRssListAdapter()
         userRrcateList.adapter = userRrcateListAdapter
-        userRrcateList.layoutManager = LinearLayoutManager(activity,RecyclerView.HORIZONTAL,false)
+        userRrcateList.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
 
         bilibiUp = itemView.findViewById(R.id.bilibili_up_rss)
         bilibiUp.setOnClickListener(this)
@@ -77,7 +79,7 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         onRssLinkInfoDataChanged()
     }
 
-    private fun refreshData(){
+    private fun refreshData() {
         managerListAdapter.notifyDataSetChanged()
         userRrcateListAdapter.notifyDataSetChanged()
     }
@@ -95,8 +97,23 @@ class ManagerFragment : Fragment() , View.OnClickListener{
             Log.d(TAG, "onRssLinkInfoDataChanged ---> $code dataList--> ${dataList.size} message --> $message")
 
             // TODO(渲染对应的list)
-            managerListAdapter.setDataList(dataList)
-            userRrcateListAdapter.setDataList(dataList)
+            val defaultList = mutableListOf<RssLinkInfo>()
+            val userCreateList = mutableListOf<RssLinkInfo>()
+            for (data in dataList) {
+                if (data.source == RssLinkInfoFactory.SOURCE_DEFAULT) {
+                    defaultList.add(data)
+                } else {
+                    userCreateList.add(data)
+                }
+            }
+
+            /**
+             * 设置列表的高度
+             */
+            managerList.layoutParams.height = defaultList.size * AppUtils.dp2px(74f) + AppUtils.dp2px(24f)
+
+            managerListAdapter.setDataList(defaultList)
+            userRrcateListAdapter.setDataList(userCreateList)
             refreshData()
         })
     }
@@ -126,18 +143,18 @@ class ManagerFragment : Fragment() , View.OnClickListener{
         }
 
         // TODO(更新Item的状态)
-        when(data.state){
+        when (data.state) {
             true -> handleUnRegisterRssLink(data)
             false -> handleRegisterRssLink(data)
         }
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.bilibili_up_rss ->{
+        when (v?.id) {
+            R.id.bilibili_up_rss -> {
                 // TODO(订阅B站up主)
                 activity?.let {
-                    AddBiliBiliUpDialog().show(it.supportFragmentManager,"bilibiliup")
+                    AddBiliBiliUpDialog().show(it.supportFragmentManager, "bilibiliup")
                 }
             }
         }

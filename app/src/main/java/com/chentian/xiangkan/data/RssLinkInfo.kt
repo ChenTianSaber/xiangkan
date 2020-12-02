@@ -14,7 +14,8 @@ data class RssLinkInfo(
         var channelTitle: String = "", //主站名称
         var channelDescription: String = "", // 主站的描述
         var state: Boolean = false, // 是否开启订阅
-        var icon: String = "" // 图标
+        var icon: String = "", // 图标
+        var source: Int = RssLinkInfoFactory.SOURCE_DEFAULT // 订阅源的来源
 ) {
         @PrimaryKey(autoGenerate = true)
         var id: Long = 0
@@ -44,6 +45,12 @@ object RssLinkInfoFactory {
      * 全部TAB的占位数据
      */
     const val ALLDATA = "-1"
+
+    /**
+     * 订阅源的来源
+     */
+    const val SOURCE_DEFAULT = 0
+    const val SOURCE_BILIBILI = 1
 
     /**
      * 构造默认的订阅源数据
