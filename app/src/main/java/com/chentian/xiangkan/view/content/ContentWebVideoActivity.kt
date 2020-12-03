@@ -131,7 +131,11 @@ class ContentWebVideoActivity : AppCompatActivity() {
 
         fullWebView.webViewClient = webViewClient
 
-        fullWebView.loadDataWithBaseURL("file:///android_asset/", HtmlUtils.buildHtml(data), "text/html", "UTF-8", null)
+        if(data.channelLink == "https://www.bilibili.com/h5/weekly-recommend"){
+            fullWebView.loadDataWithBaseURL("file:///android_asset/", HtmlUtils.buildHtml(data), "text/html", "UTF-8", null)
+        }else{
+            fullWebView.loadUrl(data.link)
+        }
 
     }
 
