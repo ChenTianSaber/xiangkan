@@ -38,8 +38,8 @@ class ManagerFragment : Fragment(), View.OnClickListener {
     private lateinit var managerList: RecyclerView
     private lateinit var managerListAdapter: ManagerListAdapter
 
-    private lateinit var userRrcateList: RecyclerView
-    private lateinit var userRrcateListAdapter: UserCreateRssListAdapter
+    private lateinit var userCreateList: RecyclerView
+    private lateinit var userCreateListAdapter: UserCreateRssListAdapter
 
     // endregion
 
@@ -67,10 +67,10 @@ class ManagerFragment : Fragment(), View.OnClickListener {
         managerList.layoutManager = layoutManager
         managerListAdapter.setItemClick(activity as MainActivity)
 
-        userRrcateList = itemView.findViewById(R.id.user_create_list)
-        userRrcateListAdapter = UserCreateRssListAdapter()
-        userRrcateList.adapter = userRrcateListAdapter
-        userRrcateList.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
+        userCreateList = itemView.findViewById(R.id.user_create_list)
+        userCreateListAdapter = UserCreateRssListAdapter()
+        userCreateList.adapter = userCreateListAdapter
+        userCreateList.layoutManager = LinearLayoutManager(activity, RecyclerView.HORIZONTAL, false)
 
         bilibiUp = itemView.findViewById(R.id.bilibili_up_rss)
         bilibiUp.setOnClickListener(this)
@@ -82,7 +82,7 @@ class ManagerFragment : Fragment(), View.OnClickListener {
 
     private fun refreshData() {
         managerListAdapter.notifyDataSetChanged()
-        userRrcateListAdapter.notifyDataSetChanged()
+        userCreateListAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -90,14 +90,14 @@ class ManagerFragment : Fragment(), View.OnClickListener {
      */
     private fun onRssLinkInfoDataChanged() {
         (activity as MainActivity).rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
-            // Log.d(TAG, "onRssLinkInfoDataChanged ---> $response")
+
             val dataList = response.data as MutableList<RssLinkInfo>
             val code = response.code
             val message = response.message
 
-            Log.d(TAG, "onRssLinkInfoDataChanged ---> $code dataList--> ${dataList.size} message --> $message")
+            Log.d(TAG, "onRssLinkInfoDataChanged:  code ---> [$code] dataList.size --> [${dataList.size}] message --> [$message]")
 
-            // TODO(渲染对应的list)
+            // 渲染对应的list
             val defaultList = mutableListOf<RssLinkInfo>()
             val userCreateList = mutableListOf<RssLinkInfo>()
             for (data in dataList) {
@@ -108,14 +108,14 @@ class ManagerFragment : Fragment(), View.OnClickListener {
                 }
             }
 
-            /**
-             * 设置列表的高度
-             */
+
+            // 设置列表的高度
             managerList.layoutParams.height = defaultList.size * AppUtils.dp2px(74f) + AppUtils.dp2px(24f)
 
             managerListAdapter.setDataList(defaultList)
-            userRrcateListAdapter.setDataList(userCreateList)
+            userCreateListAdapter.setDataList(userCreateList)
             refreshData()
+
         })
     }
 
@@ -127,6 +127,8 @@ class ManagerFragment : Fragment(), View.OnClickListener {
 
         /**
          * 订阅这个源
+         * 将其state改为true
+         * 更新列表
          */
         fun handleRegisterRssLink(data: RssLinkInfo) {
             data.state = true
@@ -143,7 +145,7 @@ class ManagerFragment : Fragment(), View.OnClickListener {
             refreshData()
         }
 
-        // TODO(更新Item的状态)
+        // 更新Item的状态
         when (data.state) {
             true -> handleUnRegisterRssLink(data)
             false -> handleRegisterRssLink(data)
@@ -153,7 +155,7 @@ class ManagerFragment : Fragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.bilibili_up_rss -> {
-                // TODO(订阅B站up主)
+                // 订阅B站up主
                 activity?.let {
 //                    AddBiliBiliUpDialog().show(it.supportFragmentManager, "bilibiliup")
                     AddBiliBiliUpDialogBack().show(it.supportFragmentManager, "bilibiliup")

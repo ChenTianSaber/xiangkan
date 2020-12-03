@@ -8,6 +8,7 @@ import com.chentian.xiangkan.data.RssLinkInfo
 
 @Dao
 interface RssLinkInfoDao {
+
     /**
      * 获取所有RssLinkInfo
      */
@@ -20,9 +21,16 @@ interface RssLinkInfoDao {
     @Query("SELECT * FROM RssLinkInfo WHERE url = :url")
     fun getItemByUrl(url: String): MutableList<RssLinkInfo>
 
+    /**
+     * 插入RssLinkInfo
+     */
     @Insert
     fun insertItem(vararg rssManagerInfo: RssLinkInfo)
 
+    /**
+     * 更新RssLinkInfo
+     */
     @Update
     fun updateItems(vararg rssManagerInfo: RssLinkInfo)
+
 }

@@ -14,7 +14,7 @@ import com.chentian.xiangkan.data.RssLinkInfo
 import com.chentian.xiangkan.utils.RssUtils
 
 /**
- * 管理订阅源页面中订阅源列表的Adapter
+ * 管理订阅源页面中默认订阅源列表的Adapter
  */
 class ManagerListAdapter : RecyclerView.Adapter<ManagerListAdapter.ManagerViewHolder>() {
 

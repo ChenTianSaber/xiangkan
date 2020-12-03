@@ -29,6 +29,9 @@ class XiangKanApplication : Application() {
         )
         MobclickAgent.setPageCollectionMode(MobclickAgent.PageMode.AUTO)
 
+        /**
+         * 管理Activity
+         */
         registerActivityLifecycleCallbacks(object : ActivityLifecycleCallbacks{
             override fun onActivityPaused(activity: Activity) {
 

@@ -63,7 +63,6 @@ class HomeFragment : Fragment() {
     }
 
     private fun initView() {
-
         sortBtn = itemView.findViewById(R.id.sort)
         sortBtn.setOnClickListener {
             // 打开筛选面板，可以选择 全部，已读，未读
@@ -98,53 +97,31 @@ class HomeFragment : Fragment() {
 
     private fun initData() {
         onRssLinkInfoDataChanged()
-//        onRssItemDataChanged()
     }
 
-    private fun changeTabChoosed(data: RssLinkInfo){
+    /**
+     * 更新TAB的选中状态
+     */
+    private fun changeTabChoosed(rssLinkInfo: RssLinkInfo){
         for(data in tabListAdapter.getDataList()){
            data.isChoosed = false
         }
-        data.isChoosed = true
+        rssLinkInfo.isChoosed = true
     }
 
     // region listen
 
     /**
-     * 点击内容Item回调
-     */
-    fun onContentItemClick(itemView: View, data: RssItem){
-        // TODO(跳转到内容fragment)
-//        Toast.makeText(activity, data.title, Toast.LENGTH_SHORT).show()
-    }
-
-    /**
-     * 点击TAB切换回调
-     */
-    fun onTabItemClick(itemView: View, data: RssLinkInfo){
-        // TODO(更新当前选中TAB，请求对应的TAB数据)
-        Toast.makeText(activity, data.channelTitle, Toast.LENGTH_SHORT).show()
-
-        // 更新TAB选中状态
-//        changeTabChoosed(data)
-//        tabListAdapter.notifyDataSetChanged()
-//
-//        (activity as MainActivity).changeTabData(data)qiehuan
-
-        // 切换到对应的页面
-//        viewPager.setCurrentItem(tabListAdapter.getDataList().indexOf(data),true)
-    }
-
-    /**
      * 订阅源数据更新
      */
     private fun onRssLinkInfoDataChanged() {
-        // 监听订阅源数据的变化
         (activity as MainActivity).rssModel.rssLinksData.observe(this, Observer<ResponseData> { response ->
-            Log.d(MainActivity.TAG, "rssLinksData observe ---> $response")
+            Log.d(TAG, "rssLinksData observe ---> [$response]")
+
             // 过滤掉未订阅的数据源
             val dataList = mutableListOf<RssLinkInfo>()
             dataList.addAll(((response.data as MutableList<RssLinkInfo>).filter { it.state }).toMutableList())
+
             // 该数据为 "全部" TAB的占位数据
             dataList.add(0, RssLinkInfo(
                     url = RssLinkInfoFactory.ALLDATA,
@@ -155,18 +132,15 @@ class HomeFragment : Fragment() {
                     icon = ""
             ))
 
-            // 判断是否需要web请求
+            // 判断是否需要web请求,如果是的话那么 全部icon 变为loading状态
             when(response.code){
-                ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> {
-                    // 这个时候我们需要把"全部"TAB变成loading状态
-                    dataList[0].isRefreshing = true
-                }
+                ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> dataList[0].isRefreshing = true
             }
 
             // 每次订阅源变动的时候，默认 全部 为选中状态
             changeTabChoosed(dataList[0])
 
-            // TODO(设置fragmentList)
+            // 设置fragmentList
             fragmentList.clear()
             for(index in 0 until dataList.size){
                 if(index == 0) {
@@ -187,8 +161,7 @@ class HomeFragment : Fragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRssItemDataChanged(response: ResponseData) {
-        // 监听内容数据的变化
-        // Log.d(TAG, "rssItemsData observe ---> $response")
+
         val dataList = response.data as MutableList<RssItem>
         val code = response.code
         val message = response.message
@@ -200,21 +173,16 @@ class HomeFragment : Fragment() {
          * 处理网络数据返回
          */
         fun handleWebResopnse(dataList: MutableList<RssItem>) {
-            // TODO(刷新标志取消，判断数据有无更新，有的话弹出更新tip，等点击tip再刷新列表，更新lastContentSize)
+            // 刷新标志取消
             tabListAdapter.getDataList()[0].isRefreshing = false
             tabListAdapter.notifyDataSetChanged()
         }
 
         when (code) {
-            ResponseCode.WEB_SUCCESS -> {
-                Log.d(TAG, "全部请求完毕")
-                handleWebResopnse(dataList)
-            }
-            ResponseCode.WEB_PROGRESS_SUCCESS -> {
-                Log.d(TAG, "请求完一个")
-            }
-            ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
+            ResponseCode.WEB_SUCCESS, ResponseCode.WEB_FAIL -> handleWebResopnse(dataList)
+            ResponseCode.WEB_PROGRESS_SUCCESS -> Log.d(TAG, "请求完一个")
         }
+
     }
 
     // endregion

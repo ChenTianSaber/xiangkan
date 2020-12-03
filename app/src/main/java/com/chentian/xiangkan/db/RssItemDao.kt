@@ -8,6 +8,7 @@ import com.chentian.xiangkan.data.RssItem
 
 @Dao
 interface RssItemDao {
+
     /**
      * 根据id排序
      */
@@ -62,12 +63,22 @@ interface RssItemDao {
     @Query("SELECT * FROM RssItem where title = :title AND author = :author ORDER BY id DESC")
     fun getAllByTitleAndAuthor(title: String, author: String): MutableList<RssItem>
 
+    /**
+     * 插入RssItem列表
+     */
     @Insert
     fun insertAll(rssItems: MutableList<RssItem>)
 
+    /**
+     * 插入RssItem
+     */
     @Insert
     fun insertItem(vararg rssItem: RssItem)
 
+    /**
+     * 更新
+     */
     @Update
     fun updateItems(vararg rssItem: RssItem)
+
 }

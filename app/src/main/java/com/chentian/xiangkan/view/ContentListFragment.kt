@@ -27,13 +27,19 @@ import org.greenrobot.eventbus.ThreadMode
  * 主页列表单个订阅源内容的fragment
  * 所有的数据操作都需要通过MainActivity来操作，不允许直接接触rssRepository
  */
-class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
+class ContentListFragment() : Fragment() {
 
     companion object{
         const val TAG = "ContentListFragment"
     }
 
+    constructor(rssLinkInfo: RssLinkInfo) : this() {
+        this.rssLinkInfo = rssLinkInfo
+    }
+
     // region field
+
+    private lateinit var rssLinkInfo: RssLinkInfo
 
     private lateinit var contentList: RecyclerView
     private lateinit var contentListAdapter: ContentListAdapter
@@ -45,10 +51,20 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
     //endregion
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+        if (savedInstanceState != null) {
+            savedInstanceState.getParcelable<RssLinkInfo>("rssLinkInfo")?.let {
+                this.rssLinkInfo = it
+            }
+        }
         itemView = inflater.inflate(R.layout.layout_contentlist,container,false)
         initView()
         initData()
         return itemView
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("rssLinkInfo", rssLinkInfo)
     }
 
     override fun onStart() {
@@ -76,9 +92,10 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
     }
 
     private fun initData() {
-        Log.d(TAG, "initData: $rssLinkInfo")
-//        onRssItemDataChanged()
-        (activity as MainActivity).changeTabData(rssLinkInfo)
+        Log.d(AllContentListFragment.TAG, "initData: rssLinkInfo --> [$rssLinkInfo]")
+
+        // 获取对应TAB下的数据
+        (activity as MainActivity).getTabData(rssLinkInfo)
     }
 
     private fun refreshData(){
@@ -92,20 +109,18 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
      */
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onRssItemDataChanged(response: ResponseData) {
-        // 监听内容数据的变化
-        // Log.d(TAG, "rssItemsData observe ---> $response")
+
         val dataList = response.data as MutableList<RssItem>
         val code = response.code
         val message = response.message
         val tag = response.tag
 
-        Log.d(TAG, "[${rssLinkInfo.channelTitle}] rssItemsData observe ---> $code dataList--> ${dataList.size} message --> $message tag --> $tag")
+        Log.d(TAG, "onRssItemDataChanged code ---> [$code] dataList.size--> [${dataList.size}] message --> [$message] tag --> [$tag] ")
 
         /**
          * 处理DB数据返回
          */
         fun handleDBResopnse(dataList: MutableList<RssItem>){
-            // TODO(直接展示, 更新lastContentSize)
             // 先判断是不是这个TAB下的数据
             if(tag == ResponseCode.SINGLE && (dataList.isNotEmpty() && dataList[0].channelLink == rssLinkInfo.channelLink)){
                 contentListAdapter.setDataList(dataList)
@@ -126,12 +141,11 @@ class ContentListFragment(var rssLinkInfo: RssLinkInfo) : Fragment() {
 
         when (code) {
             ResponseCode.DB_SUCCESS -> handleDBResopnse(dataList)
-            ResponseCode.UPDATE_RSSITEM -> {
-                refreshData()
-            }
+            ResponseCode.UPDATE_RSSITEM -> refreshData()
         }
 
         checkIsListEmpty()
+
     }
 
     // endregion

@@ -8,6 +8,7 @@ import com.chentian.xiangkan.data.RssLinkInfo
  * 因为目前业务较少，所以只用一个Listener作为所有点击事件的集合
  */
 interface ItemClickListener {
+
     /**
      * 当点击内容Item的时候
      */
@@ -27,4 +28,5 @@ interface ItemClickListener {
      * 当点击订阅管理页中订阅源的Item的时候
      */
     fun onManagerItemClick(itemView: View, data: RssLinkInfo)
+
 }

@@ -15,25 +15,19 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.room.Room
-import androidx.viewpager.widget.ViewPager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import androidx.work.*
 import com.chentian.xiangkan.data.*
 import com.chentian.xiangkan.db.AppDatabase
-import com.chentian.xiangkan.dialog.AddBiliBiliUpDialog
-import com.chentian.xiangkan.dialog.SortDialog
 import com.chentian.xiangkan.listener.ItemClickListener
 import com.chentian.xiangkan.main.RssModel
 import com.chentian.xiangkan.view.HomeFragment
 import com.chentian.xiangkan.view.ManagerFragment
 import com.chentian.xiangkan.repository.RssItemRepository
 import com.chentian.xiangkan.repository.RssLinkRepository
-import com.chentian.xiangkan.utils.AppUtils
-import com.chentian.xiangkan.view.ContentActivity
+import com.chentian.xiangkan.view.content.ContentActivity
 import com.chentian.xiangkan.view.SettingFragment
 import com.githang.statusbar.StatusBarCompat
-import java.util.concurrent.TimeUnit
 
 /**
  * 页面的容器，这里会执行对数据的操作，其余的fragment只负责监听数据并更新
@@ -115,34 +109,34 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         settingImage = findViewById(R.id.setting_image)
         settingText = findViewById(R.id.setting_text)
 
-        changeBottomTab(0)
-
         viewPager = findViewById(R.id.view_pager)
         val pagerAdapter = ScreenSlidePagerAdapter(this)
         viewPager.adapter = pagerAdapter
         viewPager.isUserInputEnabled = false
 
-//        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
-//            override fun onPageSelected(position: Int) {
-//                if(position == 0){
-//                    // 当回到首页的时候，需要判断一下是否需要刷新数据，要的话那就去请求数据
-//                    if(needRequestRssData){
-//                        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
-//                        needRequestRssData = false
-//                    }
-//                }
-//            }
-//        })
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                if(position == 0){
+                    // 当回到首页的时候，需要判断一下是否需要刷新数据，要的话那就去请求数据
+                    if(needRequestRssData){
+                        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
+                        needRequestRssData = false
+                    }
+                }
+            }
+        })
+
+        changeBottomTab(0)
 
     }
 
     private fun initData() {
-        // 获取上次的最后一次阅读位置
         sharedPreferences = getSharedPreferences("rssData", Context.MODE_PRIVATE)
         editor = sharedPreferences.edit()
 
+        // 获取上次的最后一次阅读位置
         RssItemData.lastReadRssLink = sharedPreferences.getString("lastReadRssLink","") ?: ""
-        Log.d(TAG, "initData: RssItemData.lastReadRssLink --> ${RssItemData.lastReadRssLink}")
+        Log.d(TAG, "initData: RssItemData.lastReadRssLink --> [${RssItemData.lastReadRssLink}]")
 
         fun parseStringToMap(mapString: String){
             if(mapString == "{}") return
@@ -152,14 +146,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
                 val mapList = str.trim().split("=")
                 RssItemRepository.rssLinkLastRequest[mapList[0]] = mapList[1].toLong()
             }
-            Log.d(TAG, "parseStringToMap ---> ${RssItemRepository.rssLinkLastRequest}")
+            Log.d(TAG, "parseStringToMap ---> [${RssItemRepository.rssLinkLastRequest}]")
         }
 
+        // 获取上次请求的配置
         val str = sharedPreferences.getString("rssLinkLastRequest","")
         if (!str.isNullOrEmpty()) {
             parseStringToMap(str)
         }
-//        Log.d(TAG, "initData: rssLinkLastRequest --> $str")
 
         val db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "xiangkan").build()
         rssModel = RssModel()
@@ -174,24 +168,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
 
         dataListen()
 
+        // 请求订阅源数据
         rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
-
-//        // TODO(在这里请求订阅源的数据)
-//        // 请求订阅源，请求完成后再请求内容数据
-//        rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NO_REQUEST)
-//
-//        // 创建WorkManager任务
-//        val updateDataWorkRequest: PeriodicWorkRequest = PeriodicWorkRequestBuilder<UpdateDataWork>(4,TimeUnit.HOURS).build()
-//        WorkManager.getInstance(this).enqueueUniquePeriodicWork(
-//            "updateRssItems",
-//            ExistingPeriodicWorkPolicy.KEEP,
-//            updateDataWorkRequest
-//        )
 
     }
 
     /**
-     * 监听数据源变动分发给对应的fragment
+     * 监听数据源变动
      */
     private fun dataListen() {
 
@@ -231,25 +214,21 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.home -> {
-                viewPager.setCurrentItem(0,true)
                 changeBottomTab(0)
             }
             R.id.manager -> {
-                viewPager.setCurrentItem(1,true)
                 changeBottomTab(1)
             }
             R.id.setting -> {
-                viewPager.setCurrentItem(2,true)
                 changeBottomTab(2)
             }
-//            R.id.sort -> {
-//                // 打开筛选面板，可以选择 全部，已读，未读
-//                SortDialog().show(supportFragmentManager,"sort")
-//            }
         }
     }
 
     private fun changeBottomTab(position: Int){
+
+        viewPager.setCurrentItem(position,true)
+
         homeImage.setImageResource(R.mipmap.bell_fill_gray)
         managerImage.setImageResource(R.mipmap.book_gray)
         settingImage.setImageResource(R.mipmap.bulb_gray)
@@ -278,25 +257,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
      * 转发点击事件给对应的fragment，后续可改为注册模式，感兴趣的fragment即可监听
      */
     override fun onContentItemClick(itemView: View, data: RssItem) {
-        Log.d(TAG, "onContentItemClick: $data")
-        homeFragment.onContentItemClick(itemView, data)
-        // TODO(将这个Item置为已读，并存入数据库)
+        Log.d(TAG, "onContentItemClick: [$data]")
+
         val intent = Intent(this, ContentActivity::class.java)
         intent.putExtra("RssItem", data)
         startActivity(intent)
 
+        // 将这个Item置为已读，并存入数据库
         data.wasRead = true
         rssItemRepository.updateRssItem(data)
     }
 
     override fun onMarkReadClick(itemView: View, data: RssItem) {
+        if(data.wasRead){
+            return
+        }
         data.wasRead = true
         rssItemRepository.updateRssItem(data)
     }
 
     override fun onTabItemClick(itemView: View, data: RssLinkInfo) {
         Log.d(TAG, "onTabItemClick: $data")
-        homeFragment.onTabItemClick(itemView, data)
     }
 
     override fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
@@ -318,14 +299,13 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     // region api
 
     /**
-     * 获取这个订阅源中的所有数据，只获取DB数据，不请求web端
-     * 首先将当前TAB数据切换，然后获取当前TAB下的数据
+     * 获取这个TAB下的数据
+     * @param rssLinkInfo
      */
-    fun changeTabData(rssLinkInfo: RssLinkInfo) {
+    fun getTabData(rssLinkInfo: RssLinkInfo) {
         if (rssLinkInfo.url == RssLinkInfoFactory.ALLDATA) {
             // 获取全部数据
             rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
-//            rssLinkRepository.getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST)
         } else {
             // 获取对应的数据源的数据
             rssItemRepository.getSingleRssLinkInfoRssItems(rssLinkInfo)

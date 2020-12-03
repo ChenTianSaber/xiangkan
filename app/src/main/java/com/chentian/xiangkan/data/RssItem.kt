@@ -27,7 +27,7 @@ data class RssItem(
     var id: Long = 0
 
     @IgnoredOnParcel
-    var wasRead: Boolean? = false
+    var wasRead: Boolean = false
 
     @IgnoredOnParcel
     var imageUrl: String? = ""

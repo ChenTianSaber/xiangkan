@@ -64,6 +64,7 @@ object RssUtils {
      * 解析RSS内容数据
      */
     private fun parseRssData(data: InputStream, rssLinkInfo: RssLinkInfo): MutableList<RssItem> {
+
         val dataList = mutableListOf<RssItem>()
 
         /**
@@ -80,7 +81,8 @@ object RssUtils {
                 author = channelTitle
             }
 
-            Log.d(RssItemRepository.TAG, "getAuthor: $author")
+            Log.d(TAG, "getAuthor: [$author]")
+
             return author
         }
 
@@ -119,20 +121,23 @@ object RssUtils {
          */
         fun getVideoUrl(json: JSONObject): String {
             val description = json.optString("description")
-            val pics: MutableList<String> = ArrayList()
+            val videos: MutableList<String> = ArrayList()
             val compile = Pattern.compile("<video.*?>")
             val matcher: Matcher = compile.matcher(description)
             while (matcher.find()) {
                 val img: String = matcher.group()
-                pics.add(img)
+                videos.add(img)
             }
-            if (pics.isNullOrEmpty()) return ""
-            val m = Pattern.compile("\"http?(.*?)(\"|>|\\s+)").matcher(pics[0])
+            if (videos.isNullOrEmpty()) return ""
+            val m = Pattern.compile("\"http?(.*?)(\"|>|\\s+)").matcher(videos[0])
             m.find()
             val url = m.group()
             return url.substring(1, url.length - 1)
         }
 
+        /**
+         * 校验这个RssItem是否合法
+         */
         fun checkItem(rssItem: RssItem): Boolean{
             if(rssItem.link.isEmpty()){
                 return false
@@ -141,6 +146,12 @@ object RssUtils {
             return true
         }
 
+        /**
+         * 这边的解析貌似有两种
+         * 国内一般是 rss-channel-item 这样的标签
+         * 国外似乎是 feed-entry 这样的标签
+         * 暂时只支持国内的
+         */
         data.use {
             val xmlToJson: XmlToJson = XmlToJson.Builder(it, null).build()
             val jsonObject = xmlToJson.toJson()
@@ -164,16 +175,23 @@ object RssUtils {
                     rssItem.imageUrl = getImageUrl(json)
                     rssItem.videoUrl = getVideoUrl(json)
                     rssItem.icon = rssLinkInfo.icon
-                    Log.d(TAG, "parseRssData: rssItem --> ${rssItem.videoUrl}")
+
+                    Log.d(TAG, "parseRssData: rssItem --> [${rssItem.title}] , [${rssItem.link}]")
+
                     if(checkItem(rssItem)) dataList.add(rssItem)
+
                 }
             }
         }
+
         return dataList
+
     }
 
     /**
      * 添加B站up主动态订阅
+     * @param uid bilibili上up主的uid
+     * @return 返回RssLinkInfo
      */
     fun addBiliBiliUpDynamic(uid: String): RssLinkInfo {
 
@@ -181,12 +199,14 @@ object RssUtils {
 
         /**
          * 获取BiliBili用户的信息
+         * 判断这个uid是否有效
          */
         fun getBiliBiliInfo(uid: String): JSONObject? {
             var bilibiliJson: JSONObject? = null
             var infoConnection: HttpURLConnection? = null
             try {
                 val url = URL("${RssLinkInfoFactory.BILIBILI_API}$uid")
+
                 infoConnection = url.openConnection() as HttpURLConnection
                 //设置请求方法
                 infoConnection.requestMethod = "GET"
@@ -221,12 +241,13 @@ object RssUtils {
         }
 
         /**
-         * 先通过接口获取订阅数据，检测是否可以正常获取数据
+         * 通过接口获取订阅数据，检测是否可以正常获取数据
          */
         fun getChannelData(){
             var connection: HttpURLConnection? = null
             try {
                 val url = URL("${RssLinkInfoFactory.BILIBILI_UP}$uid")
+
                 connection = url.openConnection() as HttpURLConnection
                 //设置请求方法
                 connection.requestMethod = "GET"
@@ -245,11 +266,11 @@ object RssUtils {
                     val channelJsonObject = jsonObject?.optJSONObject("rss")?.optJSONObject("channel")
 
                     channelJsonObject?.let { channelData ->
-                        Log.d(TAG, "addBiliBiliUpDynamic: channelData --> $channelData")
-                        // 在通过接口获取up信息，主要是名字和头像
+                        Log.d(TAG, "channelData --> [$channelData]")
+                        // 通过接口获取up信息，主要是名字和头像
                         getBiliBiliInfo(uid)?.let { json ->
                             val dataObj = json.optJSONObject("data")
-                            Log.d(TAG, "addBiliBiliUpDynamic: dataObj ---> $dataObj")
+                            Log.d(TAG, "bilibiliInfo ---> [$dataObj]")
                             dataObj?.let { data ->
                                 rssLinkInfo.channelTitle = data.optString("name")
                                 rssLinkInfo.channelDescription = data.optString("sign")
@@ -271,10 +292,14 @@ object RssUtils {
 
         getChannelData()
 
-        Log.d(TAG, "addBiliBiliUpDynamic: rssLinkInfo ---> $rssLinkInfo")
+        Log.d(TAG, "addBiliBiliUpDynamic: rssLinkInfo ---> [$rssLinkInfo]")
+
         return rssLinkInfo
     }
 
+    /**
+     * 封装设置icon的方法
+     */
     fun setIcon(contex: Context, channelLink: String, view: ImageView) {
 
         // 看看是不是全部图标
@@ -301,16 +326,17 @@ object RssUtils {
     /**
      * 根据channelLink判断这个源是否默认展示网页
      */
-    fun isShowWeb(channelLink: String): Boolean{
-        return when(channelLink){
-            "https://www.kaiyanapp.com/" -> true
-            "https://www.pingwest.com/status" -> true
-            "https://www.ui.cn/" -> true
-            "https://chaping.cn/news?cate=" -> true
-            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> true
-            "https://www.gcores.com/articles" -> true
-            "https://sspai.com" -> true
+    fun isShowWeb(channelLink: String): Boolean {
+        return when (channelLink) {
+            "https://www.kaiyanapp.com/",
+            "https://www.pingwest.com/status",
+            "https://www.ui.cn/",
+            "https://chaping.cn/news?cate=",
+            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1",
+            "https://www.gcores.com/articles",
+            "https://sspai.com",
             "https://www.bilibili.com/h5/weekly-recommend" -> true
+
             else -> false
         }
     }
@@ -318,12 +344,14 @@ object RssUtils {
     /**
      * 根据channelLink判断这个Item的ViewType
      */
-    fun getViewTypeByChannelLink(channelLink: String): Int{
-        return when(channelLink){
-            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> VIEW_TYPE_IMAGE
+    fun getViewTypeByChannelLink(channelLink: String): Int {
+        return when (channelLink) {
+            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1",
             "https://www.ui.cn/" -> VIEW_TYPE_IMAGE
-            "https://www.kaiyanapp.com/" -> VIEW_TYPE_VIDEO
+
+            "https://www.kaiyanapp.com/",
             "https://www.bilibili.com/h5/weekly-recommend" -> VIEW_TYPE_VIDEO
+
             else -> VIEW_TYPE_TEXT
         }
     }

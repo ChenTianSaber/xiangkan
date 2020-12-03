@@ -16,6 +16,8 @@ import java.util.*
 
 object AppUtils {
 
+    private var activityWeakRef: WeakReference<Activity>? = null
+
     /**
      * 判断APP是否处于调试模式
      */
@@ -28,8 +30,9 @@ object AppUtils {
         }
     }
 
-    private var activityWeakRef: WeakReference<Activity>? = null
-
+    /**
+     * 获取当前的Activity
+     */
     fun getCurrentActivity(): Activity? {
         var currentActivity: Activity? = null
         activityWeakRef?.get()?.let {
@@ -38,10 +41,16 @@ object AppUtils {
         return currentActivity
     }
 
+    /**
+     * 设置当前的Activity
+     */
     fun setCurrentActivity(activity: Activity) {
         activityWeakRef = WeakReference(activity)
     }
 
+    /**
+     * dp 转 px
+     */
     fun dp2px(dpValue: Float): Int{
         val scale = Resources.getSystem().displayMetrics.density
         return ((dpValue * scale + 0.5f).toInt())

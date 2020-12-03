@@ -26,7 +26,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 /**
- * 内容页fragment
+ * 反馈页面
  * 这个页面和其他的业务应该是独立的，它就是用来展示内容而已
  */
 class ReportActivity : AppCompatActivity() {
@@ -63,18 +63,16 @@ class ReportActivity : AppCompatActivity() {
             }
             finish()
         }
-
-
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     private fun initData() {
-
         webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true // 这个要加上
-        /* 获得 webview url，请注意url单词是product而不是products，products是旧版本的参数，用错地址将不能成功提交 */
+        // 这个要加上
+        webView.settings.domStorageEnabled = true
+        // 获得 webview url，请注意url单词是product而不是products，products是旧版本的参数，用错地址将不能成功提交
         val url = "https://support.qq.com/product/294473"
-        /* WebView 内嵌 Client 可以在APP内打开网页而不是跳出到浏览器 */
+        // WebView 内嵌 Client 可以在APP内打开网页而不是跳出到浏览器
         val webViewClient: WebViewClient = object : WebViewClient() {
             override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
                 super.shouldOverrideUrlLoading(view, url)

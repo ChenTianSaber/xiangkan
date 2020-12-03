@@ -70,7 +70,6 @@ class RssItemRepository(
                 EventBus.getDefault().post(
                     ResponseData(
                         code = resultCode,
-//                        data = getRssItemsFromDB(),
                         data = getSingleRssLinkInfoRssItemsByDateFromDB(linkInfo),
                         message = "从网络请求完成",
                         tag = ResponseCode.SINGLE
@@ -150,17 +149,6 @@ class RssItemRepository(
         }
     }
 
-    /**
-     * 获取所有已订阅的数据源的数据
-     */
-    private fun getAllRssLinkInfoRssItemsFromDB(rssLinkInfos: MutableList<RssLinkInfo>): MutableList<RssItem> {
-        val resultList = mutableListOf<RssItem>()
-        for (linkInfo in rssLinkInfos) {
-            if(linkInfo.state) resultList.addAll(getSingleRssLinkInfoRssItemsFromDB(linkInfo))
-        }
-        return resultList
-    }
-
     private fun getRssItemsFromWeb(rssLinkInfo: RssLinkInfo): Int {
         val resultList = RssUtils.requestRssItems(rssLinkInfo)
 
@@ -168,10 +156,8 @@ class RssItemRepository(
             return ResponseCode.WEB_FAIL
         }
 
-//        rssItemDao.insertAll(resultList)
         // 先查找有无重复数据，重复的话则不处理
         // 这里应该倒着存，这样就是时间逆序的
-//        for (data in resultList) {
         for (index in resultList.size - 1 downTo 0){
             val data = resultList[index]
             if (rssItemDao.getAllByTitleAndAuthor(data.title, data.author).isNullOrEmpty()) {
