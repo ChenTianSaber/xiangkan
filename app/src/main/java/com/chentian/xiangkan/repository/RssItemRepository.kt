@@ -77,12 +77,12 @@ class RssItemRepository(
                 )
             }
 
-            ResponseData(
-                code = if(resultCode == ResponseCode.WEB_FAIL) ResponseCode.WEB_FAIL else ResponseCode.WEB_SUCCESS,
-                data = getRssItemsFromDB(),
-                message = "从网络请求完成",
-                tag = ResponseCode.ALL
-            )
+            EventBus.getDefault().post(ResponseData(
+                    code = if(resultCode == ResponseCode.WEB_FAIL) ResponseCode.WEB_FAIL else ResponseCode.WEB_SUCCESS,
+                    data = getRssItemsFromDB(),
+                    message = "从网络请求完成",
+                    tag = ResponseCode.ALL
+            ))
         }
     }
 

@@ -25,8 +25,10 @@ import com.chentian.xiangkan.view.HomeFragment
 import com.chentian.xiangkan.view.ManagerFragment
 import com.chentian.xiangkan.repository.RssItemRepository
 import com.chentian.xiangkan.repository.RssLinkRepository
+import com.chentian.xiangkan.utils.RssUtils
 import com.chentian.xiangkan.view.content.ContentActivity
 import com.chentian.xiangkan.view.SettingFragment
+import com.chentian.xiangkan.view.content.ContentWebVideoActivity
 import com.githang.statusbar.StatusBarCompat
 
 /**
@@ -259,7 +261,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     override fun onContentItemClick(itemView: View, data: RssItem) {
         Log.d(TAG, "onContentItemClick: [$data]")
 
-        val intent = Intent(this, ContentActivity::class.java)
+        val intent = when(RssUtils.getViewTypeByChannelLink(data.channelLink)){
+            RssUtils.VIEW_TYPE_VIDEO -> Intent(this, ContentWebVideoActivity::class.java)
+            else -> Intent(this, ContentActivity::class.java)
+        }
         intent.putExtra("RssItem", data)
         startActivity(intent)
 

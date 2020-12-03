@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".view.content.ContentActivity"/>
+        <activity android:name=".view.content.ContentWebVideoActivity"/>
         <activity android:name=".view.ReportActivity"/>
     </application>
 

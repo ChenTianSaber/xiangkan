@@ -19,12 +19,15 @@ object HtmlUtils {
 
         Log.d(TAG, "rssItem: ---> [$rssItem]")
 
+        if(rssItem.channelLink == "https://www.bilibili.com/h5/weekly-recommend"){
+            return buildBilibiliHtmlPortal(rssItem)
+        }
+
         return buildCommomHtml(rssItem)
 
     }
 
     /**
-     * 非全屏状态下
      * 当判断是B站的时候使用这个css
      */
     private fun buildBilibiliHtmlPortal(rssItem: RssItem): String {
@@ -37,48 +40,31 @@ object HtmlUtils {
             iframes.add(img)
         }
 
-        Log.d(TAG, "iframes : ---> [${iframes[0]}]")
+        // 把iframe的宽高设置为100%
+        var iframe = iframes[0].replace(Regex("width=\"[0-9]*?\""),"width=\"100%\"")
+        iframe = iframe.replace(Regex("height=\"[0-9]*?\""),"height=\"100%\"")
+
+        Log.d(TAG, "iframe : ---> 之前：[${iframes[0]}], 转换后：[${iframe}]")
 
         return """
             <!DOCTYPE html>
-            <html>
-
+            <html lang="en">
             <head>
-                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-                <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-                <link rel="stylesheet" type="text/css" href="app.css">
-                
+                <meta charset="UTF-8">
                 <style>
-                    /* 这个规则规定了iframe父元素容器的尺寸，我们要去它的宽高比应该是 25:14 */
-                    .aspect-ratio {
-                        position: relative;
-                        width: 100%;
-                        height: 0;
-                        padding-bottom: 56%; /* 高度应该是宽度的56% */
-                    }                   
-                    /* 设定iframe的宽度和高度，让iframe占满整个父元素容器 */
-                    .aspect-ratio iframe {
-                        position: absolute;
+                    *{
+                        margin: 0;
+                        padding: 0;
+                    }
+                    html,body{
                         width: 100%;
                         height: 100%;
-                        left: 0;
-                        top: 0;
                     }
                 </style>
             </head>
-
             <body>
-                <div class="rss-wrapper">
-                    <div class="content">
-                        <div>
-                            <div class="aspect-ratio">
-                              ${iframes[0]}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                $iframe
             </body>
-
             </html>
         """.trimIndent()
     }
