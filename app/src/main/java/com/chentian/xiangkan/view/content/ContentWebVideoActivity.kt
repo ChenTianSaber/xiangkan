@@ -1,10 +1,12 @@
 package com.chentian.xiangkan.view.content
 
 import android.annotation.SuppressLint
+import android.content.pm.ActivityInfo
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
@@ -17,6 +19,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.chentian.xiangkan.*
 import com.chentian.xiangkan.data.RssItem
+import com.chentian.xiangkan.utils.AppUtils
 import com.chentian.xiangkan.utils.HtmlUtils
 import com.chentian.xiangkan.utils.RssUtils
 import com.githang.statusbar.StatusBarCompat
@@ -36,15 +39,9 @@ class ContentWebVideoActivity : AppCompatActivity() {
 
     //  region field
 
-    /**
-     * 当选择网页模式的时候会展示这个
-     */
     private lateinit var fullWebView: WebView
-
     private lateinit var backBtn: ImageView
-    private lateinit var modeBtn: ImageView
-
-    private var isTextMode: Boolean = true
+    private lateinit var fullScreenBtn: ImageView
 
     // endregion
 
@@ -65,24 +62,34 @@ class ContentWebVideoActivity : AppCompatActivity() {
         }
 
         backBtn = findViewById(R.id.back_btn)
-        modeBtn = findViewById(R.id.mode_btn)
-
         backBtn.setOnClickListener {
             finish()
         }
 
-        modeBtn.setOnClickListener {
-            if (isTextMode) {
-                // 这个时候转为网页模式
-
-                Glide.with(this).load(R.mipmap.compass).into(modeBtn)
-            } else {
-                // 这个时候转为文本模式
-
-                Glide.with(this).load(R.mipmap.book).into(modeBtn)
+        fullScreenBtn = findViewById(R.id.fullscreen_btn)
+        fullScreenBtn.setOnClickListener {
+            //判断当前屏幕方向
+            if(requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+                setPortrait()
+            }else{
+                setLandScape()
             }
-            isTextMode = !isTextMode
         }
+
+    }
+
+    private fun setPortrait(){
+        //切换竖屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        fullWebView.layoutParams.height = AppUtils.dp2px(256f)
+        Glide.with(this).load(R.mipmap.fullscreen).into(fullScreenBtn)
+    }
+
+    private fun setLandScape(){
+        //切换横屏
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
+        fullWebView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
+        Glide.with(this).load(R.mipmap.fullscreen_exit).into(fullScreenBtn)
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -100,7 +107,6 @@ class ContentWebVideoActivity : AppCompatActivity() {
                 Log.d(TAG, "videoUrl: $str")
                 val videoUrl = str.substring(5, str.length - 4)
                 Log.d(TAG, "videoUrl: $videoUrl")
-                isTextMode = false
                 data.link = videoUrl
             }
         }
@@ -125,7 +131,6 @@ class ContentWebVideoActivity : AppCompatActivity() {
 
         fullWebView.webViewClient = webViewClient
 
-//            fullWebView.loadUrl(data.link)
         fullWebView.loadDataWithBaseURL("file:///android_asset/", HtmlUtils.buildHtml(data), "text/html", "UTF-8", null)
 
     }

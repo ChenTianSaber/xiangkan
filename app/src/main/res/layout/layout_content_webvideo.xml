@@ -15,41 +15,40 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <FrameLayout
         android:id="@+id/linearLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="42dp"
-        android:layout_marginBottom="64dp"
-        android:background="@drawable/coner_white_3"
+        android:layout_marginTop="32dp"
+        android:background="@android:color/transparent"
         android:elevation="4dp"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingLeft="12dp"
-        android:paddingTop="4dp"
-        android:paddingRight="12dp"
-        android:paddingBottom="4dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <!--返回按钮-->
         <ImageView
             android:id="@+id/back_btn"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@mipmap/jiantou_zuo"
+            android:layout_gravity="start|center_vertical"
+            android:src="@mipmap/arrowleft"
             android:visibility="visible" />
 
-        <!--切换按钮-->
+        <!--全屏按钮-->
         <ImageView
-            android:id="@+id/mode_btn"
+            android:id="@+id/fullscreen_btn"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:layout_marginLeft="16dp"
-            android:padding="4dp"
-            android:src="@mipmap/book"
+            android:layout_gravity="end|center_vertical"
+            android:src="@mipmap/fullscreen"
             android:visibility="visible" />
 
-    </LinearLayout>
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
