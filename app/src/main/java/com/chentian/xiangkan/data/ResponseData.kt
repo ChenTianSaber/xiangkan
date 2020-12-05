@@ -17,6 +17,7 @@ object ResponseCode{
         const val GET_RSSLINK_SUCCESS_NEED_REQUEST_DB = 15 // 获取Rsslink订阅源数据成功，并且需要请求DB数据
 
         const val WEB_FAIL = 25 // 请求RssItem内容失败
+        const val WEB_PROCESS_FAIL = 26 // 请求单个RssItem内容失败
 
         const val UPDATE_RSSITEM = 31 // 更新单个RssItem
 

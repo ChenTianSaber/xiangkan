@@ -74,12 +74,7 @@ class TabListAdapter: RecyclerView.Adapter<TabListAdapter.TabViewHolder>() {
             // 设置名称
             holder.name.text = data.channelTitle
 
-            // 设置图标
-            if (data.isRefreshing) {
-                Glide.with(context).load(R.mipmap.loading).into(holder.icon)
-            } else {
-                RssUtils.setIcon(context, data.channelLink, holder.icon)
-            }
+            RssUtils.setIcon(context, data.channelLink, holder.icon)
 
             // TODO(设置选中状态，等设计完善了再搞)
 //            if(data.isChoosed){

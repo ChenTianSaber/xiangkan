@@ -58,14 +58,13 @@ class RssItemRepository(
                 tag = ResponseCode.ALL
             ))
 
-            var resultCode = ResponseCode.WEB_SUCCESS
             for (linkInfo in rssLinkInfos) {
                 if(rssLinkLastRequest[linkInfo.url] != null && (Date().time - rssLinkLastRequest[linkInfo.url]!!) < REQUEST_SPACE_TIME){
                     Log.d(TAG, "四小时之内请求过，现在跳过 url ---> ${linkInfo.url}")
                     continue
                 }
 
-                resultCode = getRssItemsFromWeb(linkInfo)
+                val resultCode = getRssItemsFromWeb(linkInfo)
                 Log.d(TAG, "getRssItemsFromWeb: resultCode ---> $resultCode")
                 EventBus.getDefault().post(
                     ResponseData(
@@ -78,7 +77,7 @@ class RssItemRepository(
             }
 
             EventBus.getDefault().post(ResponseData(
-                    code = if(resultCode == ResponseCode.WEB_FAIL) ResponseCode.WEB_FAIL else ResponseCode.WEB_SUCCESS,
+                    code = ResponseCode.WEB_SUCCESS, // TODO(这边应该是Complete更合适一点)
                     data = getRssItemsFromDB(),
                     message = "从网络请求完成",
                     tag = ResponseCode.ALL
@@ -153,7 +152,7 @@ class RssItemRepository(
         val resultList = RssUtils.requestRssItems(rssLinkInfo)
 
         if (resultList.isNullOrEmpty()) {
-            return ResponseCode.WEB_FAIL
+            return ResponseCode.WEB_PROCESS_FAIL
         }
 
         // 先查找有无重复数据，重复的话则不处理

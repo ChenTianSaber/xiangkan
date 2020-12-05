@@ -27,9 +27,6 @@ data class RssLinkInfo(
     var latestPubDate: Long = 0
 
     @Ignore
-    var isRefreshing: Boolean = false
-
-    @Ignore
     var isChoosed: Boolean = false
 }
 

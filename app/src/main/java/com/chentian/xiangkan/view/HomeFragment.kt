@@ -5,6 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.Animation
+import android.view.animation.RotateAnimation
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -40,6 +42,7 @@ class HomeFragment : Fragment() {
     private lateinit var viewPager: ViewPager2
     private lateinit var itemView: View
     private lateinit var sortBtn: ImageView
+    private lateinit var syncBtn: ImageView
 
     private var fragmentList = mutableListOf<Fragment>()
 
@@ -71,6 +74,15 @@ class HomeFragment : Fragment() {
             }
         }
 
+        syncBtn = itemView.findViewById(R.id.sync)
+        syncBtn.setOnClickListener {
+            if(syncBtn.animation == null){
+                startSyncAnimation()
+            }else{
+                stopSyncAnimation()
+            }
+        }
+
         tabList = itemView.findViewById(R.id.tab_list)
         tabListAdapter = TabListAdapter()
         tabListAdapter.setItemClick(activity as MainActivity)
@@ -97,6 +109,23 @@ class HomeFragment : Fragment() {
 
     private fun initData() {
         onRssLinkInfoDataChanged()
+    }
+
+    /**
+     * 执行更新动画
+     */
+    private fun startSyncAnimation(){
+        val animation = RotateAnimation(0f,360f,Animation.RELATIVE_TO_SELF,0.5f,Animation.RELATIVE_TO_SELF,0.5f)
+        animation.repeatCount = -1
+        animation.duration = 1200
+        syncBtn.startAnimation(animation)
+    }
+
+    /**
+     * 停止更新动画
+     */
+    private fun stopSyncAnimation(){
+        syncBtn.animation = null
     }
 
     /**
@@ -134,7 +163,7 @@ class HomeFragment : Fragment() {
 
             // 判断是否需要web请求,如果是的话那么 全部icon 变为loading状态
             when(response.code){
-                ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> dataList[0].isRefreshing = true
+                ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST -> startSyncAnimation()
             }
 
             // 每次订阅源变动的时候，默认 全部 为选中状态
@@ -174,8 +203,7 @@ class HomeFragment : Fragment() {
          */
         fun handleWebResopnse(dataList: MutableList<RssItem>) {
             // 刷新标志取消
-            tabListAdapter.getDataList()[0].isRefreshing = false
-            tabListAdapter.notifyDataSetChanged()
+            stopSyncAnimation()
         }
 
         when (code) {
