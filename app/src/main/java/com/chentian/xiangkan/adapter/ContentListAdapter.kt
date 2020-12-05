@@ -140,6 +140,9 @@ class ContentListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             // 设置日期
             holder.date.text = AppUtils.formatTime(data.pubDate)
 
+            // 设置icon
+            RssUtils.setIcon(context, data.channelLink, holder.icon)
+
             // 是否已读
             if (data.wasRead!!) {
                 holder.title.setTextColor(Color.GRAY)
@@ -184,6 +187,9 @@ class ContentListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             } else {
                 Glide.with(context).load(data.imageUrl).into(holder.cover)
             }
+
+            // 设置icon
+            RssUtils.setIcon(context, data.channelLink, holder.icon)
 
             // 是否已读
             if (data.wasRead!!) {
@@ -230,6 +236,9 @@ class ContentListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 Glide.with(context).load(data.imageUrl).into(holder.cover)
             }
 
+            // 设置icon
+            RssUtils.setIcon(context, data.channelLink, holder.icon)
+
             // 是否已读
             if (data.wasRead!!) {
                 holder.title.setTextColor(Color.GRAY)
@@ -258,6 +267,7 @@ class ContentListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val title: TextView = itemView.findViewById(R.id.title)
         val author: TextView = itemView.findViewById(R.id.author)
         val date: TextView = itemView.findViewById(R.id.date)
+        val icon: ImageView = itemView.findViewById(R.id.icon)
         val markReadBtn: TextView = itemView.findViewById(R.id.mark_read_btn)
     }
 
@@ -269,6 +279,7 @@ class ContentListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val author: TextView = itemView.findViewById(R.id.author)
         val date: TextView = itemView.findViewById(R.id.date)
         val cover: ImageView = itemView.findViewById(R.id.cover)
+        val icon: ImageView = itemView.findViewById(R.id.icon)
         val markReadBtn: TextView = itemView.findViewById(R.id.mark_read_btn)
     }
 
@@ -280,6 +291,7 @@ class ContentListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val author: TextView = itemView.findViewById(R.id.author)
         val date: TextView = itemView.findViewById(R.id.date)
         val cover: ImageView = itemView.findViewById(R.id.cover)
+        val icon: ImageView = itemView.findViewById(R.id.icon)
         val markReadBtn: TextView = itemView.findViewById(R.id.mark_read_btn)
     }
 
