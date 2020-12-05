@@ -23,8 +23,76 @@ object HtmlUtils {
             return buildBilibiliHtmlPortal(rssItem)
         }
 
+        if(rssItem.channelLink == "https://sspai.com"){
+            return buildSSPaiHtml(rssItem)
+        }
+
+        if(rssItem.channelLink == "https://www.zhihu.com/billboard"){
+            return buildZhiHuHtml(rssItem)
+        }
+
         return buildCommomHtml(rssItem)
 
+    }
+
+    /**
+     * 少数派
+     */
+    private fun buildSSPaiHtml(rssItem: RssItem): String {
+        return """
+            <!DOCTYPE html>
+                <html lang="en" id="html" class="">
+                <head>
+                    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+                    <link rel="stylesheet" href="sspai-ui.css" type="text/css">
+                </head>
+                <body id="appBody">
+                    <div data-v-450436a6="" data-v-5d84cf38="" class="article-detail">
+                        <article data-v-450436a6="" class="normal-article">
+                            <div data-v-b5fe1ab0="" data-v-450436a6="" id="" class="article-body">
+                                <div data-v-b5fe1ab0="" class="articleWidth-content">
+                                    <div data-v-b5fe1ab0="" class="content wangEditor-txt">
+                                        ${rssItem.description}
+                                    </div>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </body>
+            </html>
+        """
+    }
+
+    /**
+     * 知乎
+     */
+    private fun buildZhiHuHtml(rssItem: RssItem): String {
+        return """
+            <!DOCTYPE html>
+            <html lang="zh" data-ios="true" data-theme="light" data-react-helmet="data-theme">
+            
+            <head>
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+              <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=0,viewport-fit=cover">
+              <link rel="stylesheet" href="zhihu.css" type="text/css">
+            </head>
+            
+            <body>
+              <div class="Card AnswerCard">
+                <div class="QuestionAnswer-content" tabindex="0">
+                  <div class="RichContent RichContent--unescapable">
+                    <div class="RichContent-inner"><span class="RichText ztext CopyrightRichText-richText" itemprop="text">
+                      ${rssItem.description}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </body>
+            
+            </html>
+        """
     }
 
     /**
