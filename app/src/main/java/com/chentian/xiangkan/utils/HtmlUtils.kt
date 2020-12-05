@@ -31,9 +31,143 @@ object HtmlUtils {
             return buildZhiHuHtml(rssItem)
         }
 
+        if(rssItem.channelLink == "https://www.gcores.com/articles"){
+            return buildJiHeHtml(rssItem)
+        }
+
+        if(rssItem.channelLink == "http://www.qdaily.com/tags/29.html"){
+            return buildHaoqixinRibaoHtml(rssItem)
+        }
+
+        if(rssItem.channelLink == "https://www.huxiu.com/article"){
+            return buildHuXiuHtml(rssItem)
+        }
+
         return buildCommomHtml(rssItem)
 
     }
+
+    /**
+     * 虎嗅
+     */
+    private fun buildHuXiuHtml(rssItem: RssItem): String {
+        return """
+            <!DOCTYPE html>
+            <html style="font-size: 20px;">
+            
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+                <meta name="viewport"
+                    content="width=device-width,initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+                <link rel="stylesheet" href="huxiu1.css" type="text/css">
+                <link rel="stylesheet" href="huxiu2.css" type="text/css">
+                <link rel="stylesheet" href="huxiu3.css" type="text/css">
+            </head>
+            
+            <body>
+                <div class="htmlBox bgW" id="headerHideSign">  
+                    <div id="m-article-detail-page" class="reward-page-wrap article-detail-wrap">
+                        <div class="js-mask-box" style="height: auto; overflow: hidden;">
+                            <div cellpadding="0" cellspacing="0" class="article-con-box article-box" id="article_content">
+                                <div class="article-content" id="article-detail-content">
+                                    ${rssItem.description}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </body>
+
+            </html>
+        """
+    }
+
+    /**
+     * 好奇心日报
+     */
+    private fun buildHaoqixinRibaoHtml(rssItem: RssItem): String {
+        return """
+            <!DOCTYPE html>
+            <html style="font-size: 23.4375px;" class="webp webpanimation">
+            
+            <head>
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+              <meta name="viewport"
+                content="width=device-width, minimum-scale=1.0, maximum-scale=1.0, initial-scale=1.0, user-scalable=no">
+              <meta name="format-detection" content="telephone=no">
+              <link rel="stylesheet" href="haoqixin.css" type="text/css">
+            </head>
+            
+            <body class="mobile articles show" data-postid="68427">
+              <div class="page-content">
+                <div class="com-article-detail short" data-categoryid="18" data-initialized="true" data-guid="3">
+                  <div class="article-detail-bd">
+                    <div class="detail">
+                        ${rssItem.description}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </body>
+            
+            </html>
+        """
+    }
+
+    /**
+     * 机核
+     */
+    private fun buildJiHeHtml(rssItem: RssItem): String {
+        return """
+            <!DOCTYPE html>
+            <html class="no-js theme-system" lang="en">
+            
+            <head>
+              <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+              <meta http-equiv="x-ua-compatible" content="ie=edge">
+              <meta name="viewport"
+                content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=0">
+                <link rel="stylesheet" href="jihe.css" type="text/css">
+            </head>
+            
+            <body>
+              <div id="app">
+                <div id="app_inner">
+                      <div class="articlePage">
+                        <div class="articlePage_body">
+                          <div class="articlePage_content">
+                            <div class="story_container story_enableImagePos">
+                              <div class="story story-show">
+                                <div class="md-RichEditor-root">
+                                  <div class="md-RichEditor-editor md-RichEditor-readonly">
+                                    <div class="DraftEditor-root">
+                                      <div class="DraftEditor-editorContainer">
+                                        <div aria-describedby="placeholder-3d8o8" class="public-DraftEditor-content"
+                                          contenteditable="false" spellcheck="false"
+                                          style="outline:none;user-select:text;-webkit-user-select:text;white-space:pre-wrap;word-wrap:break-word">
+                                          <div data-contents="true">
+                                            ${rssItem.description}
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                </div>
+              </div>
+            
+            </body>
+            
+            </html>
+        """
+    }
+
 
     /**
      * 少数派

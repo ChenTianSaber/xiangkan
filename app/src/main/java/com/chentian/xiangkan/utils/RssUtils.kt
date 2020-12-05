@@ -330,8 +330,7 @@ object RssUtils {
         return when (channelLink) {
             "https://www.pingwest.com/status",
             "https://chaping.cn/news?cate=",
-            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1",
-            "https://www.gcores.com/articles" -> true
+            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> true
             else -> false
         }
     }
