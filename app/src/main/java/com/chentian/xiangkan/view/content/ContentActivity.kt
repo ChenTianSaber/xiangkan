@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.chentian.xiangkan.*
 import com.chentian.xiangkan.data.RssItem
+import com.chentian.xiangkan.utils.AppUtils
 import com.chentian.xiangkan.utils.HtmlUtils
 import com.chentian.xiangkan.utils.RssUtils
 import com.githang.statusbar.StatusBarCompat
@@ -45,6 +46,7 @@ class ContentActivity : AppCompatActivity() {
      */
     private lateinit var scrollView: ScrollView
     private lateinit var title: TextView
+    private lateinit var titleBar: TextView
     private lateinit var author: TextView
     private lateinit var pubDate: TextView
     private lateinit var webView: WebView
@@ -72,6 +74,7 @@ class ContentActivity : AppCompatActivity() {
 
         scrollView = findViewById(R.id.scroll_view)
         title = findViewById(R.id.title)
+        titleBar = findViewById(R.id.titlebar)
         author = findViewById(R.id.author)
         pubDate = findViewById(R.id.pubDate)
         webView = findViewById(R.id.web_view)
@@ -162,11 +165,8 @@ class ContentActivity : AppCompatActivity() {
             title.text = data.title
             author.text = data.author
 
-            val simpleDateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.CHINESE)
-            val date = Date(data.pubDate)
-            pubDate.text = simpleDateFormat.format(date)
+            pubDate.text = AppUtils.formatTime(data.pubDate)
 
-//            Glide.with(this).load(data.icon).into(icon)
             RssUtils.setIcon(this, data.channelLink, icon)
 
             webView.settings.javaScriptEnabled = true
@@ -178,6 +178,8 @@ class ContentActivity : AppCompatActivity() {
 
             webView.loadDataWithBaseURL("file:///android_asset/", HtmlUtils.buildHtml(data), "text/html", "UTF-8", null)
         }
+
+        titleBar.text = data.title
 
         setupFullWebviewMode()
         setupTextMode()

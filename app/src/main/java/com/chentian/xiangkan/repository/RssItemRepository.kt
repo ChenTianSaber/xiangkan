@@ -11,6 +11,7 @@ import com.chentian.xiangkan.utils.RssUtils
 import kotlinx.android.synthetic.main.item_contentlist.view.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.json.JSONObject
