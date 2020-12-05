@@ -12,25 +12,25 @@ interface RssItemDao {
     /**
      * 根据id排序
      */
-    @Query("SELECT * FROM RssItem ORDER BY id DESC")
+    @Query("SELECT * FROM RssItem WHERE state = 1 ORDER BY id DESC")
     fun getAll(): MutableList<RssItem>
 
     /**
      * 根据时间逆序
      */
-    @Query("SELECT * FROM RSSItem ORDER BY pubDate DESC")
+    @Query("SELECT * FROM RSSItem WHERE state = 1 ORDER BY pubDate DESC")
     fun getAllOrderByPubDate(): MutableList<RssItem>
 
     /**
      * 查找所有未读
      */
-    @Query("SELECT * FROM RSSItem WHERE wasRead = 0 ORDER BY pubDate DESC")
+    @Query("SELECT * FROM RSSItem WHERE wasRead = 0 AND state = 1 ORDER BY pubDate DESC")
     fun getAllUnRead(): MutableList<RssItem>
 
     /**
      * 查找所有已读
      */
-    @Query("SELECT * FROM RSSItem WHERE wasRead = 1 ORDER BY pubDate DESC")
+    @Query("SELECT * FROM RSSItem WHERE wasRead = 1 AND state = 1 ORDER BY pubDate DESC")
     fun getAllWasRead(): MutableList<RssItem>
 
     /**
@@ -80,5 +80,11 @@ interface RssItemDao {
      */
     @Update
     fun updateItems(vararg rssItem: RssItem)
+
+    /**
+     * 更新
+     */
+    @Update
+    fun updateAll(rssItems: MutableList<RssItem>)
 
 }

@@ -12,15 +12,16 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 @Entity
 data class RssItem(
-    val url: String, //订阅请求的链接
-    val channelLink: String, //主站的链接
-    val channelTitle: String, //主站名称
-    val channelDescription: String, // 主站的描述
-    val title: String, // 内容标题
-    var link: String, // 内容跳转的链接
-    val description: String, // 内容详情
-    val author: String, // 内容作者
-    val pubDate: Long // 内容更新时间
+        val url: String, //订阅请求的链接
+        val channelLink: String, //主站的链接
+        val channelTitle: String, //主站名称
+        val channelDescription: String, // 主站的描述
+        val title: String, // 内容标题
+        var link: String, // 内容跳转的链接
+        val description: String, // 内容详情
+        val author: String, // 内容作者
+        val pubDate: Long, // 内容更新时间
+        var state: Boolean = true // 内容是否订阅
 ) : Parcelable {
     @IgnoredOnParcel
     @PrimaryKey(autoGenerate = true)

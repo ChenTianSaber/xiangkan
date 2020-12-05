@@ -286,11 +286,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
     }
 
     override fun onManagerItemClick(itemView: View, data: RssLinkInfo) {
-        Log.d(TAG, "onManagerItemClick: $data")
         // managerFragment会去进行它自己的处理，例如改变data的state，改变列表的UI
         managerFragment.onManagerItemClick(itemView, data)
+
+        Log.d(TAG, "onManagerItemClick after: $data")
         // 接下来是对数据的处理
         // 更新数据库, 更新首页TAB列表, 更新首页内容数据（只请求DB）
+        // 找出这个订阅源中的所有数据，然后更新state
+        rssItemRepository.updateRssItemState(data)
         rssLinkRepository.updateRssLinkInfo(data)
 
         // 当把订阅源从未订阅变成已订阅之后，就需要请求

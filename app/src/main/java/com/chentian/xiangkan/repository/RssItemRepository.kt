@@ -187,4 +187,17 @@ class RssItemRepository(
         }
     }
 
+    /**
+     * 找出这个订阅源下的所有数据，更新state
+     */
+    fun updateRssItemState(rssLinkInfo: RssLinkInfo){
+        GlobalScope.launch(Dispatchers.IO) {
+            val resultList = rssItemDao.getAllByUrl(rssLinkInfo.url)
+            for(data in resultList){
+                data.state = rssLinkInfo.state
+            }
+            rssItemDao.updateAll(resultList)
+        }
+    }
+
 }
