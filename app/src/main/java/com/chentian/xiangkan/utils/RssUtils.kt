@@ -328,9 +328,7 @@ object RssUtils {
      */
     fun isShowWeb(channelLink: String): Boolean {
         return when (channelLink) {
-            "https://www.pingwest.com/status",
-            "https://chaping.cn/news?cate=",
-            "https://www.zcool.com.cn/discover/0!0!0!0!0!!!!2!-1!1" -> true
+            "https://www.pingwest.com/status" -> true
             else -> false
         }
     }

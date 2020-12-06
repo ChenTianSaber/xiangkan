@@ -43,8 +43,42 @@ object HtmlUtils {
             return buildHuXiuHtml(rssItem)
         }
 
+        if(rssItem.channelLink == "https://post.smzdm.com/p/aqnd9pdp/"){
+            return buildShenmeZhideMaiHtml(rssItem)
+        }
+
         return buildCommomHtml(rssItem)
 
+    }
+
+    /**
+     * 什么值得买
+     */
+    private fun buildShenmeZhideMaiHtml(rssItem: RssItem): String {
+        return """
+            <!DOCTYPE html>
+            <html style="font-size: 37.5px;">
+            
+            <head>
+                <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+                <meta content="yes" name="apple-mobile-web-app-capable">
+                <meta content="telephone=no,email=no" name="format-detection">
+                <meta name="applicable-device" content="mobile">
+                <meta http-equiv="Cache-Control" content="no-transform">
+                <meta http-equiv="Cache-Control" content="no-siteapp">
+                <meta name="viewport"
+                    content="width=device-width, height=device-height, user-scalable=no, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0">
+                <link rel="stylesheet" href="shenmezhidemai.css" type="text/css">
+            </head>
+            
+            <body>
+                <article class="article">
+                    ${rssItem.description}
+                </article>
+            </body>
+            
+            </html>
+        """
     }
 
     /**
