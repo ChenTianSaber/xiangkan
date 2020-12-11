@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -41,6 +42,8 @@ class ManagerFragment : Fragment(), View.OnClickListener {
     private lateinit var userCreateList: RecyclerView
     private lateinit var userCreateListAdapter: UserCreateRssListAdapter
 
+    private lateinit var emptyLayout: LinearLayout
+
     // endregion
 
     /**
@@ -56,6 +59,8 @@ class ManagerFragment : Fragment(), View.OnClickListener {
     }
 
     private fun initView() {
+        emptyLayout = itemView.findViewById(R.id.empty_layout)
+
         managerList = itemView.findViewById(R.id.manager_list)
         managerListAdapter = ManagerListAdapter()
         managerList.adapter = managerListAdapter
@@ -106,6 +111,12 @@ class ManagerFragment : Fragment(), View.OnClickListener {
                 } else {
                     userCreateList.add(data)
                 }
+            }
+
+            if (userCreateList.isEmpty()) {
+                emptyLayout.visibility = View.VISIBLE
+            } else {
+                emptyLayout.visibility = View.GONE
             }
 
 

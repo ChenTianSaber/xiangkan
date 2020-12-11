@@ -54,7 +54,7 @@ class RssLinkRepository(
             rssLinksData.postValue(
                 ResponseData(
                     code = flag,
-                    data = allRssLinks,
+                    data = rssLinkList,
                     message = "获取订阅源数据成功"
                 )
             )
@@ -65,10 +65,10 @@ class RssLinkRepository(
      * 更新订阅源数据
      */
     fun updateRssLinkInfo(rssLinkInfo: RssLinkInfo){
-        GlobalScope.launch(Dispatchers.IO) {
+//        GlobalScope.launch(Dispatchers.IO) {
             rssLinkInfoDao.updateItems(rssLinkInfo)
             getAllRssLinkInfo(ResponseCode.GET_RSSLINK_SUCCESS_NEED_REQUEST_DB)
-        }
+//        }
     }
 
     /**

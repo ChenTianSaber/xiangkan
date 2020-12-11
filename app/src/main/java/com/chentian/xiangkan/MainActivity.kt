@@ -30,6 +30,9 @@ import com.chentian.xiangkan.view.content.ContentActivity
 import com.chentian.xiangkan.view.SettingFragment
 import com.chentian.xiangkan.view.content.ContentWebVideoActivity
 import com.githang.statusbar.StatusBarCompat
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 /**
  * 页面的容器，这里会执行对数据的操作，其余的fragment只负责监听数据并更新
@@ -293,12 +296,14 @@ class MainActivity : AppCompatActivity(), View.OnClickListener, ItemClickListene
         // 接下来是对数据的处理
         // 更新数据库, 更新首页TAB列表, 更新首页内容数据（只请求DB）
         // 找出这个订阅源中的所有数据，然后更新state
-        rssItemRepository.updateRssItemState(data)
-        rssLinkRepository.updateRssLinkInfo(data)
+        GlobalScope.launch(Dispatchers.IO) {
+            rssItemRepository.updateRssItemState(data)
+            rssLinkRepository.updateRssLinkInfo(data)
 
-        // 当把订阅源从未订阅变成已订阅之后，就需要请求
-        if(data.state){
-            needRequestRssData = true
+            // 当把订阅源从未订阅变成已订阅之后，就需要请求
+            if(data.state){
+                needRequestRssData = true
+            }
         }
     }
 

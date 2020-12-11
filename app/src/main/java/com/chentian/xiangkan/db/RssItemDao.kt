@@ -18,19 +18,19 @@ interface RssItemDao {
     /**
      * 根据时间逆序
      */
-    @Query("SELECT * FROM RSSItem WHERE state = 1 ORDER BY pubDate DESC")
+    @Query("SELECT * FROM RssItem WHERE state = 1 ORDER BY pubDate DESC")
     fun getAllOrderByPubDate(): MutableList<RssItem>
 
     /**
      * 查找所有未读
      */
-    @Query("SELECT * FROM RSSItem WHERE wasRead = 0 AND state = 1 ORDER BY pubDate DESC")
+    @Query("SELECT * FROM RssItem WHERE wasRead = 0 AND state = 1 ORDER BY pubDate DESC")
     fun getAllUnRead(): MutableList<RssItem>
 
     /**
      * 查找所有已读
      */
-    @Query("SELECT * FROM RSSItem WHERE wasRead = 1 AND state = 1 ORDER BY pubDate DESC")
+    @Query("SELECT * FROM RssItem WHERE wasRead = 1 AND state = 1 ORDER BY pubDate DESC")
     fun getAllWasRead(): MutableList<RssItem>
 
     /**

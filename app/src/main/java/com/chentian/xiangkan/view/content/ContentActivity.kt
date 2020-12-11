@@ -143,7 +143,7 @@ class ContentActivity : AppCompatActivity() {
                     request: WebResourceRequest?
             ): Boolean {
                 Log.d(TAG, "shouldOverrideUrlLoading: ${request?.url}")
-                if (request?.url.toString().startsWith("zhihu://") || request?.url.toString().startsWith("bilibili://")) {
+                if (request?.url.toString().startsWith("zhihu://") || request?.url.toString().startsWith("bilibili://") || request?.url.toString().startsWith("https://www.zhihu.com/oia")) {
                     return true
                 }
                 return super.shouldOverrideUrlLoading(view, request)
